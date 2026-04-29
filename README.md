@@ -94,14 +94,13 @@ Every guide produced by this kit:
 
 ## Update the docs corpus
 
-The `reltio-docs/` corpus syncs twice a week. To pull the latest:
+The corpus lives at **[github.com/reltio-ai/reltio-ai-ready-docs](https://github.com/reltio-ai/reltio-ai-ready-docs)** and is updated regularly from the official Reltio documentation. To pull the latest into your fork:
 
 ```bash
-curl -sL "https://reltio-docs-viewer.vercel.app/api/docs" -o reltio-docs/docs.md
-curl -sL "https://reltio-docs-viewer.vercel.app/api/index_md" -o reltio-docs/index.md
+npm run refresh-docs
 ```
 
-Then regenerate any guides that cover topics that may have changed.
+Then regenerate any guides that cover topics that may have changed. Check the `_Generated:` timestamp in `reltio-docs/docs.md` to see how fresh your local copy is.
 
 ## Requirements
 

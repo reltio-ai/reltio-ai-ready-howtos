@@ -5,7 +5,8 @@
   "main": "generate-diagrams.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "git config core.hooksPath .githooks && echo '✓ Git hooks configured (.githooks/pre-commit will auto-generate HTML on commit)'"
+    "postinstall": "git config core.hooksPath .githooks && echo '✓ Git hooks configured (.githooks/pre-commit will auto-generate HTML on commit)'",
+    "refresh-docs": "curl -sL https://raw.githubusercontent.com/reltio-ai/reltio-ai-ready-docs/main/docs.md -o reltio-docs/docs.md && curl -sL https://raw.githubusercontent.com/reltio-ai/reltio-ai-ready-docs/main/index.md -o reltio-docs/index.md && echo '✓ Corpus refreshed from github.com/reltio-ai/reltio-ai-ready-docs'"
   },
   "repository": {
     "type": "git",
