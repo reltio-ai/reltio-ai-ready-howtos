@@ -1,0 +1,24 @@
+# .gitleaks.toml — allowlist for known false positives in this repo.
+# Reltio HOWTO guides use placeholder tokens and example strings that
+# pattern-match common secret detectors but contain no real credentials.
+
+title = "Reltio HOWTOs gitleaks config"
+
+[allowlist]
+  description = "Placeholder credentials and example tokens in HOWTO guides"
+  regexes = [
+    # JWT-shaped placeholder tokens used in curl examples (always truncated with "...")
+    '''eyJhbGci[A-Za-z0-9_\-]{10,}\.\.\.''',
+    # Standard placeholder variable names used throughout the guides
+    '''YOUR_CLIENT_(ID|SECRET)''',
+    '''YOUR_TENANT_ID''',
+    # Example crosswalk values that resemble IDs but are not secrets
+    '''(CRM|ERP|ORG|REL)-\d{4}''',
+    # Reltio docs API endpoint (read-only, public URL)
+    '''reltio-docs-viewer\.vercel\.app''',
+  ]
+  paths = [
+    # Entire howtos/ tree — all content is example-only
+    '''howtos/.*\.md''',
+    '''howtos-html/.*\.html''',
+  ]

@@ -1,0 +1,27 @@
+{
+  "name": "reltio-howtos-and-docs-main",
+  "version": "1.0.0",
+  "description": "Practical, hands-on guides for working with the Reltio platform — generated from [official Reltio documentation](https://docs.reltio.com) using AI assistance.",
+  "main": "generate-diagrams.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "git config core.hooksPath .githooks && echo '✓ Git hooks configured (.githooks/pre-commit will auto-generate HTML on commit)'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://bitbucket.org/reltio-ondemand/reltio-howtos-docs.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://bitbucket.org/reltio-ondemand/reltio-howtos-docs/issues"
+  },
+  "homepage": "https://bitbucket.org/reltio-ondemand/reltio-howtos-docs#readme",
+  "devDependencies": {
+    "@mermaid-js/mermaid-cli": "^11.12.0",
+    "highlight.js": "^11.11.1",
+    "marked": "^18.0.2"
+  }
+}

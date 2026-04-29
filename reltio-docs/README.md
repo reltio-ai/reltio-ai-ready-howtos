@@ -1,0 +1,1 @@
+Download from https://reltio-docs-viewer.vercel.app/ and place in this folder

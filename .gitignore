@@ -1,0 +1,38 @@
+# macOS
+.DS_Store
+
+# Editor
+*.swp
+*.swo
+*~
+
+# Environment
+.env
+.env.*
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+
+# Node
+node_modules/
+
+# Mermaid CLI temp files
+.tmp-diagram.mmd
+.tmp-diagram-*.mmd
+.mermaid-config.json
+.mermaid-config.generate-html.json
+
+# Generated diagram SVGs (produced by generate-diagrams.js — not committed)
+howtos/images/
+
+# Claude Code
+.claude/
+
+# Large Reltio reference docs (required for HOWTO generation)
+# reltio-docs/docs.md
+# reltio-docs/index.md

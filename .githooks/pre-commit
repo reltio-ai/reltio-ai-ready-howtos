@@ -1,0 +1,59 @@
+#!/bin/sh
+#
+# pre-commit — auto-generate HTML for HOWTO Markdown files
+#
+# Runs automatically on every `git commit` when the hooks path is configured
+# (see CONTRIBUTING.md or run `npm install` to set it up).
+#
+# What it does:
+#   • Any newly added or modified howtos/HOWTO-*.md in the staging area gets
+#     its HTML rendered via `node generate-html.js`.
+#   • The generated HTML (and any README.md / howtos-html/index.html changes)
+#     are automatically staged into the same commit.
+#   • If generate-html.js fails (platform name lint, Mermaid direction lint,
+#     or any other error), the commit is blocked and the error is shown.
+#
+# This means contributors never need to remember to run generate-html.js
+# manually — the hook does it for them.
+
+set -e
+
+# Only process staged HOWTOs that were added or modified
+STAGED_MDS=$(git diff --cached --name-only --diff-filter=AM | grep "^howtos/HOWTO-.*\.md$" || true)
+
+if [ -z "$STAGED_MDS" ]; then
+  # Nothing to do
+  exit 0
+fi
+
+echo ""
+echo "⚙  pre-commit: generating HTML for staged HOWTOs…"
+
+FAILED=0
+
+for md in $STAGED_MDS; do
+  name=$(basename "$md" .md)
+  html="howtos-html/${name}.html"
+
+  echo "   → $md"
+
+  # Run the generator. If it fails (lint error, node error, etc.) capture the
+  # exit code but continue so we report all failures at once.
+  if node generate-html.js "$md"; then
+    # Stage the HTML and any collateral files the generator touched
+    git add "$html" howtos-html/index.html README.md 2>/dev/null || true
+  else
+    FAILED=1
+  fi
+done
+
+echo ""
+
+if [ "$FAILED" -ne 0 ]; then
+  echo "❌  HTML generation failed for one or more HOWTOs."
+  echo "    Fix the error(s) above and try committing again."
+  exit 1
+fi
+
+echo "✅  HTML generated and staged. Commit proceeding."
+echo ""
