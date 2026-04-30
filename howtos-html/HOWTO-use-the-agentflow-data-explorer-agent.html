@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Use the AgentFlow Data Explorer Agent</title>
+  <style>
+/* Reltio HOWTO — HTML styles
+ * Brand colors:
+ *   Midnight     #000033
+ *   Blue         #000066
+ *   Bright Blue  #0000CC
+ *   Gold         #FFCC00
+ */
+
+:root {
+  --reltio-midnight: #000033;
+  --reltio-blue: #000066;
+  --reltio-bright-blue: #0000CC;
+  --reltio-gold: #FFCC00;
+  --text-primary: #1a1a1a;
+  --text-muted: #555;
+  --border-light: #e1e4e8;
+  --bg-code: #f6f8fa;
+  --bg-callout: #f0f4ff;
+  --bg-disclaimer: #fff8e1;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text-primary);
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 4rem;
+  background: #ffffff;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--reltio-midnight);
+  font-weight: 600;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.25;
+}
+
+h1 {
+  font-size: 2.25rem;
+  border-bottom: 3px solid var(--reltio-gold);
+  padding-bottom: 0.5rem;
+  margin-top: 0;
+}
+
+h2 {
+  font-size: 1.6rem;
+  border-bottom: 1px solid var(--border-light);
+  padding-bottom: 0.3rem;
+  margin-top: 2.5rem;
+}
+
+h3 { font-size: 1.25rem; color: var(--reltio-blue); }
+h4 { font-size: 1.1rem; color: var(--reltio-blue); }
+
+/* Paragraphs and links */
+p { margin: 0.75rem 0; }
+
+a {
+  color: var(--reltio-bright-blue);
+  text-decoration: none;
+}
+a:hover { text-decoration: underline; }
+
+/* Lists */
+ul, ol { padding-left: 1.75rem; margin: 0.75rem 0; }
+li { margin: 0.25rem 0; }
+
+/* Code */
+code {
+  font-family: "SF Mono", Monaco, Consolas, "Liberation Mono", monospace;
+  font-size: 0.9em;
+  background: var(--bg-code);
+  padding: 0.15em 0.4em;
+  border-radius: 3px;
+  color: #d63384;
+}
+
+pre {
+  background: var(--bg-code);
+  border: 1px solid var(--border-light);
+  border-radius: 6px;
+  padding: 1rem;
+  overflow-x: auto;
+  line-height: 1.5;
+}
+
+pre code {
+  background: transparent;
+  padding: 0;
+  color: inherit;
+  font-size: 0.875em;
+}
+
+/* Tables */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1rem 0;
+  font-size: 0.95em;
+}
+
+th, td {
+  border: 1px solid var(--border-light);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+th {
+  background: var(--reltio-midnight);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+tr:nth-child(even) td {
+  background: #fafbfc;
+}
+
+/* Blockquotes / callouts */
+blockquote {
+  border-left: 4px solid var(--reltio-bright-blue);
+  background: var(--bg-callout);
+  margin: 1rem 0;
+  padding: 0.75rem 1rem;
+  border-radius: 0 4px 4px 0;
+}
+
+blockquote p { margin: 0.25rem 0; }
+
+/* Disclaimer callout (last blockquote in the doc) */
+blockquote.disclaimer {
+  border-left-color: var(--reltio-gold);
+  background: var(--bg-disclaimer);
+}
+
+/* Horizontal rule */
+hr {
+  border: none;
+  border-top: 1px solid var(--border-light);
+  margin: 2.5rem 0 1.5rem;
+}
+
+/* Mermaid SVG — keep diagrams readable and centered */
+.diagram {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 1.5rem auto;
+  cursor: zoom-in;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.3s ease;
+  transform-origin: center center;
+  border-radius: 4px;
+}
+
+/* Click to enlarge — toggle class via JS; hover does nothing */
+.diagram.zoomed {
+  transform: scale(1.8);
+  box-shadow: 0 20px 60px rgba(0, 0, 51, 0.35);
+  position: relative;
+  z-index: 100;
+  background: #ffffff;
+  cursor: zoom-out;
+}
+
+/* highlight.js — GitHub-like theme, compact */
+.hljs { color: #24292e; background: var(--bg-code); }
+.hljs-comment, .hljs-quote { color: #6a737d; font-style: italic; }
+.hljs-keyword, .hljs-selector-tag { color: #d73a49; }
+.hljs-string, .hljs-attr { color: #032f62; }
+.hljs-number, .hljs-literal { color: #005cc5; }
+.hljs-title, .hljs-name { color: #6f42c1; }
+.hljs-section, .hljs-type { color: #22863a; }
+.hljs-tag { color: #22863a; }
+.hljs-built_in, .hljs-builtin-name { color: #e36209; }
+
+/* Footer banner (appears on index.html only) */
+.site-header {
+  border-bottom: 3px solid var(--reltio-gold);
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.site-header .subtitle {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-top: 0.25rem;
+}
+
+/* Print */
+@media print {
+  body { max-width: none; padding: 1rem; }
+  a { color: var(--text-primary); text-decoration: none; }
+  pre, blockquote { page-break-inside: avoid; }
+}
+
+  </style>
+</head>
+<body>
+<h1 id="howto-use-the-agentflow-data-explorer-agent">HOWTO: Use the AgentFlow Data Explorer Agent</h1>
+<p>Explore your Reltio master data through natural language — search entity profiles, trace merge history, inspect your data model, and review match analytics, all without touching a single record.</p>
+<img class="diagram" src="data:image/svg+xml;base64,PHN2ZyBpZD0ibXktc3ZnIiB3aWR0aD0iMTAwJSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgY2xhc3M9ImZsb3djaGFydCIgc3R5bGU9Im1heC13aWR0aDogMTE4MS4yNXB4OyBiYWNrZ3JvdW5kLWNvbG9yOiB0cmFuc3BhcmVudDsiIHZpZXdCb3g9IjAgMCAxMTgxLjI1IDE5OC4xMTcxODc1IiByb2xlPSJncmFwaGljcy1kb2N1bWVudCBkb2N1bWVudCIgYXJpYS1yb2xlZGVzY3JpcHRpb249ImZsb3djaGFydC12MiI+PHN0eWxlPiNteS1zdmd7Zm9udC1mYW1pbHk6InRyZWJ1Y2hldCBtcyIsdmVyZGFuYSxhcmlhbCxzYW5zLXNlcmlmO2ZvbnQtc2l6ZToxNHB4O2ZpbGw6IzAwMDAzMzt9QGtleWZyYW1lcyBlZGdlLWFuaW1hdGlvbi1mcmFtZXtmcm9te3N0cm9rZS1kYXNob2Zmc2V0OjA7fX1Aa2V5ZnJhbWVzIGRhc2h7dG97c3Ryb2tlLWRhc2hvZmZzZXQ6MDt9fSNteS1zdmcgLmVkZ2UtYW5pbWF0aW9uLXNsb3d7c3Ryb2tlLWRhc2hhcnJheTo5LDUhaW1wb3J0YW50O3N0cm9rZS1kYXNob2Zmc2V0OjkwMDthbmltYXRpb246ZGFzaCA1MHMgbGluZWFyIGluZmluaXRlO3N0cm9rZS1saW5lY2FwOnJvdW5kO30jbXktc3ZnIC5lZGdlLWFuaW1hdGlvbi1mYXN0e3N0cm9rZS1kYXNoYXJyYXk6OSw1IWltcG9ydGFudDtzdHJva2UtZGFzaG9mZnNldDo5MDA7YW5pbWF0aW9uOmRhc2ggMjBzIGxpbmVhciBpbmZpbml0ZTtzdHJva2UtbGluZWNhcDpyb3VuZDt9I215LXN2ZyAuZXJyb3ItaWNvbntmaWxsOiNmMGY0ZmY7fSNteS1zdmcgLmVycm9yLXRleHR7ZmlsbDojMGYwYjAwO3N0cm9rZTojMGYwYjAwO30jbXktc3ZnIC5lZGdlLXRoaWNrbmVzcy1ub3JtYWx7c3Ryb2tlLXdpZHRoOjFweDt9I215LXN2ZyAuZWRnZS10aGlja25lc3MtdGhpY2t7c3Ryb2tlLXdpZHRoOjMuNXB4O30jbXktc3ZnIC5lZGdlLXBhdHRlcm4tc29saWR7c3Ryb2tlLWRhc2hhcnJheTowO30jbXktc3ZnIC5lZGdlLXRoaWNrbmVzcy1pbnZpc2libGV7c3Ryb2tlLXdpZHRoOjA7ZmlsbDpub25lO30jbXktc3ZnIC5lZGdlLXBhdHRlcm4tZGFzaGVke3N0cm9rZS1kYXNoYXJyYXk6Mzt9I215LXN2ZyAuZWRnZS1wYXR0ZXJuLWRvdHRlZHtzdHJva2UtZGFzaGFycmF5OjI7fSNteS1zdmcgLm1hcmtlcntmaWxsOiMwMDAwMzM7c3Ryb2tlOiMwMDAwMzM7fSNteS1zdmcgLm1hcmtlci5jcm9zc3tzdHJva2U6IzAwMDAzMzt9I215LXN2ZyBzdmd7Zm9udC1mYW1pbHk6InRyZWJ1Y2hldCBtcyIsdmVyZGFuYSxhcmlhbCxzYW5zLXNlcmlmO2ZvbnQtc2l6ZToxNHB4O30jbXktc3ZnIHB7bWFyZ2luOjA7fSNteS1zdmcgLmxhYmVse2ZvbnQtZmFtaWx5OiJ0cmVidWNoZXQgbXMiLHZlcmRhbmEsYXJpYWwsc2Fucy1zZXJpZjtjb2xvcjojZmZmZmZmO30jbXktc3ZnIC5jbHVzdGVyLWxhYmVsIHRleHR7ZmlsbDojMGYwYjAwO30jbXktc3ZnIC5jbHVzdGVyLWxhYmVsIHNwYW57Y29sb3I6IzBmMGIwMDt9I215LXN2ZyAuY2x1c3Rlci1sYWJlbCBzcGFuIHB7YmFja2dyb3VuZC1jb2xvcjp0cmFuc3BhcmVudDt9I215LXN2ZyAubGFiZWwgdGV4dCwjbXktc3ZnIHNwYW57ZmlsbDojZmZmZmZmO2NvbG9yOiNmZmZmZmY7fSNteS1zdmcgLm5vZGUgcmVjdCwjbXktc3ZnIC5ub2RlIGNpcmNsZSwjbXktc3ZnIC5ub2RlIGVsbGlwc2UsI215LXN2ZyAubm9kZSBwb2x5Z29uLCNteS1zdmcgLm5vZGUgcGF0aHtmaWxsOiMwMDAwNjY7c3Ryb2tlOiMwMDAwMzM7c3Ryb2tlLXdpZHRoOjFweDt9I215LXN2ZyAucm91Z2gtbm9kZSAubGFiZWwgdGV4dCwjbXktc3ZnIC5ub2RlIC5sYWJlbCB0ZXh0LCNteS1zdmcgLmltYWdlLXNoYXBlIC5sYWJlbCwjbXktc3ZnIC5pY29uLXNoYXBlIC5sYWJlbHt0ZXh0LWFuY2hvcjptaWRkbGU7fSNteS1zdmcgLm5vZGUgLmthdGV4IHBhdGh7ZmlsbDojMDAwO3N0cm9rZTojMDAwO3N0cm9rZS13aWR0aDoxcHg7fSNteS1zdmcgLnJvdWdoLW5vZGUgLmxhYmVsLCNteS1zdmcgLm5vZGUgLmxhYmVsLCNteS1zdmcgLmltYWdlLXNoYXBlIC5sYWJlbCwjbXktc3ZnIC5pY29uLXNoYXBlIC5sYWJlbHt0ZXh0LWFsaWduOmNlbnRlcjt9I215LXN2ZyAubm9kZS5jbGlja2FibGV7Y3Vyc29yOnBvaW50ZXI7fSNteS1zdmcgLnJvb3QgLmFuY2hvciBwYXRoe2ZpbGw6IzAwMDAzMyFpbXBvcnRhbnQ7c3Ryb2tlLXdpZHRoOjA7c3Ryb2tlOiMwMDAwMzM7fSNteS1zdmcgLmFycm93aGVhZFBhdGh7ZmlsbDojMGIwYjBiO30jbXktc3ZnIC5lZGdlUGF0aCAucGF0aHtzdHJva2U6IzAwMDAzMztzdHJva2Utd2lkdGg6MXB4O30jbXktc3ZnIC5mbG93Y2hhcnQtbGlua3tzdHJva2U6IzAwMDAzMztmaWxsOm5vbmU7fSNteS1zdmcgLmVkZ2VMYWJlbHtiYWNrZ3JvdW5kLWNvbG9yOiNmMGY0ZmY7dGV4dC1hbGlnbjpjZW50ZXI7fSNteS1zdmcgLmVkZ2VMYWJlbCBwe2JhY2tncm91bmQtY29sb3I6I2YwZjRmZjt9I215LXN2ZyAuZWRnZUxhYmVsIHJlY3R7b3BhY2l0eTowLjU7YmFja2dyb3VuZC1jb2xvcjojZjBmNGZmO2ZpbGw6I2YwZjRmZjt9I215LXN2ZyAubGFiZWxCa2d7YmFja2dyb3VuZC1jb2xvcjpyZ2JhKDI0MCwgMjQ0LCAyNTUsIDAuNSk7fSNteS1zdmcgLmNsdXN0ZXIgcmVjdHtmaWxsOiNmMGY0ZmY7c3Ryb2tlOiMwMDAwQ0M7c3Ryb2tlLXdpZHRoOjFweDt9I215LXN2ZyAuY2x1c3RlciB0ZXh0e2ZpbGw6IzBmMGIwMDt9I215LXN2ZyAuY2x1c3RlciBzcGFue2NvbG9yOiMwZjBiMDA7fSNteS1zdmcgZGl2Lm1lcm1haWRUb29sdGlwe3Bvc2l0aW9uOmFic29sdXRlO3RleHQtYWxpZ246Y2VudGVyO21heC13aWR0aDoyMDBweDtwYWRkaW5nOjJweDtmb250LWZhbWlseToidHJlYnVjaGV0IG1zIix2ZXJkYW5hLGFyaWFsLHNhbnMtc2VyaWY7Zm9udC1zaXplOjEycHg7YmFja2dyb3VuZDojZjBmNGZmO2JvcmRlcjoxcHggc29saWQgaHNsKDIyNCwgNjAlLCA4Ny4wNTg4MjM1Mjk0JSk7Ym9yZGVyLXJhZGl1czoycHg7cG9pbnRlci1ldmVudHM6bm9uZTt6LWluZGV4OjEwMDt9I215LXN2ZyAuZmxvd2NoYXJ0VGl0bGVUZXh0e3RleHQtYW5jaG9yOm1pZGRsZTtmb250LXNpemU6MThweDtmaWxsOiMwMDAwMzM7fSNteS1zdmcgcmVjdC50ZXh0e2ZpbGw6bm9uZTtzdHJva2Utd2lkdGg6MDt9I215LXN2ZyAuaWNvbi1zaGFwZSwjbXktc3ZnIC5pbWFnZS1zaGFwZXtiYWNrZ3JvdW5kLWNvbG9yOiNmMGY0ZmY7dGV4dC1hbGlnbjpjZW50ZXI7fSNteS1zdmcgLmljb24tc2hhcGUgcCwjbXktc3ZnIC5pbWFnZS1zaGFwZSBwe2JhY2tncm91bmQtY29sb3I6I2YwZjRmZjtwYWRkaW5nOjJweDt9I215LXN2ZyAuaWNvbi1zaGFwZSAubGFiZWwgcmVjdCwjbXktc3ZnIC5pbWFnZS1zaGFwZSAubGFiZWwgcmVjdHtvcGFjaXR5OjAuNTtiYWNrZ3JvdW5kLWNvbG9yOiNmMGY0ZmY7ZmlsbDojZjBmNGZmO30jbXktc3ZnIC5sYWJlbC1pY29ue2Rpc3BsYXk6aW5saW5lLWJsb2NrO2hlaWdodDoxZW07b3ZlcmZsb3c6dmlzaWJsZTt2ZXJ0aWNhbC1hbGlnbjotMC4xMjVlbTt9I215LXN2ZyAubm9kZSAubGFiZWwtaWNvbiBwYXRoe2ZpbGw6Y3VycmVudENvbG9yO3N0cm9rZTpyZXZlcnQ7c3Ryb2tlLXdpZHRoOnJldmVydDt9I215LXN2ZyAubm9kZSAubmVvLW5vZGV7c3Ryb2tlOiMwMDAwMzM7fSNteS1zdmcgW2RhdGEtbG9vaz0ibmVvIl0ubm9kZSByZWN0LCNteS1zdmcgW2RhdGEtbG9vaz0ibmVvIl0uY2x1c3RlciByZWN0LCNteS1zdmcgW2RhdGEtbG9vaz0ibmVvIl0ubm9kZSBwb2x5Z29ue3N0cm9rZTp1cmwoI215LXN2Zy1ncmFkaWVudCk7ZmlsdGVyOmRyb3Atc2hhZG93KCAxcHggMnB4IDJweCByZ2JhKDE4NSwxODUsMTg1LDEpKTt9I215LXN2ZyBbZGF0YS1sb29rPSJuZW8iXS5ub2RlIHBhdGh7c3Ryb2tlOnVybCgjbXktc3ZnLWdyYWRpZW50KTtzdHJva2Utd2lkdGg6MXB4O30jbXktc3ZnIFtkYXRhLWxvb2s9Im5lbyJdLm5vZGUgLm91dGVyLXBhdGh7ZmlsdGVyOmRyb3Atc2hhZG93KCAxcHggMnB4IDJweCByZ2JhKDE4NSwxODUsMTg1LDEpKTt9I215LXN2ZyBbZGF0YS1sb29rPSJuZW8iXS5ub2RlIC5uZW8tbGluZSBwYXRoe3N0cm9rZTojMDAwMDMzO2ZpbHRlcjpub25lO30jbXktc3ZnIFtkYXRhLWxvb2s9Im5lbyJdLm5vZGUgY2lyY2xle3N0cm9rZTp1cmwoI215LXN2Zy1ncmFkaWVudCk7ZmlsdGVyOmRyb3Atc2hhZG93KCAxcHggMnB4IDJweCByZ2JhKDE4NSwxODUsMTg1LDEpKTt9I215LXN2ZyBbZGF0YS1sb29rPSJuZW8iXS5ub2RlIGNpcmNsZSAuc3RhdGUtc3RhcnR7ZmlsbDojMDAwMDAwO30jbXktc3ZnIFtkYXRhLWxvb2s9Im5lbyJdLmljb24tc2hhcGUgLmljb257ZmlsbDp1cmwoI215LXN2Zy1ncmFkaWVudCk7ZmlsdGVyOmRyb3Atc2hhZG93KCAxcHggMnB4IDJweCByZ2JhKDE4NSwxODUsMTg1LDEpKTt9I215LXN2ZyBbZGF0YS1sb29rPSJuZW8iXS5pY29uLXNoYXBlIC5pY29uLW5lbyBwYXRoe3N0cm9rZTp1cmwoI215LXN2Zy1ncmFkaWVudCk7ZmlsdGVyOmRyb3Atc2hhZG93KCAxcHggMnB4IDJweCByZ2JhKDE4NSwxODUsMTg1LDEpKTt9I215LXN2ZyAuZWRnZUxhYmVse2NvbG9yOiMwMDAwMzMhaW1wb3J0YW50O2JhY2tncm91bmQtY29sb3I6I2YwZjRmZiFpbXBvcnRhbnQ7Zm9udC13ZWlnaHQ6NTAwIWltcG9ydGFudDt9I215LXN2ZyAuZWRnZUxhYmVsIHJlY3QsI215LXN2ZyAuZWRnZUxhYmVsIGZvcmVpZ25PYmplY3R7ZmlsbDojZjBmNGZmIWltcG9ydGFudDt9I215LXN2ZyA6cm9vdHstLW1lcm1haWQtZm9udC1mYW1pbHk6InRyZWJ1Y2hldCBtcyIsdmVyZGFuYSxhcmlhbCxzYW5zLXNlcmlmO308L3N0eWxlPjxnPjxtYXJrZXIgaWQ9Im15LXN2Z19mbG93Y2hhcnQtdjItcG9pbnRFbmQiIGNsYXNzPSJtYXJrZXIgZmxvd2NoYXJ0LXYyIiB2aWV3Qm94PSIwIDAgMTAgMTAiIHJlZlg9IjUiIHJlZlk9IjUiIG1hcmtlclVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgbWFya2VyV2lkdGg9IjgiIG1hcmtlckhlaWdodD0iOCIgb3JpZW50PSJhdXRvIj48cGF0aCBkPSJNIDAgMCBMIDEwIDUgTCAwIDEwIHoiIGNsYXNzPSJhcnJvd01hcmtlclBhdGgiIHN0eWxlPSJzdHJva2Utd2lkdGg6IDE7IHN0cm9rZS1kYXNoYXJyYXk6IDEsIDA7Ii8+PC9tYXJrZXI+PG1hcmtlciBpZD0ibXktc3ZnX2Zsb3djaGFydC12Mi1wb2ludFN0YXJ0IiBjbGFzcz0ibWFya2VyIGZsb3djaGFydC12MiIgdmlld0JveD0iMCAwIDEwIDEwIiByZWZYPSI0LjUiIHJlZlk9IjUiIG1hcmtlclVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgbWFya2VyV2lkdGg9IjgiIG1hcmtlckhlaWdodD0iOCIgb3JpZW50PSJhdXRvIj48cGF0aCBkPSJNIDAgNSBMIDEwIDEwIEwgMTAgMCB6IiBjbGFzcz0iYXJyb3dNYXJrZXJQYXRoIiBzdHlsZT0ic3Ryb2tlLXdpZHRoOiAxOyBzdHJva2UtZGFzaGFycmF5OiAxLCAwOyIvPjwvbWFya2VyPjxtYXJrZXIgaWQ9Im15LXN2Z19mbG93Y2hhcnQtdjItcG9pbnRFbmQtbWFyZ2luIiBjbGFzcz0ibWFya2VyIGZsb3djaGFydC12MiIgdmlld0JveD0iMCAwIDExLjUgMTQiIHJlZlg9IjExLjUiIHJlZlk9IjciIG1hcmtlclVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgbWFya2VyV2lkdGg9IjEwLjUiIG1hcmtlckhlaWdodD0iMTQiIG9yaWVudD0iYXV0byI+PHBhdGggZD0iTSAwIDAgTCAxMS41IDcgTCAwIDE0IHoiIGNsYXNzPSJhcnJvd01hcmtlclBhdGgiIHN0eWxlPSJzdHJva2Utd2lkdGg6IDA7IHN0cm9rZS1kYXNoYXJyYXk6IDEsIDA7Ii8+PC9tYXJrZXI+PG1hcmtlciBpZD0ibXktc3ZnX2Zsb3djaGFydC12Mi1wb2ludFN0YXJ0LW1hcmdpbiIgY2xhc3M9Im1hcmtlciBmbG93Y2hhcnQtdjIiIHZpZXdCb3g9IjAgMCAxMS41IDE0IiByZWZYPSIxIiByZWZZPSI3IiBtYXJrZXJVbml0cz0idXNlclNwYWNlT25Vc2UiIG1hcmtlcldpZHRoPSIxMS41IiBtYXJrZXJIZWlnaHQ9IjE0IiBvcmllbnQ9ImF1dG8iPjxwb2x5Z29uIHBvaW50cz0iMCw3IDExLjUsMTQgMTEuNSwwIiBjbGFzcz0iYXJyb3dNYXJrZXJQYXRoIiBzdHlsZT0ic3Ryb2tlLXdpZHRoOiAwOyBzdHJva2UtZGFzaGFycmF5OiAxLCAwOyIvPjwvbWFya2VyPjxtYXJrZXIgaWQ9Im15LXN2Z19mbG93Y2hhcnQtdjItY2lyY2xlRW5kIiBjbGFzcz0ibWFya2VyIGZsb3djaGFydC12MiIgdmlld0JveD0iMCAwIDEwIDEwIiByZWZYPSIxMSIgcmVmWT0iNSIgbWFya2VyVW5pdHM9InVzZXJTcGFjZU9uVXNlIiBtYXJrZXJXaWR0aD0iMTEiIG1hcmtlckhlaWdodD0iMTEiIG9yaWVudD0iYXV0byI+PGNpcmNsZSBjeD0iNSIgY3k9IjUiIHI9IjUiIGNsYXNzPSJhcnJvd01hcmtlclBhdGgiIHN0eWxlPSJzdHJva2Utd2lkdGg6IDE7IHN0cm9rZS1kYXNoYXJyYXk6IDEsIDA7Ii8+PC9tYXJrZXI+PG1hcmtlciBpZD0ibXktc3ZnX2Zsb3djaGFydC12Mi1jaXJjbGVTdGFydCIgY2xhc3M9Im1hcmtlciBmbG93Y2hhcnQtdjIiIHZpZXdCb3g9IjAgMCAxMCAxMCIgcmVmWD0iLTEiIHJlZlk9IjUiIG1hcmtlclVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgbWFya2VyV2lkdGg9IjExIiBtYXJrZXJIZWlnaHQ9IjExIiBvcmllbnQ9ImF1dG8iPjxjaXJjbGUgY3g9IjUiIGN5PSI1IiByPSI1IiBjbGFzcz0iYXJyb3dNYXJrZXJQYXRoIiBzdHlsZT0ic3Ryb2tlLXdpZHRoOiAxOyBzdHJva2UtZGFzaGFycmF5OiAxLCAwOyIvPjwvbWFya2VyPjxtYXJrZXIgaWQ9Im15LXN2Z19mbG93Y2hhcnQtdjItY2lyY2xlRW5kLW1hcmdpbiIgY2xhc3M9Im1hcmtlciBmbG93Y2hhcnQtdjIiIHZpZXdCb3g9IjAgMCAxMCAxMCIgcmVmWT0iNSIgcmVmWD0iMTIuMjUiIG1hcmtlclVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgbWFya2VyV2lkdGg9IjE0IiBtYXJrZXJIZWlnaHQ9IjE0IiBvcmllbnQ9ImF1dG8iPjxjaXJjbGUgY3g9IjUiIGN5PSI1IiByPSI1IiBjbGFzcz0iYXJyb3dNYXJrZXJQYXRoIiBzdHlsZT0ic3Ryb2tlLXdpZHRoOiAwOyBzdHJva2UtZGFzaGFycmF5OiAxLCAwOyIvPjwvbWFya2VyPjxtYXJrZXIgaWQ9Im15LXN2Z19mbG93Y2hhcnQtdjItY2lyY2xlU3RhcnQtbWFyZ2luIiBjbGFzcz0ibWFya2VyIGZsb3djaGFydC12MiIgdmlld0JveD0iMCAwIDEwIDEwIiByZWZYPSItMiIgcmVmWT0iNSIgbWFya2VyVW5pdHM9InVzZXJTcGFjZU9uVXNlIiBtYXJrZXJXaWR0aD0iMTQiIG1hcmtlckhlaWdodD0iMTQiIG9yaWVudD0iYXV0byI+PGNpcmNsZSBjeD0iNSIgY3k9IjUiIHI9IjUiIGNsYXNzPSJhcnJvd01hcmtlclBhdGgiIHN0eWxlPSJzdHJva2Utd2lkdGg6IDA7IHN0cm9rZS1kYXNoYXJyYXk6IDEsIDA7Ii8+PC9tYXJrZXI+PG1hcmtlciBpZD0ibXktc3ZnX2Zsb3djaGFydC12Mi1jcm9zc0VuZCIgY2xhc3M9Im1hcmtlciBjcm9zcyBmbG93Y2hhcnQtdjIiIHZpZXdCb3g9IjAgMCAxMSAxMSIgcmVmWD0iMTIiIHJlZlk9IjUuMiIgbWFya2VyVW5pdHM9InVzZXJTcGFjZU9uVXNlIiBtYXJrZXJXaWR0aD0iMTEiIG1hcmtlckhlaWdodD0iMTEiIG9yaWVudD0iYXV0byI+PHBhdGggZD0iTSAxLDEgbCA5LDkgTSAxMCwxIGwgLTksOSIgY2xhc3M9ImFycm93TWFya2VyUGF0aCIgc3R5bGU9InN0cm9rZS13aWR0aDogMjsgc3Ryb2tlLWRhc2hhcnJheTogMSwgMDsiLz48L21hcmtlcj48bWFya2VyIGlkPSJteS1zdmdfZmxvd2NoYXJ0LXYyLWNyb3NzU3RhcnQiIGNsYXNzPSJtYXJrZXIgY3Jvc3MgZmxvd2NoYXJ0LXYyIiB2aWV3Qm94PSIwIDAgMTEgMTEiIHJlZlg9Ii0xIiByZWZZPSI1LjIiIG1hcmtlclVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgbWFya2VyV2lkdGg9IjExIiBtYXJrZXJIZWlnaHQ9IjExIiBvcmllbnQ9ImF1dG8iPjxwYXRoIGQ9Ik0gMSwxIGwgOSw5IE0gMTAsMSBsIC05LDkiIGNsYXNzPSJhcnJvd01hcmtlclBhdGgiIHN0eWxlPSJzdHJva2Utd2lkdGg6IDI7IHN0cm9rZS1kYXNoYXJyYXk6IDEsIDA7Ii8+PC9tYXJrZXI+PG1hcmtlciBpZD0ibXktc3ZnX2Zsb3djaGFydC12Mi1jcm9zc0VuZC1tYXJnaW4iIGNsYXNzPSJtYXJrZXIgY3Jvc3MgZmxvd2NoYXJ0LXYyIiB2aWV3Qm94PSIwIDAgMTUgMTUiIHJlZlg9IjE3LjciIHJlZlk9IjcuNSIgbWFya2VyVW5pdHM9InVzZXJTcGFjZU9uVXNlIiBtYXJrZXJXaWR0aD0iMTIiIG1hcmtlckhlaWdodD0iMTIiIG9yaWVudD0iYXV0byI+PHBhdGggZD0iTSAxLDEgTCAxNCwxNCBNIDEsMTQgTCAxNCwxIiBjbGFzcz0iYXJyb3dNYXJrZXJQYXRoIiBzdHlsZT0ic3Ryb2tlLXdpZHRoOiAyLjU7Ii8+PC9tYXJrZXI+PG1hcmtlciBpZD0ibXktc3ZnX2Zsb3djaGFydC12Mi1jcm9zc1N0YXJ0LW1hcmdpbiIgY2xhc3M9Im1hcmtlciBjcm9zcyBmbG93Y2hhcnQtdjIiIHZpZXdCb3g9IjAgMCAxNSAxNSIgcmVmWD0iLTMuNSIgcmVmWT0iNy41IiBtYXJrZXJVbml0cz0idXNlclNwYWNlT25Vc2UiIG1hcmtlcldpZHRoPSIxMiIgbWFya2VySGVpZ2h0PSIxMiIgb3JpZW50PSJhdXRvIj48cGF0aCBkPSJNIDEsMSBMIDE0LDE0IE0gMSwxNCBMIDE0LDEiIGNsYXNzPSJhcnJvd01hcmtlclBhdGgiIHN0eWxlPSJzdHJva2Utd2lkdGg6IDIuNTsgc3Ryb2tlLWRhc2hhcnJheTogMSwgMDsiLz48L21hcmtlcj48ZyBjbGFzcz0icm9vdCI+PGcgY2xhc3M9ImNsdXN0ZXJzIi8+PGcgY2xhc3M9ImVkZ2VQYXRocyI+PHBhdGggZD0iTTE1OC41NjMsMTI1LjExN0wxNjMuMTQ2LDEyNS4xMTdDMTY3LjcyOSwxMjUuMTE3LDE3Ni44OTYsMTI1LjExNywxODUuMzk2LDEyNS4xMTdDMTkzLjg5NiwxMjUuMTE3LDIwMS43MjksMTI1LjExNywyMDUuNjQ2LDEyNS4xMTdMMjA5LjU2MywxMjUuMTE3IiBpZD0ibXktc3ZnLUxfQV9CXzAiIGNsYXNzPSJlZGdlLXRoaWNrbmVzcy1ub3JtYWwgZWRnZS1wYXR0ZXJuLXNvbGlkIGVkZ2UtdGhpY2tuZXNzLW5vcm1hbCBlZGdlLXBhdHRlcm4tc29saWQgZmxvd2NoYXJ0LWxpbmsiIHN0eWxlPSI7IiBkYXRhLWVkZ2U9InRydWUiIGRhdGEtZXQ9ImVkZ2UiIGRhdGEtaWQ9IkxfQV9CXzAiIGRhdGEtcG9pbnRzPSJXM3NpZUNJNk1UVTRMalUyTWpVc0lua2lPakV5TlM0eE1UY3hPRGMxZlN4N0luZ2lPakU0Tmk0d05qSTFMQ0o1SWpveE1qVXVNVEUzTVRnM05YMHNleUo0SWpveU1UTXVOVFl5TlN3aWVTSTZNVEkxTGpFeE56RTROelY5WFE9PSIgZGF0YS1sb29rPSJjbGFzc2ljIiBtYXJrZXItZW5kPSJ1cmwoI215LXN2Z19mbG93Y2hhcnQtdjItcG9pbnRFbmQpIi8+PHBhdGggZD0iTTM0NS43OTcsMTI1LjExN0wzNTAuMzgsMTI1LjExN0MzNTQuOTY0LDEyNS4xMTcsMzY0LjEzLDEyNS4xMTcsMzcyLjYzLDEyNS4xMTdDMzgxLjEzLDEyNS4xMTcsMzg4Ljk2NCwxMjUuMTE3LDM5Mi44OCwxMjUuMTE3TDM5Ni43OTcsMTI1LjExNyIgaWQ9Im15LXN2Zy1MX0JfQ18wIiBjbGFzcz0iZWRnZS10aGlja25lc3Mtbm9ybWFsIGVkZ2UtcGF0dGVybi1zb2xpZCBlZGdlLXRoaWNrbmVzcy1ub3JtYWwgZWRnZS1wYXR0ZXJuLXNvbGlkIGZsb3djaGFydC1saW5rIiBzdHlsZT0iOyIgZGF0YS1lZGdlPSJ0cnVlIiBkYXRhLWV0PSJlZGdlIiBkYXRhLWlkPSJMX0JfQ18wIiBkYXRhLXBvaW50cz0iVzNzaWVDSTZNelExTGpjNU5qZzNOU3dpZVNJNk1USTFMakV4TnpFNE56VjlMSHNpZUNJNk16Y3pMakk1TmpnM05Td2llU0k2TVRJMUxqRXhOekU0TnpWOUxIc2llQ0k2TkRBd0xqYzVOamczTlN3aWVTSTZNVEkxTGpFeE56RTROelY5WFE9PSIgZGF0YS1sb29rPSJjbGFzc2ljIiBtYXJrZXItZW5kPSJ1cmwoI215LXN2Z19mbG93Y2hhcnQtdjItcG9pbnRFbmQpIi8+PHBhdGggZD0iTTU4Mi45MDYsMTI1LjExN0w1ODcuNDksMTI1LjExN0M1OTIuMDczLDEyNS4xMTcsNjAxLjI0LDEyNS4xMTcsNjA5Ljc0LDEyNS4xMTdDNjE4LjI0LDEyNS4xMTcsNjI2LjA3MywxMjUuMTE3LDYyOS45OSwxMjUuMTE3TDYzMy45MDYsMTI1LjExNyIgaWQ9Im15LXN2Zy1MX0NfRF8wIiBjbGFzcz0iZWRnZS10aGlja25lc3Mtbm9ybWFsIGVkZ2UtcGF0dGVybi1zb2xpZCBlZGdlLXRoaWNrbmVzcy1ub3JtYWwgZWRnZS1wYXR0ZXJuLXNvbGlkIGZsb3djaGFydC1saW5rIiBzdHlsZT0iOyIgZGF0YS1lZGdlPSJ0cnVlIiBkYXRhLWV0PSJlZGdlIiBkYXRhLWlkPSJMX0NfRF8wIiBkYXRhLXBvaW50cz0iVzNzaWVDSTZOVGd5TGprd05qSTFMQ0o1SWpveE1qVXVNVEUzTVRnM05YMHNleUo0SWpvMk1UQXVOREEyTWpVc0lua2lPakV5TlM0eE1UY3hPRGMxZlN4N0luZ2lPall6Tnk0NU1EWXlOU3dpZVNJNk1USTFMakV4TnpFNE56VjlYUT09IiBkYXRhLWxvb2s9ImNsYXNzaWMiIG1hcmtlci1lbmQ9InVybCgjbXktc3ZnX2Zsb3djaGFydC12Mi1wb2ludEVuZCkiLz48cGF0aCBkPSJNNzQ2LjYxMiwxMDIuNjE3TDc1NS4wMzMsOTguMTk0Qzc2My40NTUsOTMuNzcxLDc4MC4yOTgsODQuOTI0LDc5Mi42MzYsODAuNTAxQzgwNC45NzQsNzYuMDc4LDgxMi44MDcsNzYuMDc4LDgxNi43MjQsNzYuMDc4TDgyMC42NDEsNzYuMDc4IiBpZD0ibXktc3ZnLUxfRF9FXzAiIGNsYXNzPSJlZGdlLXRoaWNrbmVzcy1ub3JtYWwgZWRnZS1wYXR0ZXJuLXNvbGlkIGVkZ2UtdGhpY2tuZXNzLW5vcm1hbCBlZGdlLXBhdHRlcm4tc29saWQgZmxvd2NoYXJ0LWxpbmsiIHN0eWxlPSI7IiBkYXRhLWVkZ2U9InRydWUiIGRhdGEtZXQ9ImVkZ2UiIGRhdGEtaWQ9IkxfRF9FXzAiIGRhdGEtcG9pbnRzPSJXM3NpZUNJNk56UTJMall4TVRrM05UQXhOemt5TWpVc0lua2lPakV3TWk0Mk1UY3hPRGMxZlN4N0luZ2lPamM1Tnk0eE5EQTJNalVzSW5raU9qYzJMakEzT0RFeU5YMHNleUo0SWpvNE1qUXVOalF3TmpJMUxDSjVJam8zTmk0d056Z3hNalY5WFE9PSIgZGF0YS1sb29rPSJjbGFzc2ljIiBtYXJrZXItZW5kPSJ1cmwoI215LXN2Z19mbG93Y2hhcnQtdjItcG9pbnRFbmQpIi8+PHBhdGggZD0iTTk0OS43Miw2NS4wMDFMOTU3LjgwMiw2My40MzFDOTY1Ljg4NCw2MS44Niw5ODIuMDQ3LDU4LjcxOSw5OTYuOCw1Ny4xNDlDMTAxMS41NTIsNTUuNTc4LDEwMjQuODkzLDU1LjU3OCwxMDMxLjU2NCw1NS41NzhMMTAzOC4yMzQsNTUuNTc4IiBpZD0ibXktc3ZnLUxfRV9GXzAiIGNsYXNzPSJlZGdlLXRoaWNrbmVzcy1ub3JtYWwgZWRnZS1wYXR0ZXJuLXNvbGlkIGVkZ2UtdGhpY2tuZXNzLW5vcm1hbCBlZGdlLXBhdHRlcm4tc29saWQgZmxvd2NoYXJ0LWxpbmsiIHN0eWxlPSI7IiBkYXRhLWVkZ2U9InRydWUiIGRhdGEtZXQ9ImVkZ2UiIGRhdGEtaWQ9IkxfRV9GXzAiIGRhdGEtcG9pbnRzPSJXM3NpZUNJNk9UUTVMamN4T1RrNE5UTXhNVGc1T1RNc0lua2lPalkxTGpBd01USXpOVE14TVRnNU9UTjlMSHNpZUNJNk9UazRMakl4TURrek56VXNJbmtpT2pVMUxqVTNPREV5Tlgwc2V5SjRJam94TURReUxqSXpORE0zTlN3aWVTSTZOVFV1TlRjNE1USTFmVjA9IiBkYXRhLWxvb2s9ImNsYXNzaWMiIG1hcmtlci1lbmQ9InVybCgjbXktc3ZnX2Zsb3djaGFydC12Mi1wb2ludEVuZCkiLz48cGF0aCBkPSJNOTQxLjI0Niw5NS42MjlMOTUwLjc0LDk5LjQ1NEM5NjAuMjM1LDEwMy4yNzgsOTc5LjIyMywxMTAuOTI4LDk5Ny42OTMsMTE4Ljg5N0MxMDE2LjE2MywxMjYuODY2LDEwMzQuMTE1LDEzNS4xNTMsMTA0My4wOTEsMTM5LjI5N0wxMDUyLjA2NywxNDMuNDQxIiBpZD0ibXktc3ZnLUxfRV9HXzAiIGNsYXNzPSJlZGdlLXRoaWNrbmVzcy1ub3JtYWwgZWRnZS1wYXR0ZXJuLXNvbGlkIGVkZ2UtdGhpY2tuZXNzLW5vcm1hbCBlZGdlLXBhdHRlcm4tc29saWQgZmxvd2NoYXJ0LWxpbmsiIHN0eWxlPSI7IiBkYXRhLWVkZ2U9InRydWUiIGRhdGEtZXQ9ImVkZ2UiIGRhdGEtaWQ9IkxfRV9HXzAiIGRhdGEtcG9pbnRzPSJXM3NpZUNJNk9UUXhMakkwTmpNNE1UUXhNemszT0Rjc0lua2lPamsxTGpZeU9EWXhPRFU0TmpBeU1USXlmU3g3SW5naU9qazVPQzR5TVRBNU16YzFMQ0o1SWpveE1UZ3VOVGM0TVRJMWZTeDdJbmdpT2pFd05UVXVOams0T0RVd09UWXpPRE0yTXl3aWVTSTZNVFExTGpFeE56RTROelY5WFE9PSIgZGF0YS1sb29rPSJjbGFzc2ljIiBtYXJrZXItZW5kPSJ1cmwoI215LXN2Z19mbG93Y2hhcnQtdjItcG9pbnRFbmQpIi8+PHBhdGggZD0iTTEwMzUuNjI1LDE3Ny40OTZMMTAyOS4zODksMTc4LjM5MUMxMDIzLjE1NCwxNzkuMjg2LDEwMTAuNjgyLDE4MS4wNzcsOTg2Ljg2NSwxODEuOTcyQzk2My4wNDcsMTgyLjg2Nyw5MjcuODgzLDE4Mi44NjcsODk0LjM3MSwxODIuODY3Qzg2MC44NTksMTgyLjg2Nyw4MjksMTgyLjg2Nyw4MDQuMTM5LDE3Ny4zNDNDNzc5LjI3OCwxNzEuODE5LDc2MS40MTUsMTYwLjc3LDc1Mi40ODQsMTU1LjI0Nkw3NDMuNTUyLDE0OS43MjEiIGlkPSJteS1zdmctTF9HX0RfMCIgY2xhc3M9ImVkZ2UtdGhpY2tuZXNzLW5vcm1hbCBlZGdlLXBhdHRlcm4tc29saWQgZWRnZS10aGlja25lc3Mtbm9ybWFsIGVkZ2UtcGF0dGVybi1zb2xpZCBmbG93Y2hhcnQtbGluayIgc3R5bGU9IjsiIGRhdGEtZWRnZT0idHJ1ZSIgZGF0YS1ldD0iZWRnZSIgZGF0YS1pZD0iTF9HX0RfMCIgZGF0YS1wb2ludHM9Ilczc2llQ0k2TVRBek5TNDJNalVzSW5raU9qRTNOeTQwT1RVNU9EUXlPVE0wTVRBek1uMHNleUo0SWpvNU9UZ3VNakV3T1RNM05Td2llU0k2TVRneUxqZzJOekU0TnpWOUxIc2llQ0k2T0RreUxqY3hPRGMxTENKNUlqb3hPREl1T0RZM01UZzNOWDBzZXlKNElqbzNPVGN1TVRRd05qSTFMQ0o1SWpveE9ESXVPRFkzTVRnM05YMHNleUo0SWpvM05EQXVNVFV3TWpZek56azROekF4TXl3aWVTSTZNVFEzTGpZeE56RTROelY5WFE9PSIgZGF0YS1sb29rPSJjbGFzc2ljIiBtYXJrZXItZW5kPSJ1cmwoI215LXN2Z19mbG93Y2hhcnQtdjItcG9pbnRFbmQpIi8+PC9nPjxnIGNsYXNzPSJlZGdlTGFiZWxzIj48ZyBjbGFzcz0iZWRnZUxhYmVsIj48ZyBjbGFzcz0ibGFiZWwiIGRhdGEtaWQ9IkxfQV9CXzAiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDAsIDApIj48Zm9yZWlnbk9iamVjdCB3aWR0aD0iMCIgaGVpZ2h0PSIwIj48ZGl2IHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hodG1sIiBjbGFzcz0ibGFiZWxCa2ciIHN0eWxlPSJkaXNwbGF5OiB0YWJsZS1jZWxsOyB3aGl0ZS1zcGFjZTogbm93cmFwOyBsaW5lLWhlaWdodDogMS41OyBtYXgtd2lkdGg6IDIwMHB4OyB0ZXh0LWFsaWduOiBjZW50ZXI7Ij48c3BhbiBjbGFzcz0iZWRnZUxhYmVsIj48L3NwYW4+PC9kaXY+PC9mb3JlaWduT2JqZWN0PjwvZz48L2c+PGcgY2xhc3M9ImVkZ2VMYWJlbCI+PGcgY2xhc3M9ImxhYmVsIiBkYXRhLWlkPSJMX0JfQ18wIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwLCAwKSI+PGZvcmVpZ25PYmplY3Qgd2lkdGg9IjAiIGhlaWdodD0iMCI+PGRpdiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94aHRtbCIgY2xhc3M9ImxhYmVsQmtnIiBzdHlsZT0iZGlzcGxheTogdGFibGUtY2VsbDsgd2hpdGUtc3BhY2U6IG5vd3JhcDsgbGluZS1oZWlnaHQ6IDEuNTsgbWF4LXdpZHRoOiAyMDBweDsgdGV4dC1hbGlnbjogY2VudGVyOyI+PHNwYW4gY2xhc3M9ImVkZ2VMYWJlbCI+PC9zcGFuPjwvZGl2PjwvZm9yZWlnbk9iamVjdD48L2c+PC9nPjxnIGNsYXNzPSJlZGdlTGFiZWwiPjxnIGNsYXNzPSJsYWJlbCIgZGF0YS1pZD0iTF9DX0RfMCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMCwgMCkiPjxmb3JlaWduT2JqZWN0IHdpZHRoPSIwIiBoZWlnaHQ9IjAiPjxkaXYgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGh0bWwiIGNsYXNzPSJsYWJlbEJrZyIgc3R5bGU9ImRpc3BsYXk6IHRhYmxlLWNlbGw7IHdoaXRlLXNwYWNlOiBub3dyYXA7IGxpbmUtaGVpZ2h0OiAxLjU7IG1heC13aWR0aDogMjAwcHg7IHRleHQtYWxpZ246IGNlbnRlcjsiPjxzcGFuIGNsYXNzPSJlZGdlTGFiZWwiPjwvc3Bhbj48L2Rpdj48L2ZvcmVpZ25PYmplY3Q+PC9nPjwvZz48ZyBjbGFzcz0iZWRnZUxhYmVsIj48ZyBjbGFzcz0ibGFiZWwiIGRhdGEtaWQ9IkxfRF9FXzAiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDAsIDApIj48Zm9yZWlnbk9iamVjdCB3aWR0aD0iMCIgaGVpZ2h0PSIwIj48ZGl2IHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hodG1sIiBjbGFzcz0ibGFiZWxCa2ciIHN0eWxlPSJkaXNwbGF5OiB0YWJsZS1jZWxsOyB3aGl0ZS1zcGFjZTogbm93cmFwOyBsaW5lLWhlaWdodDogMS41OyBtYXgtd2lkdGg6IDIwMHB4OyB0ZXh0LWFsaWduOiBjZW50ZXI7Ij48c3BhbiBjbGFzcz0iZWRnZUxhYmVsIj48L3NwYW4+PC9kaXY+PC9mb3JlaWduT2JqZWN0PjwvZz48L2c+PGcgY2xhc3M9ImVkZ2VMYWJlbCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoOTk4LjIxMDkzNzUsIDU1LjU3ODEyNSkiPjxnIGNsYXNzPSJsYWJlbCIgZGF0YS1pZD0iTF9FX0ZfMCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTkuOTE0MDYyNSwgLTEwLjUpIj48Zm9yZWlnbk9iamVjdCB3aWR0aD0iMTkuODI4MTI1IiBoZWlnaHQ9IjIxIj48ZGl2IHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hodG1sIiBjbGFzcz0ibGFiZWxCa2ciIHN0eWxlPSJkaXNwbGF5OiB0YWJsZS1jZWxsOyB3aGl0ZS1zcGFjZTogbm93cmFwOyBsaW5lLWhlaWdodDogMS41OyBtYXgtd2lkdGg6IDIwMHB4OyB0ZXh0LWFsaWduOiBjZW50ZXI7Ij48c3BhbiBjbGFzcz0iZWRnZUxhYmVsIj48cD5ZZXM8L3A+PC9zcGFuPjwvZGl2PjwvZm9yZWlnbk9iamVjdD48L2c+PC9nPjxnIGNsYXNzPSJlZGdlTGFiZWwiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDk5OC4yMTA5Mzc1LCAxMTguNTc4MTI1KSI+PGcgY2xhc3M9ImxhYmVsIiBkYXRhLWlkPSJMX0VfR18wIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtOC4yMjY1NjI1LCAtMTAuNSkiPjxmb3JlaWduT2JqZWN0IHdpZHRoPSIxNi40NTMxMjUiIGhlaWdodD0iMjEiPjxkaXYgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGh0bWwiIGNsYXNzPSJsYWJlbEJrZyIgc3R5bGU9ImRpc3BsYXk6IHRhYmxlLWNlbGw7IHdoaXRlLXNwYWNlOiBub3dyYXA7IGxpbmUtaGVpZ2h0OiAxLjU7IG1heC13aWR0aDogMjAwcHg7IHRleHQtYWxpZ246IGNlbnRlcjsiPjxzcGFuIGNsYXNzPSJlZGdlTGFiZWwiPjxwPk5vPC9wPjwvc3Bhbj48L2Rpdj48L2ZvcmVpZ25PYmplY3Q+PC9nPjwvZz48ZyBjbGFzcz0iZWRnZUxhYmVsIj48ZyBjbGFzcz0ibGFiZWwiIGRhdGEtaWQ9IkxfR19EXzAiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDAsIDApIj48Zm9yZWlnbk9iamVjdCB3aWR0aD0iMCIgaGVpZ2h0PSIwIj48ZGl2IHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hodG1sIiBjbGFzcz0ibGFiZWxCa2ciIHN0eWxlPSJkaXNwbGF5OiB0YWJsZS1jZWxsOyB3aGl0ZS1zcGFjZTogbm93cmFwOyBsaW5lLWhlaWdodDogMS41OyBtYXgtd2lkdGg6IDIwMHB4OyB0ZXh0LWFsaWduOiBjZW50ZXI7Ij48c3BhbiBjbGFzcz0iZWRnZUxhYmVsIj48L3NwYW4+PC9kaXY+PC9mb3JlaWduT2JqZWN0PjwvZz48L2c+PC9nPjxnIGNsYXNzPSJub2RlcyI+PGcgY2xhc3M9Im5vZGUgZGVmYXVsdCIgaWQ9Im15LXN2Zy1mbG93Y2hhcnQtQS0wIiBkYXRhLWxvb2s9ImNsYXNzaWMiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDgzLjI4MTI1LCAxMjUuMTE3MTg3NSkiPjxyZWN0IGNsYXNzPSJiYXNpYyBsYWJlbC1jb250YWluZXIiIHN0eWxlPSIiIHg9Ii03NS4yODEyNSIgeT0iLTIyLjUiIHdpZHRoPSIxNTAuNTYyNSIgaGVpZ2h0PSI0NSIvPjxnIGNsYXNzPSJsYWJlbCIgc3R5bGU9IiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTUxLjI4MTI1LCAtMTAuNSkiPjxyZWN0Lz48Zm9yZWlnbk9iamVjdCB3aWR0aD0iMTAyLjU2MjUiIGhlaWdodD0iMjEiPjxkaXYgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGh0bWwiIHN0eWxlPSJkaXNwbGF5OiB0YWJsZS1jZWxsOyB3aGl0ZS1zcGFjZTogbm93cmFwOyBsaW5lLWhlaWdodDogMS41OyBtYXgtd2lkdGg6IDIwMHB4OyB0ZXh0LWFsaWduOiBjZW50ZXI7Ij48c3BhbiBjbGFzcz0ibm9kZUxhYmVsIj48cD5PcGVuIHdvcmtzcGFjZTwvcD48L3NwYW4+PC9kaXY+PC9mb3JlaWduT2JqZWN0PjwvZz48L2c+PGcgY2xhc3M9Im5vZGUgZGVmYXVsdCIgaWQ9Im15LXN2Zy1mbG93Y2hhcnQtQi0xIiBkYXRhLWxvb2s9ImNsYXNzaWMiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDI3OS42Nzk2ODc1LCAxMjUuMTE3MTg3NSkiPjxyZWN0IGNsYXNzPSJiYXNpYyBsYWJlbC1jb250YWluZXIiIHN0eWxlPSIiIHg9Ii02Ni4xMTcxODc1IiB5PSItMjIuNSIgd2lkdGg9IjEzMi4yMzQzNzUiIGhlaWdodD0iNDUiLz48ZyBjbGFzcz0ibGFiZWwiIHN0eWxlPSIiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC00Mi4xMTcxODc1LCAtMTAuNSkiPjxyZWN0Lz48Zm9yZWlnbk9iamVjdCB3aWR0aD0iODQuMjM0Mzc1IiBoZWlnaHQ9IjIxIj48ZGl2IHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hodG1sIiBzdHlsZT0iZGlzcGxheTogdGFibGUtY2VsbDsgd2hpdGUtc3BhY2U6IG5vd3JhcDsgbGluZS1oZWlnaHQ6IDEuNTsgbWF4LXdpZHRoOiAyMDBweDsgdGV4dC1hbGlnbjogY2VudGVyOyI+PHNwYW4gY2xhc3M9Im5vZGVMYWJlbCI+PHA+U2VsZWN0IHRlbmFudDwvcD48L3NwYW4+PC9kaXY+PC9mb3JlaWduT2JqZWN0PjwvZz48L2c+PGcgY2xhc3M9Im5vZGUgZGVmYXVsdCIgaWQ9Im15LXN2Zy1mbG93Y2hhcnQtQy0zIiBkYXRhLWxvb2s9ImNsYXNzaWMiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDQ5MS44NTE1NjI1LCAxMjUuMTE3MTg3NSkiPjxyZWN0IGNsYXNzPSJiYXNpYyBsYWJlbC1jb250YWluZXIiIHN0eWxlPSIiIHg9Ii05MS4wNTQ2ODc1IiB5PSItMjIuNSIgd2lkdGg9IjE4Mi4xMDkzNzUiIGhlaWdodD0iNDUiLz48ZyBjbGFzcz0ibGFiZWwiIHN0eWxlPSIiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC02Ny4wNTQ2ODc1LCAtMTAuNSkiPjxyZWN0Lz48Zm9yZWlnbk9iamVjdCB3aWR0aD0iMTM0LjEwOTM3NSIgaGVpZ2h0PSIyMSI+PGRpdiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94aHRtbCIgc3R5bGU9ImRpc3BsYXk6IHRhYmxlLWNlbGw7IHdoaXRlLXNwYWNlOiBub3dyYXA7IGxpbmUtaGVpZ2h0OiAxLjU7IG1heC13aWR0aDogMjAwcHg7IHRleHQtYWxpZ246IGNlbnRlcjsiPjxzcGFuIGNsYXNzPSJub2RlTGFiZWwiPjxwPkNob29zZSBEYXRhIEV4cGxvcmVyPC9wPjwvc3Bhbj48L2Rpdj48L2ZvcmVpZ25PYmplY3Q+PC9nPjwvZz48ZyBjbGFzcz0ibm9kZSBkZWZhdWx0IiBpZD0ibXktc3ZnLWZsb3djaGFydC1ELTUiIGRhdGEtbG9vaz0iY2xhc3NpYyIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNzAzLjc3MzQzNzUsIDEyNS4xMTcxODc1KSI+PHJlY3QgY2xhc3M9ImJhc2ljIGxhYmVsLWNvbnRhaW5lciIgc3R5bGU9IiIgeD0iLTY1Ljg2NzE4NzUiIHk9Ii0yMi41IiB3aWR0aD0iMTMxLjczNDM3NSIgaGVpZ2h0PSI0NSIvPjxnIGNsYXNzPSJsYWJlbCIgc3R5bGU9IiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTQxLjg2NzE4NzUsIC0xMC41KSI+PHJlY3QvPjxmb3JlaWduT2JqZWN0IHdpZHRoPSI4My43MzQzNzUiIGhlaWdodD0iMjEiPjxkaXYgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGh0bWwiIHN0eWxlPSJkaXNwbGF5OiB0YWJsZS1jZWxsOyB3aGl0ZS1zcGFjZTogbm93cmFwOyBsaW5lLWhlaWdodDogMS41OyBtYXgtd2lkdGg6IDIwMHB4OyB0ZXh0LWFsaWduOiBjZW50ZXI7Ij48c3BhbiBjbGFzcz0ibm9kZUxhYmVsIj48cD5FbnRlciBwcm9tcHQ8L3A+PC9zcGFuPjwvZGl2PjwvZm9yZWlnbk9iamVjdD48L2c+PC9nPjxnIGNsYXNzPSJub2RlIGRlZmF1bHQiIGlkPSJteS1zdmctZmxvd2NoYXJ0LUUtNyIgZGF0YS1sb29rPSJjbGFzc2ljIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSg4OTIuNzE4NzUsIDc2LjA3ODEyNSkiPjxwb2x5Z29uIHBvaW50cz0iNjguMDc4MTI1LDAgMTM2LjE1NjI1LC02OC4wNzgxMjUgNjguMDc4MTI1LC0xMzYuMTU2MjUgMCwtNjguMDc4MTI1IiBjbGFzcz0ibGFiZWwtY29udGFpbmVyIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtNjcuNTc4MTI1LCA2OC4wNzgxMjUpIi8+PGcgY2xhc3M9ImxhYmVsIiBzdHlsZT0iIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtNDUuNTc4MTI1LCAtMTAuNSkiPjxyZWN0Lz48Zm9yZWlnbk9iamVjdCB3aWR0aD0iOTEuMTU2MjUiIGhlaWdodD0iMjEiPjxkaXYgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGh0bWwiIHN0eWxlPSJkaXNwbGF5OiB0YWJsZS1jZWxsOyB3aGl0ZS1zcGFjZTogbm93cmFwOyBsaW5lLWhlaWdodDogMS41OyBtYXgtd2lkdGg6IDIwMHB4OyB0ZXh0LWFsaWduOiBjZW50ZXI7Ij48c3BhbiBjbGFzcz0ibm9kZUxhYmVsIj48cD5SZXN1bHRzIHVzZWZ1bD88L3A+PC9zcGFuPjwvZGl2PjwvZm9yZWlnbk9iamVjdD48L2c+PC9nPjxnIGNsYXNzPSJub2RlIGRlZmF1bHQiIGlkPSJteS1zdmctZmxvd2NoYXJ0LUYtOSIgZGF0YS1sb29rPSJjbGFzc2ljIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxMTA0LjQzNzUsIDU1LjU3ODEyNSkiPjxyZWN0IGNsYXNzPSJiYXNpYyBsYWJlbC1jb250YWluZXIiIHN0eWxlPSIiIHg9Ii02Mi4yMDMxMjUiIHk9Ii0yMi41IiB3aWR0aD0iMTI0LjQwNjI1IiBoZWlnaHQ9IjQ1Ii8+PGcgY2xhc3M9ImxhYmVsIiBzdHlsZT0iIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMzguMjAzMTI1LCAtMTAuNSkiPjxyZWN0Lz48Zm9yZWlnbk9iamVjdCB3aWR0aD0iNzYuNDA2MjUiIGhlaWdodD0iMjEiPjxkaXYgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGh0bWwiIHN0eWxlPSJkaXNwbGF5OiB0YWJsZS1jZWxsOyB3aGl0ZS1zcGFjZTogbm93cmFwOyBsaW5lLWhlaWdodDogMS41OyBtYXgtd2lkdGg6IDIwMHB4OyB0ZXh0LWFsaWduOiBjZW50ZXI7Ij48c3BhbiBjbGFzcz0ibm9kZUxhYmVsIj48cD5SZXZpZXcgZGF0YTwvcD48L3NwYW4+PC9kaXY+PC9mb3JlaWduT2JqZWN0PjwvZz48L2c+PGcgY2xhc3M9Im5vZGUgZGVmYXVsdCIgaWQ9Im15LXN2Zy1mbG93Y2hhcnQtRy0xMSIgZGF0YS1sb29rPSJjbGFzc2ljIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxMTA0LjQzNzUsIDE2Ny42MTcxODc1KSI+PHJlY3QgY2xhc3M9ImJhc2ljIGxhYmVsLWNvbnRhaW5lciIgc3R5bGU9IiIgeD0iLTY4LjgxMjUiIHk9Ii0yMi41IiB3aWR0aD0iMTM3LjYyNSIgaGVpZ2h0PSI0NSIvPjxnIGNsYXNzPSJsYWJlbCIgc3R5bGU9IiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTQ0LjgxMjUsIC0xMC41KSI+PHJlY3QvPjxmb3JlaWduT2JqZWN0IHdpZHRoPSI4OS42MjUiIGhlaWdodD0iMjEiPjxkaXYgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGh0bWwiIHN0eWxlPSJkaXNwbGF5OiB0YWJsZS1jZWxsOyB3aGl0ZS1zcGFjZTogbm93cmFwOyBsaW5lLWhlaWdodDogMS41OyBtYXgtd2lkdGg6IDIwMHB4OyB0ZXh0LWFsaWduOiBjZW50ZXI7Ij48c3BhbiBjbGFzcz0ibm9kZUxhYmVsIj48cD5SZWZpbmUgcHJvbXB0PC9wPjwvc3Bhbj48L2Rpdj48L2ZvcmVpZ25PYmplY3Q+PC9nPjwvZz48L2c+PC9nPjwvZz48ZGVmcz48ZmlsdGVyIGlkPSJteS1zdmctZHJvcC1zaGFkb3ciIGhlaWdodD0iMTMwJSIgd2lkdGg9IjEzMCUiPjxmZURyb3BTaGFkb3cgZHg9IjQiIGR5PSI0IiBzdGREZXZpYXRpb249IjAiIGZsb29kLW9wYWNpdHk9IjAuMDYiIGZsb29kLWNvbG9yPSIjMDAwMDAwIi8+PC9maWx0ZXI+PC9kZWZzPjxkZWZzPjxmaWx0ZXIgaWQ9Im15LXN2Zy1kcm9wLXNoYWRvdy1zbWFsbCIgaGVpZ2h0PSIxNTAlIiB3aWR0aD0iMTUwJSI+PGZlRHJvcFNoYWRvdyBkeD0iMiIgZHk9IjIiIHN0ZERldmlhdGlvbj0iMCIgZmxvb2Qtb3BhY2l0eT0iMC4wNiIgZmxvb2QtY29sb3I9IiMwMDAwMDAiLz48L2ZpbHRlcj48L2RlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJteS1zdmctZ3JhZGllbnQiIGdyYWRpZW50VW5pdHM9Im9iamVjdEJvdW5kaW5nQm94IiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzAwMDAzMyIgc3RvcC1vcGFjaXR5PSIxIi8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSJoc2woMCwgMCUsIDg2LjA3ODQzMTM3MjUlKSIgc3RvcC1vcGFjaXR5PSIxIi8+PC9saW5lYXJHcmFkaWVudD48L3N2Zz4=" alt="Workflow diagram" /><h2 id="overview">Overview</h2>
+<p>The <strong><a href="#glossary">Data Explorer</a></strong> agent in <strong><a href="#glossary">AgentFlow</a></strong> lets you query your Reltio master data using plain language instead of API calls. This guide covers how to access the agent, write prompts that produce reliable results, and avoid common patterns that stall or mislead it.</p>
+<p>This guide is for these Reltio roles: <strong>Business User</strong>, <strong>Data Steward</strong>, <strong>Reltio Configurator</strong>, <strong>Solution Architect</strong>. For more information on data unification roles in the Reltio Context Intelligence Platform, see <a href="https://docs.reltio.com/en/roles/about-roles">About roles</a>.</p>
+<h2 id="contents">Contents</h2>
+<ol>
+<li><a href="#1-getting-started">Getting started</a></li>
+<li><a href="#2-key-concepts">Key concepts</a></li>
+<li><a href="#3-open-and-launch-data-explorer">Open and launch Data Explorer</a></li>
+<li><a href="#4-write-effective-prompts">Write effective prompts</a></li>
+<li><a href="#5-common-tasks">Common tasks</a></li>
+<li><a href="#6-limitations-and-safeguards">Limitations and safeguards</a></li>
+<li><a href="#7-troubleshooting">Troubleshooting</a></li>
+<li><a href="#8-further-reading">Further reading</a></li>
+<li><a href="#9-glossary">Glossary</a></li>
+</ol>
+<h2 id="1-getting-started">1. Getting started</h2>
+<p>Before you begin, confirm the following:</p>
+<ul>
+<li>Your Reltio tenant has AgentFlow enabled.</li>
+<li>Your account has the required system roles assigned (see table below).</li>
+<li>You have read-level access to the <a href="#glossary">entity</a> types you want to explore. Attribute masking rules apply — attributes you cannot see in the Reltio Console will not appear in agent responses.</li>
+</ul>
+<p><strong>Required system roles:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>ROLE_USER</code></td>
+<td>Base Reltio platform access</td>
+</tr>
+<tr>
+<td><code>ROLE_API</code></td>
+<td>API-level access (required for <a href="#glossary">MCP server</a>)</td>
+</tr>
+<tr>
+<td><code>ROLE_EXECUTE_MCP</code></td>
+<td>Grants permission to execute MCP server functions</td>
+</tr>
+<tr>
+<td><code>ROLE_EXECUTE_AGENTS</code></td>
+<td>Grants permission to use AgentFlow agents</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><strong>Note:</strong> <code>ROLE_EXECUTE_MCP</code> is a prerequisite for <code>ROLE_EXECUTE_AGENTS</code>. Both must be present. If you&#39;re unsure whether your account has these roles, contact your <strong>System Administrator</strong>.</p>
+</blockquote>
+<p>Data Explorer does not require a separate license. It is included with AgentFlow access.</p>
+<blockquote>
+<p><strong>Learn more:</strong> <a href="https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-capabilities-and-permissions">AgentFlow capabilities and permissions</a> in the Reltio documentation.</p>
+</blockquote>
+<h2 id="2-key-concepts">2. Key concepts</h2>
+<p><strong>AgentFlow</strong> is the conversational AI workspace in the Reltio Context Intelligence Platform. Each conversation is scoped to one <a href="#glossary">agent</a> and one task — you can&#39;t switch agents mid-conversation.</p>
+<p>The <strong>Data Explorer</strong> agent is read-only. It translates your natural language prompts into governed API calls through the <strong>MCP server</strong>, retrieves entity details, relationships, match analytics, and tenant metadata, and returns results in a readable format. It cannot create, update, merge, or delete records.</p>
+<p>Every response respects your tenant&#39;s <a href="#glossary">RBAC</a> policies and attribute masking rules. If you don&#39;t have access to a specific attribute or entity type, the agent won&#39;t display that data.</p>
+<p>The agent runs in AgentFlow through the MCP server in read-only mode — its design makes accidental data modifications impossible.</p>
+<blockquote>
+<p><strong>Learn more:</strong> <a href="https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance">Reltio AgentFlow at a glance</a> in the Reltio documentation.</p>
+</blockquote>
+<h2 id="3-open-and-launch-data-explorer">3. Open and launch Data Explorer</h2>
+<p>Follow these steps to start a Data Explorer session:</p>
+<ol>
+<li>Open the <a href="https://reltio.ai/agent-flow">AgentFlow workspace</a> in your browser.</li>
+<li>When prompted, select your <strong>tenant</strong> and <strong>environment</strong>.</li>
+<li>In the left navigation panel, look for <strong>Data Explorer</strong> under <strong>RELTIO AGENTS</strong>. On your first login, Data Explorer appears there by default.</li>
+<li>If Data Explorer isn&#39;t in your panel, select <strong>Discover agents</strong>, find the <strong>Data Explorer</strong> card, and launch it. Once launched, it stays in the left panel across sessions.</li>
+<li>Select <strong>Data Explorer</strong> to open a new conversation.</li>
+<li>Type your question or instruction in the input field and press <strong>Enter</strong> or select the send icon.</li>
+</ol>
+<blockquote>
+<p><strong>Important:</strong> Each conversation is scoped to one agent. If you need to take an action (such as merging records), start a new conversation and select the appropriate agent — for example, <strong>Resolver</strong> for merge decisions.</p>
+</blockquote>
+<blockquote>
+<p><strong>Learn more:</strong> <a href="https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/use-the-agentflow-workspace">Use the AgentFlow workspace</a> in the Reltio documentation.</p>
+</blockquote>
+<h2 id="4-write-effective-prompts">4. Write effective prompts</h2>
+<p>The quality of Data Explorer responses depends almost entirely on how you write your prompts. These patterns produce consistent, reliable results.</p>
+<h3 id="use-exact-schema-labels">Use exact schema labels</h3>
+<p>Always refer to attributes by their exact name in your tenant&#39;s data model — not by a description of what they represent.</p>
+<table>
+<thead>
+<tr>
+<th>✅ Works</th>
+<th>⚠️ Unreliable</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Find HCPs with more than 10 Addresses</code></td>
+<td><code>Find HCPs with more than 10 address records</code></td>
+</tr>
+<tr>
+<td><code>Show the HCOAffiliation count for this entity</code></td>
+<td><code>How many hospital affiliations does this entity have?</code></td>
+</tr>
+</tbody></table>
+<p>If you&#39;re unsure of the exact attribute name, start by asking the agent: <em>&quot;What&#39;s the data model for my tenant?&quot;</em> — it will list the entity types, attributes, and relationship types available to you.</p>
+<h3 id="include-the-entity-type">Include the entity type</h3>
+<p>Always specify the entity type (for example, <strong>HCP</strong>, <strong>Organization</strong>, <strong>Customer</strong>, <strong>Location</strong>) so the agent has a clear search target. Open-ended queries across multiple entity types produce large, unfocused responses.</p>
+<table>
+<thead>
+<tr>
+<th>✅ Specific</th>
+<th>⚠️ Too broad</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Find HCP profiles in New York with a missing email</code></td>
+<td><code>Find profiles with a missing email</code></td>
+</tr>
+<tr>
+<td><code>How many Organizations are in California?</code></td>
+<td><code>How many records are in California?</code></td>
+</tr>
+</tbody></table>
+<h3 id="anchor-complex-lookups-on-entity-ids">Anchor complex lookups on entity IDs</h3>
+<p>For merge history, relationship traversal, or data quality checks on specific profiles, provide the entity ID or URI rather than relying on name matching.</p>
+<table>
+<thead>
+<tr>
+<th>✅ Works</th>
+<th>⚠️ Unreliable</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Show me the merge history for entity 00Ei8qS</code></td>
+<td><code>Show me the merge history for John Smith at Reltio Corp</code></td>
+</tr>
+<tr>
+<td><code>Does entity 00Ei8qS have duplicate addresses?</code></td>
+<td><code>Does John Smith in New York have duplicate addresses?</code></td>
+</tr>
+</tbody></table>
+<h3 id="break-multi-step-questions-into-sequences">Break multi-step questions into sequences</h3>
+<p>Data Explorer processes one query at a time. For complex traversals, send prompts in steps rather than one compound question.</p>
+<p><strong>Instead of:</strong></p>
+<blockquote>
+<p><em>&quot;List all HCPs affiliated with The Homestead at Soldiers and Sailors Memorial Hospital.&quot;</em></p>
+</blockquote>
+<p><strong>Try:</strong></p>
+<blockquote>
+<ol>
+<li><em>&quot;Find the entity for &#39;The Homestead at Soldiers and Sailors Memorial Hospital&#39; and show me its entity ID.&quot;</em></li>
+<li><em>&quot;Show me HCPs affiliated with this hospital using Contact Affiliation relationships (entity ID XYZ).&quot;</em></li>
+</ol>
+</blockquote>
+<p>Breaking the request helps the agent resolve each step without guessing at relationship types or entity names.</p>
+<h3 id="scope-large-queries">Scope large queries</h3>
+<p>Queries that scan large portions of your tenant may hit scanning limits or time out. If you get incomplete results, narrow the scope:</p>
+<ul>
+<li>Add a geographic or attribute filter</li>
+<li>Lower the count threshold</li>
+<li>Ask for a sample first: <em>&quot;...start with a small sample I can review&quot;</em></li>
+</ul>
+<p>Use Data Explorer for exploration and discovery. For precise bulk counts over large datasets, use Reltio UI advanced search.</p>
+<blockquote>
+<p><strong>Learn more:</strong> <a href="https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-agents-catalog/data-explorer/prompt-samples-for-data-explorer">Prompt samples for Data Explorer</a> in the Reltio documentation.</p>
+</blockquote>
+<h2 id="5-common-tasks">5. Common tasks</h2>
+<h3 id="search-and-retrieve-entities">Search and retrieve entities</h3>
+<p>Find records by free text, attribute filters, or entity ID:</p>
+<ul>
+<li><em>&quot;Find the Organization record for XYZ Corp.&quot;</em></li>
+<li><em>&quot;Show me the HCP profile for entity <code>entities/abc123</code>.&quot;</em></li>
+<li><em>&quot;How many customers do we have in New York City?&quot;</em></li>
+</ul>
+<p>The agent returns entity details — URI, labels, attributes, source system <a href="#glossary">crosswalks</a>, and pagination-supported search results.</p>
+<h3 id="explore-relationships">Explore relationships</h3>
+<p>Navigate the relationship graph from a known entity:</p>
+<ul>
+<li><em>&quot;Show me all organizations affiliated with entity <code>entities/abc123</code>.&quot;</em></li>
+<li><em>&quot;Tell me about relationships in my tenant.&quot;</em></li>
+</ul>
+<p>Specify the relationship type when you know it to give the agent a precise traversal path and reduce ambiguity.</p>
+<h3 id="inspect-match-history-and-lineage">Inspect match history and lineage</h3>
+<p>Review how a <a href="#glossary">golden record</a> was formed and which source systems contributed:</p>
+<ul>
+<li><em>&quot;Show me the merge history for entity <code>00Ei8qS</code>.&quot;</em></li>
+<li><em>&quot;Analyze this HCP profile for data quality issues: <code>entities/00Ei8qS</code>.&quot;</em></li>
+<li><em>&quot;Does entity <code>00Ei8qS</code> have duplicate addresses?&quot;</em></li>
+</ul>
+<p>The agent returns merge timelines, contributing source systems, match scores, and the rules that triggered the merges.</p>
+<h3 id="discover-your-data-model">Discover your data model</h3>
+<p>Get a clear picture of how your tenant is structured before running complex queries:</p>
+<ul>
+<li><em>&quot;What&#39;s the data model for my tenant?&quot;</em></li>
+<li><em>&quot;Tell me about your capabilities, including a list of tools.&quot;</em></li>
+<li><em>&quot;What entity types and relationship types exist in this environment?&quot;</em></li>
+</ul>
+<p>Starting with a data model query is especially useful when you&#39;re working in an unfamiliar tenant. The agent will summarize entity types, relationship types, graph types, and groupings in a single response.</p>
+<blockquote>
+<p><strong>Learn more:</strong> <a href="https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-agents-catalog">AgentFlow agents catalog</a> in the Reltio documentation.</p>
+</blockquote>
+<h2 id="6-limitations-and-safeguards">6. Limitations and safeguards</h2>
+<p>Understanding what Data Explorer cannot do is as important as knowing what it can.</p>
+<p><strong>Read-only by design:</strong></p>
+<ul>
+<li>Cannot create, update, merge, unmerge, or delete records.</li>
+<li>For merge and unmerge actions, use the <strong>Resolver</strong> or <strong>Unmerger</strong> agents in a separate conversation.</li>
+</ul>
+<p><strong>RBAC enforcement:</strong></p>
+<ul>
+<li>All attribute masking rules are applied — attributes you don&#39;t have access to are not returned.</li>
+<li>Response scope is limited to your data access permissions. If results look incomplete, verify your roles with your <strong>System Administrator</strong>.</li>
+</ul>
+<p><strong>Scanning limits:</strong></p>
+<ul>
+<li>Large, open-ended queries may return partial results or time out.</li>
+<li>The agent processes one query at a time.</li>
+</ul>
+<p><strong>Tenant-specific accuracy:</strong></p>
+<ul>
+<li>Prompts that reference collection counts (for example, <em>&quot;more than 10 Addresses&quot;</em>) depend on your entity type configuration supporting those patterns.</li>
+<li>If your tenant models addresses differently (for example, as nested Location entities rather than a multi-valued attribute named <strong>Addresses</strong>), provide custom instructions with concrete filter examples for your schema. The agent needs these to apply the correct attribute paths.</li>
+</ul>
+<blockquote>
+<p><strong>Learn more:</strong> <a href="https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-agents-catalog/data-explorer">Data Explorer</a> in the Reltio documentation.</p>
+</blockquote>
+<h2 id="7-troubleshooting">7. Troubleshooting</h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Likely cause</th>
+<th>What to do</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Agent returns empty results for a filter</td>
+<td>Attribute name doesn&#39;t match the schema label</td>
+<td>Ask <em>&quot;What&#39;s the data model for my tenant?&quot;</em> to find the exact name, then re-run</td>
+</tr>
+<tr>
+<td>Response stalls or looks incomplete</td>
+<td>Query scans too large a dataset</td>
+<td>Narrow the scope — add entity type, geography, or ask for a sample</td>
+</tr>
+<tr>
+<td>Agent can&#39;t find a named entity</td>
+<td>Ambiguous name with multiple matches</td>
+<td>Provide an entity ID or URI instead of a display name</td>
+</tr>
+<tr>
+<td>Attribute values missing from response</td>
+<td>Account doesn&#39;t have access to that attribute</td>
+<td>Contact your <strong>System Administrator</strong> to verify RBAC permissions</td>
+</tr>
+<tr>
+<td>Can&#39;t traverse a relationship chain</td>
+<td>Relationship type is ambiguous or missing from the prompt</td>
+<td>Break into two prompts: find the source entity ID first, then traverse by relationship type</td>
+</tr>
+<tr>
+<td>Responses carry stale context</td>
+<td>Previous conversation thread still active</td>
+<td>Start a new conversation to clear the agent&#39;s context</td>
+</tr>
+</tbody></table>
+<h2 id="8-further-reading">8. Further reading</h2>
+<ul>
+<li><a href="https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance">Reltio AgentFlow at a glance</a></li>
+<li><a href="https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-agents-catalog">AgentFlow agents catalog</a></li>
+<li><a href="https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-agents-catalog/data-explorer">Data Explorer agent</a></li>
+<li><a href="https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-agents-catalog/data-explorer/prompt-samples-for-data-explorer">Prompt samples for Data Explorer</a></li>
+<li><a href="https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-capabilities-and-permissions">AgentFlow capabilities and permissions</a></li>
+<li><a href="https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/use-the-agentflow-workspace">Use the AgentFlow workspace</a></li>
+</ul>
+<h2 id="9-glossary">9. Glossary</h2>
+<p><strong>Agent:</strong> A purpose-built AI assistant in AgentFlow designed to handle a specific type of task — such as exploring data, resolving duplicates, or enriching addresses — through governed API calls.</p>
+<p><strong>AgentFlow:</strong> The conversational AI workspace in the Reltio Context Intelligence Platform where users interact with master data through purpose-built agents. Each conversation is scoped to one agent and one task.</p>
+<p><strong>Crosswalk:</strong> A reference that links a Reltio entity back to its record in a source system, including the source name and source-system identifier.</p>
+<p><strong>Data Explorer:</strong> A read-only AgentFlow agent that translates natural language prompts into governed API calls to retrieve entity details, relationships, match analytics, and tenant metadata — without modifying any records.</p>
+<p><strong>Entity:</strong> The core data object in Reltio. An entity represents a real-world object (person, organization, product) with attributes, relationships, and source system crosswalks unified into a single golden record.</p>
+<p><strong>Golden record:</strong> The unified master data profile that Reltio assembles from multiple source system records for a single real-world entity.</p>
+<p><strong>MCP server:</strong> The Model Context Protocol server that routes AgentFlow agent requests to Reltio&#39;s governed APIs, enforcing RBAC and audit controls on every call.</p>
+<p><strong>RBAC (role-based access control):</strong> The permission system that controls which users can access which data and perform which actions in the Reltio Context Intelligence Platform. Data Explorer respects all RBAC rules, including attribute masking.</p>
+<hr>
+<blockquote class="disclaimer">
+<p><strong>Disclaimer:</strong> AI-generated from the Reltio documentation snapshot 2026-04-24 14:51 UTC (3,238 topics). AI output can contain subtle inaccuracies, and the knowledge base syncs twice a week — so the content here may lag <a href="https://docs.reltio.com">docs.reltio.com</a>. Verify anything critical against the official docs and your own tenant. Full disclaimer: <a href="DISCLAIMER.html">DISCLAIMER.md</a>.</p>
+</blockquote>
+
+<script>
+  // Click-to-zoom for workflow diagrams — toggle zoomed class on click,
+  // dismiss on second click or by clicking anywhere outside the diagram.
+  document.querySelectorAll('.diagram').forEach(function (img) {
+    img.addEventListener('click', function (e) {
+      e.stopPropagation();
+      img.classList.toggle('zoomed');
+    });
+  });
+  document.addEventListener('click', function () {
+    document.querySelectorAll('.diagram.zoomed').forEach(function (img) {
+      img.classList.remove('zoomed');
+    });
+  });
+</script>
+</body>
+</html>

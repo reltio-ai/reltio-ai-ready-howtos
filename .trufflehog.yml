@@ -1,0 +1,19 @@
+# .trufflehog.yml — TruffleHog false-positive suppression for the Reltio HOWTO generator kit.
+# HOWTO guides use placeholder credentials and example tokens throughout.
+# None of the strings below represent real secrets.
+
+detectors:
+  # GitHub token shape appears in example curl headers — always placeholder text
+  - name: GitHub
+    disabled: true
+
+exclude_paths:
+  # All HOWTO content is example-only — no real credentials
+  - howtos/
+  - howtos-html/
+  # Docs corpus pulled from the public Reltio AI Ready Docs repo
+  - reltio-docs/
+
+exclude_detectors:
+  # Statuspage API token shape appears in mermaid-cli transitive deps; not a real token
+  - Statuspage

@@ -24,5 +24,8 @@
     "@mermaid-js/mermaid-cli": "^11.12.0",
     "highlight.js": "^11.11.1",
     "marked": "^18.0.2"
+  },
+  "overrides": {
+    "uuid": ">=14.0.0"
   }
 }

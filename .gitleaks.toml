@@ -14,8 +14,8 @@ title = "Reltio HOWTOs gitleaks config"
     '''YOUR_TENANT_ID''',
     # Example crosswalk values that resemble IDs but are not secrets
     '''(CRM|ERP|ORG|REL)-\d{4}''',
-    # Reltio docs API endpoint (read-only, public URL)
-    '''reltio-docs-viewer\.vercel\.app''',
+    # Reltio AI Ready Docs raw GitHub URL (read-only, public)
+    '''raw\.githubusercontent\.com/reltio-ai/reltio-ai-ready-docs''',
   ]
   paths = [
     # Entire howtos/ tree — all content is example-only
