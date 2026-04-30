@@ -1,0 +1,66 @@
+name: Refresh docs corpus
+
+# Syncs docs.md and index.md from reltio-ai/reltio-ai-ready-docs at the same
+# cadence as that repo updates — Wednesdays and Fridays at 19:00 UTC.
+# (The source repo commits its sync at ~18:31 UTC; this fires 29 minutes later
+# so forks always pull a freshly-updated corpus.)
+#
+# Only commits when the files actually changed. Safe to trigger manually at any time.
+
+on:
+  schedule:
+    - cron: '0 19 * * 3'   # Wednesday 19:00 UTC
+    - cron: '0 19 * * 5'   # Friday    19:00 UTC
+  workflow_dispatch:         # Allow manual trigger from the Actions tab
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Download fresh corpus
+        run: |
+          echo "Fetching docs.md …"
+          curl -sSL "https://raw.githubusercontent.com/reltio-ai/reltio-ai-ready-docs/main/docs.md" \
+               -o reltio-docs/docs.md
+          echo "Fetching index.md …"
+          curl -sSL "https://raw.githubusercontent.com/reltio-ai/reltio-ai-ready-docs/main/index.md" \
+               -o reltio-docs/index.md
+          echo ""
+          echo "docs.md  : $(wc -l < reltio-docs/docs.md) lines  ($(du -sh reltio-docs/docs.md | cut -f1))"
+          echo "index.md : $(wc -l < reltio-docs/index.md) lines  ($(du -sh reltio-docs/index.md | cut -f1))"
+
+      - name: Check for changes
+        id: diff
+        run: |
+          if git diff --quiet reltio-docs/docs.md reltio-docs/index.md; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "✓ Corpus is already up to date — no commit needed."
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "Changes detected — will commit."
+          fi
+
+      - name: Commit and push updated corpus
+        if: steps.diff.outputs.changed == 'true'
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Pull snapshot date from the docs.md header line:  _Generated: 2026-04-29 02:14 UTC_
+          SNAPSHOT=$(grep -m1 '^_Generated:' reltio-docs/docs.md | sed 's/^_Generated: //;s/_$//')
+          TOPICS=$(grep -m1 '^_Topics:' reltio-docs/docs.md | sed 's/^_Topics: //;s/_$//')
+
+          git add reltio-docs/docs.md reltio-docs/index.md
+          git commit -m "chore: sync docs corpus — ${SNAPSHOT} (${TOPICS} topics)"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
