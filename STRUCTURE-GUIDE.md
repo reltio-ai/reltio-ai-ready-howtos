@@ -243,7 +243,7 @@ After saving your HOWTO, you can optionally run:
 node generate-diagrams.js
 ```
 
-This converts Mermaid blocks to SVG files. This step is **not required** — Mermaid renders natively on Bitbucket and GitHub.
+This converts Mermaid blocks to SVG files. This step is **not required** — Mermaid renders natively on GitHub.
 
 ---
 
