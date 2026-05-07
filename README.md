@@ -91,7 +91,7 @@ The documentation corpus is at **[github.com/reltio-ai/reltio-ai-ready-docs](htt
 npm run refresh-docs
 ```
 
-Then regenerate any guides that cover topics that may have changed. Check the `_Generated:` timestamp in `reltio-docs/docs.md` to see how fresh your local copy is.
+Then regenerate any guide that covers topics that may have changed. Check the `_Generated:` timestamp in `reltio-docs/docs.md` to see how recent your local copy is.
 
 ## Requirements
 
