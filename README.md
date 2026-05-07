@@ -21,7 +21,7 @@ This repo is a **generator kit**. You fork it, open it in Claude Code, and gener
 
 > **This repo does not accept pull requests.** Fork it and keep your guides in your own fork.
 
-Every guide is generated against the official Reltio docs corpus. If a topic isn't covered in the docs, the generator refuses rather than fabricating content.
+Every guide is generated against the official Reltio docs corpus. If a topic isn't covered in the docs, the generator won't generate a HOWTO as a guardrail against content fabrication.
 
 ## Quickstart
 
@@ -63,7 +63,7 @@ The generator will:
 - Validate every claim against the documentation
 - Auto-generate the rendered HTML alongside the Markdown
 
-### 5. Find your files
+### 5. Locate your files
 
 ```
 howtos/HOWTO-your-topic.md          ← the Markdown source
@@ -81,21 +81,11 @@ Every HTML file is fully self-contained — CSS embedded, diagrams inlined. No s
 | `Use the Export Service API to download entity data` | `Exporting data` |
 | `Authenticate with Reltio using OAuth 2.0 client credentials` | `Authentication` |
 
-If the generator can't find 30+ lines of source material on your topic, it tells you what it found and suggests the closest alternatives. This is by design — a short honest refusal is better than a long inaccurate guide.
-
-## What the generator enforces
-
-Every guide produced by this kit:
-
-- **Sources every claim** to `reltio-docs/docs.md` — no fabrication
-- **Passes a platform name lint check** — `generate-html.js` hard-blocks any file containing the retired brand name "Reltio Data Cloud"
-- **Follows a fixed document skeleton** — title, overview, audience line, numbered sections, glossary, disclaimer
-- **Carries a disclaimer footer** — AI-generated, snapshot-dated, links to [DISCLAIMER.md](DISCLAIMER.md)
-- **Produces both Markdown and HTML** — the pre-commit hook enforces this on every commit
+If the generator can't find 30+ lines of source material on your topic, it tells you what it found and suggests the closest alternatives. This is by design — an assertive refusal is better than an inaccurate guide.
 
 ## Update the docs corpus
 
-The corpus lives at **[github.com/reltio-ai/reltio-ai-ready-docs](https://github.com/reltio-ai/reltio-ai-ready-docs)** and is updated regularly from the official Reltio documentation. To pull the latest into your fork:
+The documentation corpus is at **[github.com/reltio-ai/reltio-ai-ready-docs](https://github.com/reltio-ai/reltio-ai-ready-docs)** and is updated bi-weekly from the official Reltio documentation. To pull the latest into your fork:
 
 ```bash
 npm run refresh-docs
