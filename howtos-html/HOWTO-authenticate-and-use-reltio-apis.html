@@ -304,9 +304,9 @@ hr {
 <ul>
 <li>A Reltio tenant and its tenant ID (for example, <code>HKlMR3wNbRT3PMo</code>).</li>
 <li>Your environment URL (for example, <code>https://na07-prod.reltio.com</code>). Your tenant URL is <code>https://{environment}.reltio.com/reltio/api/{tenantId}</code>.</li>
-<li>A Reltio customer admin (or a user with <strong>Auth.Customer.Clients CREATE</strong> permission) who can create an <a href="#9-glossary">application client</a> for you. Only customer administrators and users with customer client management permissions can create application clients.</li>
+<li>A Reltio customer admin (or a user with <strong>Auth.Customer.Clients CREATE</strong> permission) who can create an <span class="glossary-term" data-def="A credential pair (clientId + clientSecret) that represents a system or service calling Reltio, not a human user. Created and managed via the Application Client Management APIs or the Client Credentials app in Reltio Console.">application client</span> for you. Only customer administrators and users with customer client management permissions can create application clients.</li>
 <li>A terminal with <code>curl</code> (and optionally <code>jq</code> for pretty JSON).</li>
-<li>Familiarity with HTTP and OAuth 2.0 basics.</li>
+<li>Familiarity with HTTP and <span class="glossary-term" data-def="The authorization framework Reltio uses for its Authentication API. See RFC 6749.">OAuth 2.0</span> basics.</li>
 </ul>
 <blockquote>
 <p><strong>Tip:</strong> If your tenant is configured for SSO, you must obtain access tokens from your SSO Auth server instead of the Reltio Auth API. This guide covers the client credentials flow for machine-to-machine integrations.</p>
@@ -315,10 +315,10 @@ hr {
 <p><strong>Learn more:</strong> <a href="https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/authentication-api">Authentication API overview</a> in the Reltio documentation.</p>
 </blockquote>
 <h2 id="2-key-concepts">2. Key concepts</h2>
-<p>Reltio&#39;s Authentication API implements <a href="#9-glossary">OAuth 2.0</a>. It&#39;s a centralized service — not tenant-specific — that issues an <a href="#9-glossary">access token</a> you then send to every tenant API call.</p>
+<p>Reltio&#39;s Authentication API implements <span class="glossary-term" data-def="The authorization framework Reltio uses for its Authentication API. See RFC 6749.">OAuth 2.0</span>. It&#39;s a centralized service — not tenant-specific — that issues an <span class="glossary-term" data-def="A short-lived credential (default validity 3600 seconds) that authenticates your API requests. You get one by sending your Client ID and Client Secret to https://auth.reltio.com/oauth/token with grant_type=client_credentials.">access token</span> you then send to every tenant API call.</p>
 <ul>
-<li><strong>Client credentials grant</strong> — machine-to-machine authentication. You trade a <a href="#9-glossary">Client ID</a> and <a href="#9-glossary">Client Secret</a> for an access token. No user is associated with the client; the application is authenticated with the default <code>ROLE_API</code> role plus any scopes you configure.</li>
-<li><strong>Bearer token</strong> — Reltio&#39;s token type is always <code>bearer</code>. You send it as <code>Authorization: Bearer &lt;accessToken&gt;</code> on every Reltio API request.</li>
+<li><strong>Client credentials grant</strong> — machine-to-machine authentication. You trade a <span class="glossary-term" data-def="The identifier that represents the client application initiating machine-to-machine communication with Reltio.">Client ID</span> and <span class="glossary-term" data-def="The secret (effectively, the password) for the Client ID. Shown only once at creation; store it in a secret manager.">Client Secret</span> for an access token. No user is associated with the client; the application is authenticated with the default <code>[ROLE_API](#glossary)</code> role plus any scopes you configure.</li>
+<li><strong><span class="glossary-term" data-def="The OAuth 2.0 token type Reltio issues. Sent in the Authorization: Bearer &lt;accessToken&gt; header on every Reltio API request.">Bearer token</span></strong> — Reltio&#39;s token type is always <code>bearer</code>. You send it as <code>Authorization: Bearer &lt;accessToken&gt;</code> on every Reltio API request.</li>
 <li><strong>Token validity</strong> — access tokens expire after <code>3600</code> seconds (one hour) by default. In RDBMS mode, values above <code>3600</code> seconds are rejected with a validation error.</li>
 <li><strong>No refresh token with client credentials</strong> — per the OAuth 2.0 spec, the client credentials grant does not issue a refresh token. When the access token expires, request a new one.</li>
 <li><strong>IP whitelisting</strong> — the Authentication API itself is not IP-whitelisted; whitelisting is enforced when the token is used against tenant-specific endpoints (for example, <code>/entities/_scan</code>). Requests from non-whitelisted IPs fail with <code>403 Forbidden</code> even with a valid token.</li>
@@ -372,7 +372,7 @@ hr {
 <li><strong>Role and permission</strong> — you need either the <code>ROLE_ADMIN_CUSTOMER</code> role or the <code>Auth.Customer.Clients CREATE</code> permission to call this endpoint.</li>
 <li><strong>Authentication methods</strong> — <code>client_secret_basic</code> lets you send the secret in the <code>Authorization</code> header; <code>client_secret_post</code> lets you send it in the request body.</li>
 <li><strong>Client secret</strong> — if you don&#39;t set <code>clientSecret</code>, Reltio generates a secure random secret and returns it exactly once. Copy it immediately and store it in a secret manager.</li>
-<li><strong>Access token validity</strong> — if you omit <code>accessTokenValidity</code>, the default is <code>3600</code> seconds. In RDBMS mode, values above <code>3600</code> seconds are rejected.</li>
+<li><strong><span class="glossary-term" data-def="A short-lived credential (default validity 3600 seconds) that authenticates your API requests. You get one by sending your Client ID and Client Secret to https://auth.reltio.com/oauth/token with grant_type=client_credentials.">Access token</span> validity</strong> — if you omit <code>accessTokenValidity</code>, the default is <code>3600</code> seconds. In RDBMS mode, values above <code>3600</code> seconds are rejected.</li>
 </ul>
 <h3 id="what-can-go-wrong">What can go wrong</h3>
 <table>
@@ -404,7 +404,7 @@ hr {
 </blockquote>
 <h2 id="4-get-an-access-token">4. Get an access token</h2>
 <p><code>POST https://auth.reltio.com/oauth/token</code></p>
-<p>Exchange the Client ID and Client Secret for a bearer access token. This is the centralized Reltio Auth service endpoint — it&#39;s the same host regardless of your tenant environment.</p>
+<p>Exchange the Client ID and <span class="glossary-term" data-def="The secret (effectively, the password) for the Client ID. Shown only once at creation; store it in a secret manager.">Client Secret</span> for a bearer access token. This is the centralized Reltio Auth service endpoint — it&#39;s the same host regardless of your tenant environment.</p>
 <p><strong>Request</strong></p>
 <pre><code class="language-bash @illustrative hljs"><span class="hljs-comment"># Base64-encode your credentials for the Authorization header</span>
 <span class="hljs-built_in">export</span> <span class="hljs-attribute">BASIC</span>=$(printf <span class="hljs-string">&#x27;%s:%s&#x27;</span> <span class="hljs-string">&quot;YOUR_CLIENT_ID&quot;</span> <span class="hljs-string">&quot;YOUR_CLIENT_SECRET&quot;</span> | base64)
@@ -443,7 +443,7 @@ curl -s -X POST <span class="hljs-string">&quot;https://auth.reltio.com/oauth/to
 </thead>
 <tbody><tr>
 <td><code>invalid_client</code> or <code>401 Unauthorized</code></td>
-<td>Wrong Client ID or Client Secret, or missing/malformed <code>Authorization</code> header</td>
+<td>Wrong <span class="glossary-term" data-def="The identifier that represents the client application initiating machine-to-machine communication with Reltio.">Client ID</span> or Client Secret, or missing/malformed <code>Authorization</code> header</td>
 <td>Re-check credentials; verify Base64 encoding of <code>client_id:client_secret</code></td>
 </tr>
 <tr>
@@ -467,7 +467,7 @@ curl -s -X POST <span class="hljs-string">&quot;https://auth.reltio.com/oauth/to
 </blockquote>
 <h2 id="5-make-your-first-tenant-api-call">5. Make your first tenant API call</h2>
 <p><code>GET {TenantURL}/entities/{entityId}</code></p>
-<p>Now use the token against a tenant-scoped endpoint. A good first call is <code>Get Entity</code> — it returns a single <a href="#9-glossary">entity</a> object by URI and confirms that your token, tenant URL, and network path all work end-to-end.</p>
+<p>Now use the token against a tenant-scoped endpoint. A good first call is <code>Get [Entity](#glossary)</code> — it returns a single <span class="glossary-term" data-def="The core Reltio data object — a person, organization, product, location, or other real-world object. Has a URI of the form entities/{id}.">entity</span> object by URI and confirms that your token, tenant URL, and network path all work end-to-end.</p>
 <p><strong>Request</strong></p>
 <pre><code class="language-bash @illustrative hljs"><span class="hljs-built_in">export</span> <span class="hljs-attribute">TOKEN</span>=<span class="hljs-string">&quot;2YotnFZFEjr1zCsicMWpAA&quot;</span>
 <span class="hljs-built_in">export</span> <span class="hljs-attribute">TENANT</span>=<span class="hljs-string">&quot;https://na07-prod.reltio.com/reltio/api/YOUR_TENANT_ID&quot;</span>

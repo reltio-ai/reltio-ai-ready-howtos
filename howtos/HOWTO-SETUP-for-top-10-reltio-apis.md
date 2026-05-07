@@ -63,17 +63,17 @@ The tutorial's data model is small on purpose — three object types, three attr
 
 | Component | Purpose |
 |-----------|---------|
-| [Entity type](#13-glossary) `Individual` | Represents a person with `FirstName`, `LastName`, and `Email` simple attributes |
+| [Entity type](#glossary) `Individual` | Represents a person with `FirstName`, `LastName`, and `Email` simple attributes |
 | [Entity type](#glossary) `Organization` | Represents a company with a `Name` simple attribute |
-| [Source](#13-glossary) `CRM` | Primary [source](#glossary) for individuals and organizations created during the tutorial |
+| [Source](#glossary) `CRM` | Primary [source](#glossary) for individuals and organizations created during the tutorial |
 | Source `ERP` | Second source used to create a near-duplicate record |
-| [Relation type](#13-glossary) `Employment` | Links an `Individual` (start) to an `Organization` (end), with a `Title` attribute |
+| [Relation type](#glossary) `Employment` | Links an `Individual` (start) to an `Organization` (end), with a `Title` attribute |
 
 A few platform concepts to keep straight:
 
-- **[L3](#13-glossary)** — the customer-owned configuration layer; the consolidated model a tenant actually runs on is L1 + L2 + L3 after inheritance.
-- **[Configuration API](#13-glossary)** — the REST surface used to get and set L3. The two most-used calls are `GET /configuration` (with `_noInheritance` for just the L3 you own) and `PUT /configuration`.
-- **[Crosswalk](#13-glossary)** — a pointer from a Reltio entity back to its source record; every record you load during the tutorial lands in the tenant with a [crosswalk](#glossary) whose `type` points to `configuration/sources/CRM` or `configuration/sources/ERP`.
+- **[L3](#glossary)** — the customer-owned configuration layer; the consolidated model a tenant actually runs on is L1 + L2 + L3 after inheritance.
+- **[Configuration API](#glossary)** — the REST surface used to get and set L3. The two most-used calls are `GET /configuration` (with `_noInheritance` for just the L3 you own) and `PUT /configuration`.
+- **[Crosswalk](#glossary)** — a pointer from a Reltio entity back to its source record; every record you load during the tutorial lands in the tenant with a [crosswalk](#glossary) whose `type` points to `configuration/sources/CRM` or `configuration/sources/ERP`.
 
 The Top 10 APIs tutorial exercises CRUD, search, crosswalks, relations, match, and merge. The V1 tutorial you can follow today is [HOWTO: Top 10 Reltio APIs](./HOWTO-top-10-reltio-apis.md).
 

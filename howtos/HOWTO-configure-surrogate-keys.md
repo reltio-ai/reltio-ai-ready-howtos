@@ -50,12 +50,12 @@ Gather these before you begin:
 
 These terms appear throughout the guide.
 
-- **[Surrogate key](#11-glossary)** — a crosswalk key calculated by Reltio from cleansed attribute values when the source system doesn't provide one.
-- **[Crosswalk](#11-glossary)** — a pointer from a Reltio entity back to a record in a source system.
-- **[refEntity](#11-glossary)** — in an incoming JSON payload, the crosswalk for a referenced entity (for example, a `Location` linked to an `HCP`).
-- **[refRelation](#11-glossary)** — in an incoming JSON payload, the crosswalk for the relationship that links one entity to another (for example, `hasAddress`).
-- **Enforce flag** — a `surrogateCrosswalks` configuration option that controls whether a surrogate is always generated or only as a fallback.
-- **generationLogic** — a parameter that controls how surrogate keys handle missing operational values (OV).
+- **[Surrogate key](#glossary)** — a crosswalk key calculated by Reltio from cleansed attribute values when the source system doesn't provide one.
+- **[Crosswalk](#glossary)** — a pointer from a Reltio entity back to a record in a source system.
+- **[refEntity](#glossary)** — in an incoming JSON payload, the crosswalk for a referenced entity (for example, a `[Location](#glossary)` linked to an `HCP`).
+- **[refRelation](#glossary)** — in an incoming JSON payload, the crosswalk for the relationship that links one entity to another (for example, `hasAddress`).
+- **[Enforce flag](#glossary)** — a `surrogateCrosswalks` configuration option that controls whether a surrogate is always generated or only as a fallback.
+- **[generationLogic](#glossary)** — a parameter that controls how surrogate keys handle missing operational values (OV).
 
 > **Learn more:** [Configuring surrogate keys](https://docs.reltio.com/en/objectives/model-data/data-modeling-at-a-glance/data-modeling-operation/define-crosswalks-for-data-sources/configuring-surrogate-keys) in the Reltio documentation.
 
@@ -66,7 +66,7 @@ Not every source needs surrogate keys. Use this table as a first filter.
 | Situation | What to use |
 |---|---|
 | Source provides a unique key per record | Use the source's own keys — no surrogate needed |
-| Source has a key for the parent but not for nested objects (e.g., HCP has an ID, inline addresses don't) | Configure a surrogate for the nested entity |
+| Source has a key for the parent but not for nested objects (e.g., [HCP](#glossary) has an ID, inline addresses don't) | Configure a surrogate for the nested entity |
 | Source is a flat file with no keys | Configure surrogate keys from the attribute values |
 | Source de-normalizes — the same address repeats across many rows | Configure surrogate keys so duplicates merge automatically |
 
@@ -76,14 +76,14 @@ Reltio's documentation lists four patterns for how source data arrives and the r
 
 | Pattern | Methodology |
 |---|---|
-| **Pattern 1** — Each HCP comes with a single address on the same row | Use the unique key of the HCP as the `refRelation` key |
+| **Pattern 1** — Each HCP comes with a single address on the same row | Use the unique key of the HCP as the `[refRelation](#glossary)` key |
 | **Pattern 2** — Each HCP has multiple addresses in one flat file, each row a different address | Construct a key from HCP key + address — e.g., `101876\|123MainStreet\|Anytown\|91301\|USA` |
 | **Pattern 3** — HCPs in one file, addresses in a separate file with the HCP key as foreign key; `AddrKey` is unique | Use the source's `AddrKey` as the `refRelation` key |
 | **Pattern 4** — Many-to-many via an intersection table with unique keys | Use the intersection-table key as the `refRelation` key |
 
 ### Why this matters
 
-Reltio models address as a `Party` object in L1 plus a `Location` object linked by `hasAddress`. `Location` is the address attribute of anything that inherits from `Party` — `Individual`, `Organization`, `HCP`, `HCO`. If a source repeats the same address across many records, surrogate keys let Reltio merge them into a single `Location` entity automatically. The merged entity ends up with relationships to every entity that shares the address.
+Reltio models address as a `Party` object in L1 plus a `Location` object linked by `hasAddress`. `Location` is the address attribute of anything that inherits from `Party` — `Individual`, `Organization`, `HCP`, `[HCO](#glossary)`. If a source repeats the same address across many records, surrogate keys let Reltio merge them into a single `Location` entity automatically. The merged entity ends up with relationships to every entity that shares the address.
 
 > **Learn more:** [Configuring surrogate keys](https://docs.reltio.com/en/objectives/model-data/data-modeling-at-a-glance/data-modeling-operation/define-crosswalks-for-data-sources/configuring-surrogate-keys) in the Reltio documentation.
 
@@ -130,7 +130,7 @@ The example below configures a `Location` surrogate keyed off the full address f
 
 ## 5. Trigger surrogate key generation on ingest
 
-Once the L3 config is in place, trigger surrogate generation per record by setting `refEntity.crosswalks[0].value` to `"Surrogate"` in the incoming JSON.
+Once the L3 config is in place, trigger surrogate generation per record by setting `[refEntity](#glossary).crosswalks[0].value` to `"Surrogate"` in the incoming JSON.
 
 ```json
 [

@@ -309,7 +309,7 @@ hr {
 <p>Gather these before you begin:</p>
 <ul>
 <li>A Reltio tenant configured with the tutorial data model — two entity types (<code>Individual</code>, <code>Organization</code>), two sources (<code>CRM</code>, <code>ERP</code>), and an <code>Employment</code> relation. If you don&#39;t have one yet, run <a href="HOWTO-SETUP-for-top-10-reltio-apis.html">HOWTO: Configure a Reltio tenant for the Top 10 APIs tutorial</a> first.</li>
-<li>Your <strong>Client ID</strong> and <strong>Client Secret</strong> — credentials for an <a href="#15-glossary">application client</a> that can read and write the tenant.</li>
+<li>Your <strong>Client ID</strong> and <strong>Client Secret</strong> — credentials for an <span class="glossary-term" data-def="a machine-to-machine identity in Reltio Auth, identified by a Client ID and secured by a Client Secret. Used by integrations; no human user is attached.">application client</span> that can read and write the tenant.</li>
 <li>Your <strong>Tenant URL</strong> in the format <code>https://{environment}.reltio.com/reltio/api/{tenantId}</code> (for example, <code>https://na07-prod.reltio.com/reltio/api/YOUR_TENANT_ID</code>).</li>
 <li>A terminal with <code>curl</code> and <code>jq</code> installed.</li>
 </ul>
@@ -324,11 +324,11 @@ hr {
 <h2 id="2-key-concepts">2. Key concepts</h2>
 <p>The ten APIs in this guide fall into four groups — one authentication call, one configuration read, six entity-management calls, one relation call, and two match/merge calls. A handful of shared ideas run through all of them.</p>
 <ul>
-<li><strong><a href="#15-glossary">OAuth 2.0 client credentials</a></strong> — Reltio&#39;s Authentication API issues a short-lived bearer token. Every tenant call needs <code>Authorization: Bearer ${TOKEN}</code>.</li>
-<li><strong><a href="#15-glossary">Entity</a></strong> — one record of a real-world thing (a person, an organization). Entities have attributes and are identified by a URI like <code>entities/ABC123</code>.</li>
-<li><strong><a href="#15-glossary">Crosswalk</a></strong> — the pointer from an entity back to its source record. <code>CRM-1001</code> in the <code>CRM</code> source and <code>ERP-5001</code> in the <code>ERP</code> source are both crosswalks on the same Reltio entity.</li>
-<li><strong><a href="#15-glossary">Operational value (OV)</a></strong> — the <span class="glossary-term" data-def="the logic that chooses which candidate value becomes OV when multiple sources disagree.">survivorship</span>-selected winning value for an attribute after Reltio reconciles multiple sources.</li>
-<li><strong><a href="#15-glossary">Match rule</a></strong> — a configured predicate that flags likely duplicates. The setup guide defines a single <code>suspect</code>-type rule called <code>SuspectLastNameEmail</code>.</li>
+<li><strong><span class="glossary-term" data-def="the OAuth grant Reltio uses for machine-to-machine authentication. Trades Client ID + Client Secret for a short-lived bearer token.">OAuth 2.0 client credentials</span></strong> — Reltio&#39;s Authentication API issues a short-lived bearer token. Every tenant call needs <code>Authorization: Bearer ${TOKEN}</code>.</li>
+<li><strong><span class="glossary-term" data-def="one record of a real-world thing (person, organization, product). Identified by a URI like entities/ABC123.">Entity</span></strong> — one record of a real-world thing (a person, an organization). Entities have attributes and are identified by a URI like <code>entities/ABC123</code>.</li>
+<li><strong><span class="glossary-term" data-def="a pointer from a Reltio entity to a record in a source system. Carries a type (the source URI) and a value (the source&#39;s ID for the record).">Crosswalk</span></strong> — the pointer from an entity back to its source record. <code>CRM-1001</code> in the <code>CRM</code> source and <code>ERP-5001</code> in the <code>ERP</code> source are both crosswalks on the same Reltio entity.</li>
+<li><strong><span class="glossary-term" data-def="the survivorship-selected winning value for an attribute. In API responses, the winner has &quot;ov&quot;: true.">Operational value (OV)</span></strong> — the <span class="glossary-term" data-def="the logic that chooses which candidate value becomes OV when multiple sources disagree.">survivorship</span>-selected winning value for an attribute after Reltio reconciles multiple sources.</li>
+<li><strong><span class="glossary-term" data-def="a configured predicate that flags likely duplicates. Rules are classified as automatic, suspect, or relevance_based.">Match rule</span></strong> — a configured predicate that flags likely duplicates. The setup guide defines a single <code>suspect</code>-type rule called <code>SuspectLastNameEmail</code>.</li>
 <li><strong>Asynchronous processing</strong> — entity creation, match evaluation, and merges complete asynchronously. A successful <code>HTTP 200</code> means the request was accepted, not that every downstream index is updated. Wait a few seconds before polling a follow-up call.</li>
 </ul>
 <p>Every tenant API URL in this guide is relative to <code>${TENANT}</code>. The Authentication API is the one exception: it lives at <code>https://auth.reltio.com</code> and is not tenant-specific.</p>
@@ -337,7 +337,7 @@ hr {
 </blockquote>
 <h2 id="3-authenticate">3. Authenticate</h2>
 <p><strong>Endpoint:</strong> <code>POST https://auth.reltio.com/oauth/token</code></p>
-<p>The Authentication API implements the <a href="#15-glossary">OAuth 2.0 client credentials</a> grant. You exchange your Client ID and Client Secret for an access token valid for one hour (<code>3600</code> seconds by default).</p>
+<p>The Authentication API implements the <span class="glossary-term" data-def="the OAuth grant Reltio uses for machine-to-machine authentication. Trades Client ID + Client Secret for a short-lived bearer token.">OAuth 2.0 client credentials</span> grant. You exchange your Client ID and Client Secret for an access token valid for one hour (<code>3600</code> seconds by default).</p>
 <p>Send the credentials as HTTP Basic auth and ask for a <code>client_credentials</code> grant:</p>
 <pre><code class="language-bash hljs">curl -s -X POST <span class="hljs-string">&quot;https://auth.reltio.com/oauth/token&quot;</span> \
   -H <span class="hljs-string">&quot;Authorization: Basic <span class="hljs-subst">$(echo -n <span class="hljs-string">&quot;<span class="hljs-variable">${CLIENT_ID}</span>:<span class="hljs-variable">${CLIENT_SECRET}</span>&quot;</span> | base64)</span>&quot;</span> \
@@ -401,7 +401,7 @@ hr {
 <ul>
 <li>Attribute payloads use full type paths. <code>FirstName</code> on an Individual is <code>configuration/entityTypes/Individual/attributes/FirstName</code>.</li>
 <li>If you later send a path that doesn&#39;t exist in the configuration, the API rejects the entity.</li>
-<li>Reltio&#39;s <a href="#15-glossary">L3 layer</a> is what you, the customer, own. L1 and L2 are inherited. When inspecting or modifying configuration, know which layer you&#39;re looking at.</li>
+<li>Reltio&#39;s <span class="glossary-term" data-def="the customer-owned configuration layer. The model a tenant runs on is the inheritance of L1, L2, and L3.">L3 layer</span> is what you, the customer, own. L1 and L2 are inherited. When inspecting or modifying configuration, know which layer you&#39;re looking at.</li>
 </ul>
 <p><strong>What can go wrong:</strong></p>
 <table>
@@ -483,7 +483,7 @@ hr {
 <ul>
 <li>The request body is <strong>always an array</strong>, even for a single entity.</li>
 <li>Every attribute is an <strong>array of objects</strong> — <code>&quot;FirstName&quot;: [{&quot;type&quot;: &quot;...&quot;, &quot;value&quot;: &quot;John&quot;}]</code>, never <code>&quot;FirstName&quot;: &quot;John&quot;</code>.</li>
-<li>Every record must include at least one <a href="#15-glossary">crosswalk</a>. Without one, Reltio can&#39;t track lineage or match.</li>
+<li>Every record must include at least one <span class="glossary-term" data-def="a pointer from a Reltio entity to a record in a source system. Carries a type (the source URI) and a value (the source&#39;s ID for the record).">crosswalk</span>. Without one, Reltio can&#39;t track lineage or match.</li>
 <li>Attribute <code>type</code> paths must match your tenant configuration exactly.</li>
 </ul>
 <p><strong>What can go wrong:</strong></p>
@@ -516,7 +516,7 @@ hr {
 </blockquote>
 <h2 id="6-search-for-entities">6. Search for entities</h2>
 <p><strong>Endpoint:</strong> <code>GET ${TENANT}/entities?filter=...</code> (or <code>POST ${TENANT}/entities/_search</code> for long filters)</p>
-<p>With records in the tenant, you can query them. The <a href="#15-glossary">Entity Search API</a> accepts a filter expression with functions like <code>equals</code>, <code>startsWith</code>, <code>fuzzy</code>, <code>exists</code>, and <code>missing</code>, combined with <code>AND</code> and <code>OR</code>.</p>
+<p>With records in the tenant, you can query them. The <span class="glossary-term" data-def="/entities (GET) and /entities/_search (POST). Accepts filter expressions to query entities.">Entity Search API</span> accepts a filter expression with functions like <code>equals</code>, <code>startsWith</code>, <code>fuzzy</code>, <code>exists</code>, and <code>missing</code>, combined with <code>AND</code> and <code>OR</code>.</p>
 <p>Find every Individual:</p>
 <pre><code class="language-bash hljs">curl -s -X GET \
   <span class="hljs-string">&quot;<span class="hljs-variable">${TENANT}</span>/entities?filter=(equals(type,&#x27;configuration/entityTypes/Individual&#x27;))&amp;max=10&quot;</span> \
@@ -610,7 +610,7 @@ hr {
 </blockquote>
 <h2 id="8-update-an-attribute">8. Update an attribute</h2>
 <p><strong>Endpoint:</strong> <code>POST ${TENANT}/entities?options=partialOverride</code></p>
-<p>Reltio&#39;s <strong><a href="#15-glossary">upsert</a></strong> pattern uses the same <code>POST /entities</code> endpoint you saw in <a href="#5-create-entities">Step 5</a>. When the crosswalk already exists, Reltio finds the matching entity and updates it instead of creating a new one. Add the <code>partialOverride</code> option so Reltio only touches the attributes you send.</p>
+<p>Reltio&#39;s <strong><span class="glossary-term" data-def="the Reltio pattern where POST /entities with an existing crosswalk updates instead of creating. Combine with ?options=partialOverride for incremental updates.">upsert</span></strong> pattern uses the same <code>POST /entities</code> endpoint you saw in <a href="#5-create-entities">Step 5</a>. When the crosswalk already exists, Reltio finds the matching entity and updates it instead of creating a new one. Add the <code>partialOverride</code> option so Reltio only touches the attributes you send.</p>
 <pre><code class="language-bash hljs">curl -s -X POST <span class="hljs-string">&quot;<span class="hljs-variable">${TENANT}</span>/entities?options=partialOverride&quot;</span> \
   -H <span class="hljs-string">&quot;Authorization: Bearer <span class="hljs-variable">${TOKEN}</span>&quot;</span> \
   -H <span class="hljs-string">&quot;Content-Type: application/json&quot;</span> \
@@ -679,7 +679,7 @@ hr {
 </blockquote>
 <h2 id="9-create-a-relationship">9. Create a relationship</h2>
 <p><strong>Endpoint:</strong> <code>POST ${TENANT}/relations</code></p>
-<p>Entities rarely stand alone. Use the <a href="#15-glossary">Relations API</a> to connect the John entity from <a href="#5-create-entities">Step 5</a> to an Organization through the <code>Employment</code> relation type. First, create the Organization:</p>
+<p>Entities rarely stand alone. Use the <span class="glossary-term" data-def="/relations. Creates, reads, updates, and deletes directional links between entities.">Relations API</span> to connect the John entity from <a href="#5-create-entities">Step 5</a> to an Organization through the <code>Employment</code> relation type. First, create the Organization:</p>
 <pre><code class="language-bash hljs">curl -s -X POST <span class="hljs-string">&quot;<span class="hljs-variable">${TENANT}</span>/entities&quot;</span> \
   -H <span class="hljs-string">&quot;Authorization: Bearer <span class="hljs-variable">${TOKEN}</span>&quot;</span> \
   -H <span class="hljs-string">&quot;Content-Type: application/json&quot;</span> \
@@ -748,7 +748,7 @@ hr {
 </blockquote>
 <h2 id="10-find-potential-matches">10. Find potential matches</h2>
 <p><strong>Endpoint:</strong> <code>GET ${TENANT}/{entityURI}/_matches</code></p>
-<p>Every time an entity is created or updated, Reltio evaluates the tenant&#39;s <a href="#15-glossary">match rules</a> against it. The <a href="#15-glossary">Potential Matches API</a> returns what those rules found, grouped by rule URI.</p>
+<p>Every time an entity is created or updated, Reltio evaluates the tenant&#39;s <span class="glossary-term" data-def="a configured predicate that flags likely duplicates. Rules are classified as automatic, suspect, or relevance_based.">match rules</span> against it. The <span class="glossary-term" data-def="/{entityURI}/_matches. Returns rule-evaluated duplicate candidates grouped by match-group URI.">Potential Matches API</span> returns what those rules found, grouped by rule URI.</p>
 <p>To see matches in action, first create a near-duplicate of John from the <code>ERP</code> source:</p>
 <pre><code class="language-bash hljs">curl -s -X POST <span class="hljs-string">&quot;<span class="hljs-variable">${TENANT}</span>/entities&quot;</span> \
   -H <span class="hljs-string">&quot;Authorization: Bearer <span class="hljs-variable">${TOKEN}</span>&quot;</span> \
@@ -843,7 +843,7 @@ hr {
 </blockquote>
 <h2 id="11-merge-two-entities">11. Merge two entities</h2>
 <p><strong>Endpoint:</strong> <code>POST ${TENANT}/{survivorURI}/_sameAs?uri={loserURI}</code></p>
-<p>When you confirm two entities are the same, merge them. The entity in the URL path becomes the <strong>survivor</strong> and keeps its URI; the entity in the <code>uri</code> query parameter is the <strong>loser</strong> and from now on redirects to the survivor. Attributes, crosswalks, roles, and tags from both are combined, and <a href="#15-glossary">survivorship</a> picks the winning <a href="#15-glossary">OV</a> values.</p>
+<p>When you confirm two entities are the same, merge them. The entity in the URL path becomes the <strong>survivor</strong> and keeps its URI; the entity in the <code>uri</code> query parameter is the <strong>loser</strong> and from now on redirects to the survivor. Attributes, crosswalks, roles, and tags from both are combined, and <span class="glossary-term" data-def="the logic that chooses which candidate value becomes OV when multiple sources disagree.">survivorship</span> picks the winning <span class="glossary-term" data-def="the survivorship-selected winning value for an attribute. In API responses, the winner has &quot;ov&quot;: true.">OV</span> values.</p>
 <pre><code class="language-bash hljs">curl -s -X POST \
   <span class="hljs-string">&quot;<span class="hljs-variable">${TENANT}</span>/<span class="hljs-variable">${ENTITY_JOHN}</span>/_sameAs?uri=<span class="hljs-variable">${ENTITY_JON}</span>&quot;</span> \
   -H <span class="hljs-string">&quot;Authorization: Bearer <span class="hljs-variable">${TOKEN}</span>&quot;</span> | jq .</code></pre>
@@ -905,7 +905,7 @@ hr {
 </blockquote>
 <h2 id="12-view-entity-history">12. View entity history</h2>
 <p><strong>Endpoint:</strong> <code>GET ${TENANT}/{entityURI}/_changes</code></p>
-<p>Every create, update, merge, and split is recorded. The <a href="#15-glossary">Entity History API</a> returns that log — useful for audit, debugging, and reconciliation.</p>
+<p>Every create, update, merge, and split is recorded. The <span class="glossary-term" data-def="/{entityURI}/_changes. Returns the audit log of an entity, up to 1,000 most recent events.">Entity History API</span> returns that log — useful for audit, debugging, and reconciliation.</p>
 <pre><code class="language-bash hljs">curl -s -X GET \
   <span class="hljs-string">&quot;<span class="hljs-variable">${TENANT}</span>/<span class="hljs-variable">${ENTITY_JOHN}</span>/_changes?max=10&amp;order=desc&quot;</span> \
   -H <span class="hljs-string">&quot;Authorization: Bearer <span class="hljs-variable">${TOKEN}</span>&quot;</span> | jq .</code></pre>

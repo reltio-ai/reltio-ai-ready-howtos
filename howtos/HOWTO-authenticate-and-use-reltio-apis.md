@@ -40,9 +40,9 @@ Gather these before you begin:
 
 - A Reltio tenant and its tenant ID (for example, `HKlMR3wNbRT3PMo`).
 - Your environment URL (for example, `https://na07-prod.reltio.com`). Your tenant URL is `https://{environment}.reltio.com/reltio/api/{tenantId}`.
-- A Reltio customer admin (or a user with **Auth.Customer.Clients CREATE** permission) who can create an [application client](#9-glossary) for you. Only customer administrators and users with customer client management permissions can create application clients.
+- A Reltio customer admin (or a user with **Auth.Customer.Clients CREATE** permission) who can create an [application client](#glossary) for you. Only customer administrators and users with customer client management permissions can create application clients.
 - A terminal with `curl` (and optionally `jq` for pretty JSON).
-- Familiarity with HTTP and OAuth 2.0 basics.
+- Familiarity with HTTP and [OAuth 2.0](#glossary) basics.
 
 > **Tip:** If your tenant is configured for SSO, you must obtain access tokens from your SSO Auth server instead of the Reltio Auth API. This guide covers the client credentials flow for machine-to-machine integrations.
 
@@ -50,10 +50,10 @@ Gather these before you begin:
 
 ## 2. Key concepts
 
-Reltio's Authentication API implements [OAuth 2.0](#9-glossary). It's a centralized service — not tenant-specific — that issues an [access token](#9-glossary) you then send to every tenant API call.
+Reltio's Authentication API implements [OAuth 2.0](#glossary). It's a centralized service — not tenant-specific — that issues an [access token](#glossary) you then send to every tenant API call.
 
-- **Client credentials grant** — machine-to-machine authentication. You trade a [Client ID](#9-glossary) and [Client Secret](#9-glossary) for an access token. No user is associated with the client; the application is authenticated with the default `ROLE_API` role plus any scopes you configure.
-- **Bearer token** — Reltio's token type is always `bearer`. You send it as `Authorization: Bearer <accessToken>` on every Reltio API request.
+- **Client credentials grant** — machine-to-machine authentication. You trade a [Client ID](#glossary) and [Client Secret](#glossary) for an access token. No user is associated with the client; the application is authenticated with the default `[ROLE_API](#glossary)` role plus any scopes you configure.
+- **[Bearer token](#glossary)** — Reltio's token type is always `bearer`. You send it as `Authorization: Bearer <accessToken>` on every Reltio API request.
 - **Token validity** — access tokens expire after `3600` seconds (one hour) by default. In RDBMS mode, values above `3600` seconds are rejected with a validation error.
 - **No refresh token with client credentials** — per the OAuth 2.0 spec, the client credentials grant does not issue a refresh token. When the access token expires, request a new one.
 - **IP whitelisting** — the Authentication API itself is not IP-whitelisted; whitelisting is enforced when the token is used against tenant-specific endpoints (for example, `/entities/_scan`). Requests from non-whitelisted IPs fail with `403 Forbidden` even with a valid token.
@@ -116,7 +116,7 @@ curl -s -X POST "https://auth.reltio.com/oauth/customers/YOUR_CUSTOMER_ID/client
 - **Role and permission** — you need either the `ROLE_ADMIN_CUSTOMER` role or the `Auth.Customer.Clients CREATE` permission to call this endpoint.
 - **Authentication methods** — `client_secret_basic` lets you send the secret in the `Authorization` header; `client_secret_post` lets you send it in the request body.
 - **Client secret** — if you don't set `clientSecret`, Reltio generates a secure random secret and returns it exactly once. Copy it immediately and store it in a secret manager.
-- **Access token validity** — if you omit `accessTokenValidity`, the default is `3600` seconds. In RDBMS mode, values above `3600` seconds are rejected.
+- **[Access token](#glossary) validity** — if you omit `accessTokenValidity`, the default is `3600` seconds. In RDBMS mode, values above `3600` seconds are rejected.
 
 ### What can go wrong
 
@@ -132,7 +132,7 @@ curl -s -X POST "https://auth.reltio.com/oauth/customers/YOUR_CUSTOMER_ID/client
 
 `POST https://auth.reltio.com/oauth/token`
 
-Exchange the Client ID and Client Secret for a bearer access token. This is the centralized Reltio Auth service endpoint — it's the same host regardless of your tenant environment.
+Exchange the Client ID and [Client Secret](#glossary) for a bearer access token. This is the centralized Reltio Auth service endpoint — it's the same host regardless of your tenant environment.
 
 **Request**
 
@@ -174,7 +174,7 @@ The `Authorization: Basic` header is the Base64 encoding of `client_id:client_se
 
 | Symptom | Cause | Fix |
 |---------|-------|-----|
-| `invalid_client` or `401 Unauthorized` | Wrong Client ID or Client Secret, or missing/malformed `Authorization` header | Re-check credentials; verify Base64 encoding of `client_id:client_secret` |
+| `invalid_client` or `401 Unauthorized` | Wrong [Client ID](#glossary) or Client Secret, or missing/malformed `Authorization` header | Re-check credentials; verify Base64 encoding of `client_id:client_secret` |
 | `unsupported_grant_type` | `grant_type` value isn't `client_credentials` | Set the body to exactly `grant_type=client_credentials` |
 | `invalid_request` | Missing required parameter, repeated parameter, or multiple credential sources | Send only one credentialing method and include `grant_type` once |
 | `429 Too Many Requests` | More than 10 token requests per second | Cache your token and reuse it; only request a new one after it expires |
@@ -185,7 +185,7 @@ The `Authorization: Basic` header is the Base64 encoding of `client_id:client_se
 
 `GET {TenantURL}/entities/{entityId}`
 
-Now use the token against a tenant-scoped endpoint. A good first call is `Get Entity` — it returns a single [entity](#9-glossary) object by URI and confirms that your token, tenant URL, and network path all work end-to-end.
+Now use the token against a tenant-scoped endpoint. A good first call is `Get [Entity](#glossary)` — it returns a single [entity](#glossary) object by URI and confirms that your token, tenant URL, and network path all work end-to-end.
 
 **Request**
 

@@ -45,7 +45,7 @@ This guide is for this Reltio role: **Developer**. For more information on data 
 Gather these before you begin:
 
 - A Reltio tenant configured with the tutorial data model — two entity types (`Individual`, `Organization`), two sources (`CRM`, `ERP`), and an `Employment` relation. If you don't have one yet, run [HOWTO: Configure a Reltio tenant for the Top 10 APIs tutorial](./HOWTO-SETUP-for-top-10-reltio-apis.md) first.
-- Your **Client ID** and **Client Secret** — credentials for an [application client](#15-glossary) that can read and write the tenant.
+- Your **Client ID** and **Client Secret** — credentials for an [application client](#glossary) that can read and write the tenant.
 - Your **Tenant URL** in the format `https://{environment}.reltio.com/reltio/api/{tenantId}` (for example, `https://na07-prod.reltio.com/reltio/api/YOUR_TENANT_ID`).
 - A terminal with `curl` and `jq` installed.
 
@@ -65,11 +65,11 @@ You'll set `TOKEN` in [Step 3](#3-authenticate) and a few entity-URI variables (
 
 The ten APIs in this guide fall into four groups — one authentication call, one configuration read, six entity-management calls, one relation call, and two match/merge calls. A handful of shared ideas run through all of them.
 
-- **[OAuth 2.0 client credentials](#15-glossary)** — Reltio's Authentication API issues a short-lived bearer token. Every tenant call needs `Authorization: Bearer ${TOKEN}`.
-- **[Entity](#15-glossary)** — one record of a real-world thing (a person, an organization). Entities have attributes and are identified by a URI like `entities/ABC123`.
-- **[Crosswalk](#15-glossary)** — the pointer from an entity back to its source record. `CRM-1001` in the `CRM` source and `ERP-5001` in the `ERP` source are both crosswalks on the same Reltio entity.
-- **[Operational value (OV)](#15-glossary)** — the [survivorship](#glossary)-selected winning value for an attribute after Reltio reconciles multiple sources.
-- **[Match rule](#15-glossary)** — a configured predicate that flags likely duplicates. The setup guide defines a single `suspect`-type rule called `SuspectLastNameEmail`.
+- **[OAuth 2.0 client credentials](#glossary)** — Reltio's Authentication API issues a short-lived bearer token. Every tenant call needs `Authorization: Bearer ${TOKEN}`.
+- **[Entity](#glossary)** — one record of a real-world thing (a person, an organization). Entities have attributes and are identified by a URI like `entities/ABC123`.
+- **[Crosswalk](#glossary)** — the pointer from an entity back to its source record. `CRM-1001` in the `CRM` source and `ERP-5001` in the `ERP` source are both crosswalks on the same Reltio entity.
+- **[Operational value (OV)](#glossary)** — the [survivorship](#glossary)-selected winning value for an attribute after Reltio reconciles multiple sources.
+- **[Match rule](#glossary)** — a configured predicate that flags likely duplicates. The setup guide defines a single `suspect`-type rule called `SuspectLastNameEmail`.
 - **Asynchronous processing** — entity creation, match evaluation, and merges complete asynchronously. A successful `HTTP 200` means the request was accepted, not that every downstream index is updated. Wait a few seconds before polling a follow-up call.
 
 Every tenant API URL in this guide is relative to `${TENANT}`. The Authentication API is the one exception: it lives at `https://auth.reltio.com` and is not tenant-specific.
@@ -80,7 +80,7 @@ Every tenant API URL in this guide is relative to `${TENANT}`. The Authenticatio
 
 **Endpoint:** `POST https://auth.reltio.com/oauth/token`
 
-The Authentication API implements the [OAuth 2.0 client credentials](#15-glossary) grant. You exchange your Client ID and Client Secret for an access token valid for one hour (`3600` seconds by default).
+The Authentication API implements the [OAuth 2.0 client credentials](#glossary) grant. You exchange your Client ID and Client Secret for an access token valid for one hour (`3600` seconds by default).
 
 Send the credentials as HTTP Basic auth and ask for a `client_credentials` grant:
 
@@ -154,7 +154,7 @@ curl -s -X GET "${TENANT}/configuration" \
 
 - Attribute payloads use full type paths. `FirstName` on an Individual is `configuration/entityTypes/Individual/attributes/FirstName`.
 - If you later send a path that doesn't exist in the configuration, the API rejects the entity.
-- Reltio's [L3 layer](#15-glossary) is what you, the customer, own. L1 and L2 are inherited. When inspecting or modifying configuration, know which layer you're looking at.
+- Reltio's [L3 layer](#glossary) is what you, the customer, own. L1 and L2 are inherited. When inspecting or modifying configuration, know which layer you're looking at.
 
 **What can go wrong:**
 
@@ -232,7 +232,7 @@ export ENTITY_JANE="entities/DEF456"
 
 - The request body is **always an array**, even for a single entity.
 - Every attribute is an **array of objects** — `"FirstName": [{"type": "...", "value": "John"}]`, never `"FirstName": "John"`.
-- Every record must include at least one [crosswalk](#15-glossary). Without one, Reltio can't track lineage or match.
+- Every record must include at least one [crosswalk](#glossary). Without one, Reltio can't track lineage or match.
 - Attribute `type` paths must match your tenant configuration exactly.
 
 **What can go wrong:**
@@ -249,7 +249,7 @@ export ENTITY_JANE="entities/DEF456"
 
 **Endpoint:** `GET ${TENANT}/entities?filter=...` (or `POST ${TENANT}/entities/_search` for long filters)
 
-With records in the tenant, you can query them. The [Entity Search API](#15-glossary) accepts a filter expression with functions like `equals`, `startsWith`, `fuzzy`, `exists`, and `missing`, combined with `AND` and `OR`.
+With records in the tenant, you can query them. The [Entity Search API](#glossary) accepts a filter expression with functions like `equals`, `startsWith`, `fuzzy`, `exists`, and `missing`, combined with `AND` and `OR`.
 
 Find every Individual:
 
@@ -336,7 +336,7 @@ curl -s -X POST \
 
 **Endpoint:** `POST ${TENANT}/entities?options=partialOverride`
 
-Reltio's **[upsert](#15-glossary)** pattern uses the same `POST /entities` endpoint you saw in [Step 5](#5-create-entities). When the crosswalk already exists, Reltio finds the matching entity and updates it instead of creating a new one. Add the `partialOverride` option so Reltio only touches the attributes you send.
+Reltio's **[upsert](#glossary)** pattern uses the same `POST /entities` endpoint you saw in [Step 5](#5-create-entities). When the crosswalk already exists, Reltio finds the matching entity and updates it instead of creating a new one. Add the `partialOverride` option so Reltio only touches the attributes you send.
 
 ```bash
 curl -s -X POST "${TENANT}/entities?options=partialOverride" \
@@ -384,7 +384,7 @@ Update modes differ in what happens to attributes **not** in the payload:
 
 **Endpoint:** `POST ${TENANT}/relations`
 
-Entities rarely stand alone. Use the [Relations API](#15-glossary) to connect the John entity from [Step 5](#5-create-entities) to an Organization through the `Employment` relation type. First, create the Organization:
+Entities rarely stand alone. Use the [Relations API](#glossary) to connect the John entity from [Step 5](#5-create-entities) to an Organization through the `Employment` relation type. First, create the Organization:
 
 ```bash
 curl -s -X POST "${TENANT}/entities" \
@@ -456,7 +456,7 @@ curl -s -X GET "${TENANT}/${ENTITY_JOHN}/relations" \
 
 **Endpoint:** `GET ${TENANT}/{entityURI}/_matches`
 
-Every time an entity is created or updated, Reltio evaluates the tenant's [match rules](#15-glossary) against it. The [Potential Matches API](#15-glossary) returns what those rules found, grouped by rule URI.
+Every time an entity is created or updated, Reltio evaluates the tenant's [match rules](#glossary) against it. The [Potential Matches API](#glossary) returns what those rules found, grouped by rule URI.
 
 To see matches in action, first create a near-duplicate of John from the `ERP` source:
 
@@ -533,7 +533,7 @@ Useful query parameters:
 
 **Endpoint:** `POST ${TENANT}/{survivorURI}/_sameAs?uri={loserURI}`
 
-When you confirm two entities are the same, merge them. The entity in the URL path becomes the **survivor** and keeps its URI; the entity in the `uri` query parameter is the **loser** and from now on redirects to the survivor. Attributes, crosswalks, roles, and tags from both are combined, and [survivorship](#15-glossary) picks the winning [OV](#15-glossary) values.
+When you confirm two entities are the same, merge them. The entity in the URL path becomes the **survivor** and keeps its URI; the entity in the `uri` query parameter is the **loser** and from now on redirects to the survivor. Attributes, crosswalks, roles, and tags from both are combined, and [survivorship](#glossary) picks the winning [OV](#glossary) values.
 
 ```bash
 curl -s -X POST \
@@ -595,7 +595,7 @@ curl -s -X POST \
 
 **Endpoint:** `GET ${TENANT}/{entityURI}/_changes`
 
-Every create, update, merge, and split is recorded. The [Entity History API](#15-glossary) returns that log — useful for audit, debugging, and reconciliation.
+Every create, update, merge, and split is recorded. The [Entity History API](#glossary) returns that log — useful for audit, debugging, and reconciliation.
 
 ```bash
 curl -s -X GET \

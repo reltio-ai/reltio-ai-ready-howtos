@@ -1,6 +1,6 @@
 # HOWTO: Use the Agent Builder for AgentFlow
 
-Author, test, submit, review, and publish custom AI agents in Reltio [AgentFlow](#13-glossary) through a governed lifecycle — from draft through automated [security scan](#glossary) to reviewer approval and live publication.
+Author, test, submit, review, and publish custom AI agents in Reltio [AgentFlow](#glossary) through a governed lifecycle — from draft through automated [security scan](#glossary) to reviewer approval and live publication.
 
 ```mermaid
 %%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#000066', 'primaryTextColor': '#ffffff', 'primaryBorderColor': '#0000CC', 'lineColor': '#000033', 'textColor': '#000033', 'secondaryColor': '#f5f5f5', 'tertiaryColor': '#f0f4ff', 'edgeLabelBackground': '#f0f4ff', 'clusterBkg': '#f0f4ff', 'clusterBorder': '#0000CC'}, 'themeCSS': '.edgeLabel { color: #000033 !important; background-color: #f0f4ff !important; font-weight: 500 !important; } .edgeLabel rect, .edgeLabel foreignObject { fill: #f0f4ff !important; }', 'flowchart': {'nodeSpacing': 40, 'rankSpacing': 55, 'curve': 'basis', 'padding': 12}}}%%
@@ -21,7 +21,7 @@ flowchart LR
 
 ## Overview
 
-[Agent Builder](#13-glossary) is the authoring and governance surface inside [AgentFlow](#13-glossary). [Agent Authors](#13-glossary) create a custom agent by writing a [system prompt](#13-glossary), selecting the [tools](#13-glossary) the agent is allowed to call, and testing it interactively. When the author submits a [publish request](#13-glossary), an automated [security scan](#13-glossary) checks the prompt for policy violations. Clean requests enter the [Agent Approver's](#13-glossary) queue; violations are [auto-blocked](#13-glossary) before a human sees them. Once approved, the agent is published as an [immutable version](#glossary) and appears in **Discover Agents** for end users. This guide walks through the full lifecycle — authoring, scanning, reviewing, and managing state transitions — covering both the author and approver workflows.
+[Agent Builder](#glossary) is the authoring and governance surface inside [AgentFlow](#glossary). [Agent Authors](#glossary) create a custom agent by writing a [system prompt](#glossary), selecting the [tools](#glossary) the agent is allowed to call, and testing it interactively. When the author submits a [publish request](#glossary), an automated [security scan](#glossary) checks the prompt for policy violations. Clean requests enter the [Agent Approver's](#glossary) queue; violations are [auto-blocked](#glossary) before a human sees them. Once approved, the agent is published as an [immutable version](#glossary) and appears in **Discover Agents** for end users. This guide walks through the full lifecycle — authoring, scanning, reviewing, and managing state transitions — covering both the author and approver workflows.
 
 This guide is for these Reltio roles: **Developer**, **Reltio Configurator**, **Data Product Owner**. For more information on data unification roles in the Reltio Context Intelligence Platform, see [About roles](https://docs.reltio.com/en/roles/about-roles).
 
@@ -87,7 +87,7 @@ Use this path when you are building a new agent from scratch. If you are updatin
 
 ## 4. Write the system prompt
 
-The [system prompt](#13-glossary) is the complete instruction set the model evaluates when the agent starts. It is limited to a maximum of **100,000 characters, including spaces**. Every save in the prompt editor increments the agent's minor version number.
+The [system prompt](#glossary) is the complete instruction set the model evaluates when the agent starts. It is limited to a maximum of **100,000 characters, including spaces**. Every save in the prompt editor increments the agent's minor version number.
 
 1. In the agent editor, open the **Prompt** tab.
 2. Enter the system prompt. A well-structured prompt covers the agent's **identity**, **objectives**, **tool usage rules**, **workflow**, **guardrails**, **output format**, and **error handling behavior**.
@@ -157,7 +157,7 @@ The agent can only call tools you explicitly select — this selection is the ag
 
 ## 6. Test the draft agent
 
-Testing runs the same automated [security scan](#13-glossary) that runs on submission. A test run with a prompt violation is blocked before execution — this is a build-time check, not a runtime conversation guardrail.
+Testing runs the same automated [security scan](#glossary) that runs on submission. A test run with a prompt violation is blocked before execution — this is a build-time check, not a runtime conversation guardrail.
 
 1. Open the **Test** tab in the agent editor.
 2. Enter a prompt in the chat panel and review the streaming response.
@@ -176,7 +176,7 @@ Testing runs the same automated [security scan](#13-glossary) that runs on submi
 
 ## 7. Submit the agent for review
 
-When the draft is ready, submit a [publish request](#13-glossary). The system runs the security scan automatically before the request reaches a reviewer.
+When the draft is ready, submit a [publish request](#glossary). The system runs the security scan automatically before the request reaches a reviewer.
 
 1. In the agent editor, select the publish action.
 2. Optionally add version notes. These are visible to the reviewer alongside the agent configuration.

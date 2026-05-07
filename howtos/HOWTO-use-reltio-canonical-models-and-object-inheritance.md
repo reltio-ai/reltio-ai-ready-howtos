@@ -58,11 +58,11 @@ Gather these before you start:
 
 Read these terms before diving into the layers.
 
-- **[Canonical model](#10-glossary)** — a shared, logical definition of an object that every source maps to. Reltio's canonical models live in L1 and L2; you inherit them in L3.
-- **[Object inheritance](#10-glossary)** — the mechanism that lets L3 reuse L1 and L2 definitions by reference instead of redefining them.
-- **[L1, L2, L3 layers](#10-glossary)** — the three configuration layers. You only edit L3.
+- **[Canonical model](#glossary)** — a shared, logical definition of an object that every source maps to. Reltio's canonical models live in L1 and L2; you inherit them in L3.
+- **[Object inheritance](#glossary)** — the mechanism that lets L3 reuse L1 and L2 definitions by reference instead of redefining them.
+- **[L1, L2, L3 layers](#glossary)** — the three configuration layers. You only edit L3.
 - **Attribute types** — simple, nested, reference, and analytic. These replace the rigid column types of a relational table.
-- **[Consolidated configuration](#10-glossary)** — the effective configuration your tenant uses, computed by merging L1, L2, and L3.
+- **[Consolidated configuration](#glossary)** — the effective configuration your tenant uses, computed by merging L1, L2, and L3.
 
 > **Learn more:** [Tenant configuration inheritance across layers](https://docs.reltio.com/en/reltio/what-does-reltio-do/what-reltio-does-at-a-glance/data-unification-and-mdm-at-a-glance/data-unification-and-mdm-in-detail/reltio-information-model/data-model/tenant-configuration-inheritance-across-layers) in the Reltio documentation.
 
@@ -73,7 +73,7 @@ Each layer builds on the one below it. L3 inherits from L2, which inherits from 
 | Layer | Who controls it | What it contains |
 |---|---|---|
 | **L1 — Foundation** | Reltio Product Management | Industry-agnostic objects: `Party` (abstract), `Location`, `Organization`, `Individual`, `HasAddress` relationship |
-| **L2 — Containers** | Reltio Product Management | Industry-specific extensions — Life Sciences adds `HCO` by extending `Organization`, and `HCP` by extending `Individual` |
+| **L2 — Containers** | Reltio Product Management | Industry-specific extensions — Life Sciences adds `[HCO](#glossary)` by extending `Organization`, and `HCP` by extending `Individual` |
 | **L3 — Customer tenant** | You | Your customizations: new attributes, new entity types, and overrides of L1 or L2 |
 
 Each layer is represented as JSON. You only touch L3. You can retrieve it, edit it, and apply it back to the tenant using the Configuration API.
@@ -91,7 +91,7 @@ The Life Sciences velocity pack is a good walkthrough because you can see all th
 The chain for a Healthcare Professional:
 
 1. **L1** defines `Party` as an abstract type, then extends it to `Individual` (a concrete type).
-2. **L2 (Life Sciences)** extends `Individual` to `HCP`.
+2. **L2 (Life Sciences)** extends `Individual` to `[HCP](#glossary)`.
 3. **L3 (your tenant)** extends `HCP` to add the attributes your organization needs — for example, an internal territory ID.
 
 Your L3 `HCP` now carries:

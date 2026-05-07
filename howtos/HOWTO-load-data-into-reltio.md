@@ -52,7 +52,7 @@ The [Data Loader](#glossary) can pull files from:
 
 **Data types you can load:**
 
-- [Entities](#glossary) (for example, customers, organizations, products)
+- [Entity](#glossary) records (for example, customers, organizations, products)
 - [Relationships](#glossary) (for example, Employment between an Individual and an Organization)
 - Interactions (available on Reltio Intelligent 360 tenants only)
 

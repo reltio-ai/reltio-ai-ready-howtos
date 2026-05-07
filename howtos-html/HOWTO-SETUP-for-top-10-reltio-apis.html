@@ -331,7 +331,7 @@ hr {
 </tr>
 </thead>
 <tbody><tr>
-<td><a href="#13-glossary">Entity type</a> <code>Individual</code></td>
+<td><span class="glossary-term" data-def="A class of business object (for example, Individual or Organization) defined by metadata including a URI, label, and attributes. Entity types are the building blocks of a Reltio data model.">Entity type</span> <code>Individual</code></td>
 <td>Represents a person with <code>FirstName</code>, <code>LastName</code>, and <code>Email</code> simple attributes</td>
 </tr>
 <tr>
@@ -339,7 +339,7 @@ hr {
 <td>Represents a company with a <code>Name</code> simple attribute</td>
 </tr>
 <tr>
-<td><a href="#13-glossary">Source</a> <code>CRM</code></td>
+<td><span class="glossary-term" data-def="A registered origin of data in a tenant, defined as configuration/sources/{name}. Every record loaded into Reltio is associated with a source; if none is specified, the source defaults to Reltio.">Source</span> <code>CRM</code></td>
 <td>Primary <span class="glossary-term" data-def="A registered origin of data in a tenant, defined as configuration/sources/{name}. Every record loaded into Reltio is associated with a source; if none is specified, the source defaults to Reltio.">source</span> for individuals and organizations created during the tutorial</td>
 </tr>
 <tr>
@@ -347,15 +347,15 @@ hr {
 <td>Second source used to create a near-duplicate record</td>
 </tr>
 <tr>
-<td><a href="#13-glossary">Relation type</a> <code>Employment</code></td>
+<td><span class="glossary-term" data-def="A configuration object that describes how two entity types are linked, using a startObject and endObject. Relation types can carry their own simple attributes.">Relation type</span> <code>Employment</code></td>
 <td>Links an <code>Individual</code> (start) to an <code>Organization</code> (end), with a <code>Title</code> attribute</td>
 </tr>
 </tbody></table>
 <p>A few platform concepts to keep straight:</p>
 <ul>
-<li><strong><a href="#13-glossary">L3</a></strong> — the customer-owned configuration layer; the consolidated model a tenant actually runs on is L1 + L2 + L3 after inheritance.</li>
-<li><strong><a href="#13-glossary">Configuration API</a></strong> — the REST surface used to get and set L3. The two most-used calls are <code>GET /configuration</code> (with <code>_noInheritance</code> for just the L3 you own) and <code>PUT /configuration</code>.</li>
-<li><strong><a href="#13-glossary">Crosswalk</a></strong> — a pointer from a Reltio entity back to its source record; every record you load during the tutorial lands in the tenant with a <span class="glossary-term" data-def="A reference that links a Reltio entity back to its record in a source system. Every record loaded into a tenant carries a crosswalk whose type points to a configuration/sources/{name} URI.">crosswalk</span> whose <code>type</code> points to <code>configuration/sources/CRM</code> or <code>configuration/sources/ERP</code>.</li>
+<li><strong><span class="glossary-term" data-def="The Layer 3, customer-owned configuration that overlays Reltio&#39;s L1 and L2 layers. When an L3 is applied, inheritance produces the consolidated tenant configuration the platform runs on.">L3</span></strong> — the customer-owned configuration layer; the consolidated model a tenant actually runs on is L1 + L2 + L3 after inheritance.</li>
+<li><strong><span class="glossary-term" data-def="The REST API for retrieving, editing, and validating a tenant&#39;s metadata configuration. Its two most-used calls are GET /configuration and PUT /configuration.">Configuration API</span></strong> — the REST surface used to get and set L3. The two most-used calls are <code>GET /configuration</code> (with <code>_noInheritance</code> for just the L3 you own) and <code>PUT /configuration</code>.</li>
+<li><strong><span class="glossary-term" data-def="A reference that links a Reltio entity back to its record in a source system. Every record loaded into a tenant carries a crosswalk whose type points to a configuration/sources/{name} URI.">Crosswalk</span></strong> — a pointer from a Reltio entity back to its source record; every record you load during the tutorial lands in the tenant with a <span class="glossary-term" data-def="A reference that links a Reltio entity back to its record in a source system. Every record loaded into a tenant carries a crosswalk whose type points to a configuration/sources/{name} URI.">crosswalk</span> whose <code>type</code> points to <code>configuration/sources/CRM</code> or <code>configuration/sources/ERP</code>.</li>
 </ul>
 <p>The Top 10 APIs tutorial exercises CRUD, search, crosswalks, relations, match, and merge. The V1 tutorial you can follow today is <a href="HOWTO-top-10-reltio-apis.html">HOWTO: Top 10 Reltio APIs</a>.</p>
 <blockquote>

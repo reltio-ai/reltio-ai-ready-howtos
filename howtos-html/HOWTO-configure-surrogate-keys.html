@@ -312,12 +312,12 @@ hr {
 <h2 id="2-key-concepts">2. Key concepts</h2>
 <p>These terms appear throughout the guide.</p>
 <ul>
-<li><strong><a href="#11-glossary">Surrogate key</a></strong> — a crosswalk key calculated by Reltio from cleansed attribute values when the source system doesn&#39;t provide one.</li>
-<li><strong><a href="#11-glossary">Crosswalk</a></strong> — a pointer from a Reltio entity back to a record in a source system.</li>
-<li><strong><a href="#11-glossary">refEntity</a></strong> — in an incoming JSON payload, the crosswalk for a referenced entity (for example, a <code>Location</code> linked to an <code>HCP</code>).</li>
-<li><strong><a href="#11-glossary">refRelation</a></strong> — in an incoming JSON payload, the crosswalk for the relationship that links one entity to another (for example, <code>hasAddress</code>).</li>
-<li><strong>Enforce flag</strong> — a <code>surrogateCrosswalks</code> configuration option that controls whether a surrogate is always generated or only as a fallback.</li>
-<li><strong>generationLogic</strong> — a parameter that controls how surrogate keys handle missing operational values (OV).</li>
+<li><strong><span class="glossary-term" data-def="The key value of a surrogate crosswalk — typically an MD5 hash of the concatenated, cleansed attribute values.">Surrogate key</span></strong> — a crosswalk key calculated by Reltio from cleansed attribute values when the source system doesn&#39;t provide one.</li>
+<li><strong><span class="glossary-term" data-def="A pointer from a Reltio entity back to the source-system record it came from. Every entity in Reltio has at least one crosswalk.">Crosswalk</span></strong> — a pointer from a Reltio entity back to a record in a source system.</li>
+<li><strong><span class="glossary-term" data-def="In an incoming JSON payload, the crosswalk for a referenced entity — for example, a Location linked to an HCP.">refEntity</span></strong> — in an incoming JSON payload, the crosswalk for a referenced entity (for example, a <code>[Location](#glossary)</code> linked to an <code>HCP</code>).</li>
+<li><strong><span class="glossary-term" data-def="In an incoming JSON payload, the crosswalk for the relationship that links one entity to another — for example, hasAddress.">refRelation</span></strong> — in an incoming JSON payload, the crosswalk for the relationship that links one entity to another (for example, <code>hasAddress</code>).</li>
+<li><strong><span class="glossary-term" data-def="A boolean on a surrogateCrosswalks config entry. true means always generate a surrogate; false means only generate one when no crosswalk value is supplied.">Enforce flag</span></strong> — a <code>surrogateCrosswalks</code> configuration option that controls whether a surrogate is always generated or only as a fallback.</li>
+<li><strong><span class="glossary-term" data-def="A parameter that controls how surrogate keys handle missing operational values. Accepts ovOnly, useFirstNonOvWhenOvMissing, generateUidWhenOvMissing, generateUidWhenOvAndNonOvMissing, and generateUidWhenAllOvMissing.">generationLogic</span></strong> — a parameter that controls how surrogate keys handle missing operational values (OV).</li>
 </ul>
 <blockquote>
 <p><strong>Learn more:</strong> <a href="https://docs.reltio.com/en/objectives/model-data/data-modeling-at-a-glance/data-modeling-operation/define-crosswalks-for-data-sources/configuring-surrogate-keys">Configuring surrogate keys</a> in the Reltio documentation.</p>
@@ -336,7 +336,7 @@ hr {
 <td>Use the source&#39;s own keys — no surrogate needed</td>
 </tr>
 <tr>
-<td>Source has a key for the parent but not for nested objects (e.g., HCP has an ID, inline addresses don&#39;t)</td>
+<td>Source has a key for the parent but not for nested objects (e.g., <span class="glossary-term" data-def="Healthcare Professional — a Life Sciences entity type.">HCP</span> has an ID, inline addresses don&#39;t)</td>
 <td>Configure a surrogate for the nested entity</td>
 </tr>
 <tr>
@@ -359,7 +359,7 @@ hr {
 </thead>
 <tbody><tr>
 <td><strong>Pattern 1</strong> — Each HCP comes with a single address on the same row</td>
-<td>Use the unique key of the HCP as the <code>refRelation</code> key</td>
+<td>Use the unique key of the HCP as the <code>[refRelation](#glossary)</code> key</td>
 </tr>
 <tr>
 <td><strong>Pattern 2</strong> — Each HCP has multiple addresses in one flat file, each row a different address</td>
@@ -375,7 +375,7 @@ hr {
 </tr>
 </tbody></table>
 <h3 id="why-this-matters">Why this matters</h3>
-<p>Reltio models address as a <code>Party</code> object in L1 plus a <code>Location</code> object linked by <code>hasAddress</code>. <code>Location</code> is the address attribute of anything that inherits from <code>Party</code> — <code>Individual</code>, <code>Organization</code>, <code>HCP</code>, <code>HCO</code>. If a source repeats the same address across many records, surrogate keys let Reltio merge them into a single <code>Location</code> entity automatically. The merged entity ends up with relationships to every entity that shares the address.</p>
+<p>Reltio models address as a <code>Party</code> object in L1 plus a <code>Location</code> object linked by <code>hasAddress</code>. <code>Location</code> is the address attribute of anything that inherits from <code>Party</code> — <code>Individual</code>, <code>Organization</code>, <code>HCP</code>, <code>[HCO](#glossary)</code>. If a source repeats the same address across many records, surrogate keys let Reltio merge them into a single <code>Location</code> entity automatically. The merged entity ends up with relationships to every entity that shares the address.</p>
 <blockquote>
 <p><strong>Learn more:</strong> <a href="https://docs.reltio.com/en/objectives/model-data/data-modeling-at-a-glance/data-modeling-operation/define-crosswalks-for-data-sources/configuring-surrogate-keys">Configuring surrogate keys</a> in the Reltio documentation.</p>
 </blockquote>
@@ -415,7 +415,7 @@ hr {
 <li><strong>Cleansed values, not raw</strong> — Reltio uses cleansed, standardized values to calculate the hash. That&#39;s what makes <code>New York, Main Avenue 123</code> and <code>New York, Main Ave 123</code> produce the same key after cleansing.</li>
 </ul>
 <h2 id="5-trigger-surrogate-key-generation-on-ingest">5. Trigger surrogate key generation on ingest</h2>
-<p>Once the L3 config is in place, trigger surrogate generation per record by setting <code>refEntity.crosswalks[0].value</code> to <code>&quot;Surrogate&quot;</code> in the incoming JSON.</p>
+<p>Once the L3 config is in place, trigger surrogate generation per record by setting <code>[refEntity](#glossary).crosswalks[0].value</code> to <code>&quot;Surrogate&quot;</code> in the incoming JSON.</p>
 <pre><code class="language-json hljs"><span class="hljs-punctuation">[</span>
   <span class="hljs-punctuation">{</span>
     <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;configuration/entityTypes/HCP&quot;</span><span class="hljs-punctuation">,</span>

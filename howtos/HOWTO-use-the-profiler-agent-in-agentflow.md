@@ -17,7 +17,7 @@ flowchart LR
 
 ## Overview
 
-The [Profiler](#13-glossary) agent is a pre-ingestion data quality assistant in [AgentFlow](#13-glossary). It connects to structured files in cloud storage or [SFTP](#glossary), previews file structure, computes column-level quality scores, identifies issues with ranked suggestions, and optionally maps source fields to your tenant schema for loading via [Data Loader](#13-glossary). This guide walks you through enabling the agent, running your first profiling job, interpreting results, and loading validated data.
+The [Profiler](#glossary) agent is a pre-ingestion data quality assistant in [AgentFlow](#glossary). It connects to structured files in cloud storage or [SFTP](#glossary), previews file structure, computes column-level quality scores, identifies issues with ranked suggestions, and optionally maps source fields to your tenant schema for loading via [Data Loader](#glossary). This guide walks you through enabling the agent, running your first profiling job, interpreting results, and loading validated data.
 
 This guide is for these Reltio roles: **Data Steward**, **Reltio Configurator**. For more information on data unification roles in the Reltio Context Intelligence Platform, see [About roles](https://docs.reltio.com/en/roles/about-roles).
 
@@ -25,7 +25,7 @@ This guide is for these Reltio roles: **Data Steward**, **Reltio Configurator**.
 
 1. [Getting started](#1-getting-started)
 2. [Key concepts](#2-key-concepts)
-3. [Enable the [Profiler](#glossary) agent for your tenant](#3-enable-the-profiler-agent-for-your-tenant)
+3. [Enable the Profiler agent for your tenant](#3-enable-the-profiler-agent-for-your-tenant)
 4. [Configure AWS IAM role for S3 access](#4-configure-aws-iam-role-for-s3-access)
 5. [Run your first profiling job](#5-run-your-first-profiling-job)
 6. [Review schema and validation rules](#6-review-schema-and-validation-rules)

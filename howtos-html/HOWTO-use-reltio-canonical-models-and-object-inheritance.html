@@ -311,11 +311,11 @@ hr {
 <h2 id="2-key-concepts">2. Key concepts</h2>
 <p>Read these terms before diving into the layers.</p>
 <ul>
-<li><strong><a href="#10-glossary">Canonical model</a></strong> — a shared, logical definition of an object that every source maps to. Reltio&#39;s canonical models live in L1 and L2; you inherit them in L3.</li>
-<li><strong><a href="#10-glossary">Object inheritance</a></strong> — the mechanism that lets L3 reuse L1 and L2 definitions by reference instead of redefining them.</li>
-<li><strong><a href="#10-glossary">L1, L2, L3 layers</a></strong> — the three configuration layers. You only edit L3.</li>
+<li><strong><span class="glossary-term" data-def="A shared, logical definition of an object (entity, relationship, interaction) that every source system maps to. Reltio&#39;s canonical models live in L1 (industry-agnostic) and L2 (industry-specific).">Canonical model</span></strong> — a shared, logical definition of an object that every source maps to. Reltio&#39;s canonical models live in L1 and L2; you inherit them in L3.</li>
+<li><strong><span class="glossary-term" data-def="The mechanism by which L3 reuses definitions from L1 and L2 by reference, rather than redefining them.">Object inheritance</span></strong> — the mechanism that lets L3 reuse L1 and L2 definitions by reference instead of redefining them.</li>
+<li><strong><span class="glossary-term" data-def="The three configuration layers in the Reltio inheritance model. L1 is Reltio&#39;s foundation, L2 adds industry-specific containers, L3 is your tenant. Only L3 is customer-editable.">L1, L2, L3 layers</span></strong> — the three configuration layers. You only edit L3.</li>
 <li><strong>Attribute types</strong> — simple, nested, reference, and analytic. These replace the rigid column types of a relational table.</li>
-<li><strong><a href="#10-glossary">Consolidated configuration</a></strong> — the effective configuration your tenant uses, computed by merging L1, L2, and L3.</li>
+<li><strong><span class="glossary-term" data-def="The effective tenant configuration produced by merging L1, L2, and L3. Also called the tenant configuration or metadata configuration.">Consolidated configuration</span></strong> — the effective configuration your tenant uses, computed by merging L1, L2, and L3.</li>
 </ul>
 <blockquote>
 <p><strong>Learn more:</strong> <a href="https://docs.reltio.com/en/reltio/what-does-reltio-do/what-reltio-does-at-a-glance/data-unification-and-mdm-at-a-glance/data-unification-and-mdm-in-detail/reltio-information-model/data-model/tenant-configuration-inheritance-across-layers">Tenant configuration inheritance across layers</a> in the Reltio documentation.</p>
@@ -338,7 +338,7 @@ hr {
 <tr>
 <td><strong>L2 — Containers</strong></td>
 <td>Reltio Product Management</td>
-<td>Industry-specific extensions — Life Sciences adds <code>HCO</code> by extending <code>Organization</code>, and <code>HCP</code> by extending <code>Individual</code></td>
+<td>Industry-specific extensions — Life Sciences adds <code>[HCO](#glossary)</code> by extending <code>Organization</code>, and <code>HCP</code> by extending <code>Individual</code></td>
 </tr>
 <tr>
 <td><strong>L3 — Customer tenant</strong></td>
@@ -359,7 +359,7 @@ hr {
 <p>The chain for a Healthcare Professional:</p>
 <ol>
 <li><strong>L1</strong> defines <code>Party</code> as an abstract type, then extends it to <code>Individual</code> (a concrete type).</li>
-<li><strong>L2 (Life Sciences)</strong> extends <code>Individual</code> to <code>HCP</code>.</li>
+<li><strong>L2 (Life Sciences)</strong> extends <code>Individual</code> to <code>[HCP](#glossary)</code>.</li>
 <li><strong>L3 (your tenant)</strong> extends <code>HCP</code> to add the attributes your organization needs — for example, an internal territory ID.</li>
 </ol>
 <p>Your L3 <code>HCP</code> now carries:</p>
