@@ -1,10 +1,10 @@
 # Reltio AI-Ready HOWTOs
 
-Generate hands-on, accurate HOWTO guides for the Reltio platform — powered by Claude Code and grounded in official Reltio documentation.
+Generate hands-on HOWTO guides for the Reltio Context Intelligence Platform — powered by Claude Code and grounded in official Reltio documentation.
 
 ## How it works
 
-This repo is a **generator kit**. You fork it, open it in Claude Code, and generate HOWTOs tailored to how your company uses Reltio. The guides are written for your team, live in your fork, and are never sent back here.
+This repo is a **generator kit**. You fork it, open it in Claude Code, and generate HOWTOs tailored to your use cases. The guides your team generates go into your own copy.
 
 > **This repo does not accept pull requests.** Fork it and keep your guides in your own fork.
 
