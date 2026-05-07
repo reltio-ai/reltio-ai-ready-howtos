@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Disclaimer</title>
+  <style>
+/* Reltio HOWTO — HTML styles
+ * Brand colors:
+ *   Midnight     #000033
+ *   Blue         #000066
+ *   Bright Blue  #0000CC
+ *   Gold         #FFCC00
+ */
+
+:root {
+  --reltio-midnight: #000033;
+  --reltio-blue: #000066;
+  --reltio-bright-blue: #0000CC;
+  --reltio-gold: #FFCC00;
+  --text-primary: #1a1a1a;
+  --text-muted: #555;
+  --border-light: #e1e4e8;
+  --bg-code: #f6f8fa;
+  --bg-callout: #f0f4ff;
+  --bg-disclaimer: #fff8e1;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text-primary);
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 4rem;
+  background: #ffffff;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--reltio-midnight);
+  font-weight: 600;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.25;
+}
+
+h1 {
+  font-size: 2.25rem;
+  border-bottom: 3px solid var(--reltio-gold);
+  padding-bottom: 0.5rem;
+  margin-top: 0;
+}
+
+h2 {
+  font-size: 1.6rem;
+  border-bottom: 1px solid var(--border-light);
+  padding-bottom: 0.3rem;
+  margin-top: 2.5rem;
+}
+
+h3 { font-size: 1.25rem; color: var(--reltio-blue); }
+h4 { font-size: 1.1rem; color: var(--reltio-blue); }
+
+/* Paragraphs and links */
+p { margin: 0.75rem 0; }
+
+a {
+  color: var(--reltio-bright-blue);
+  text-decoration: none;
+}
+a:hover { text-decoration: underline; }
+
+/* Lists */
+ul, ol { padding-left: 1.75rem; margin: 0.75rem 0; }
+li { margin: 0.25rem 0; }
+
+/* Code */
+code {
+  font-family: "SF Mono", Monaco, Consolas, "Liberation Mono", monospace;
+  font-size: 0.9em;
+  background: var(--bg-code);
+  padding: 0.15em 0.4em;
+  border-radius: 3px;
+  color: #d63384;
+}
+
+pre {
+  background: var(--bg-code);
+  border: 1px solid var(--border-light);
+  border-radius: 6px;
+  padding: 1rem;
+  overflow-x: auto;
+  line-height: 1.5;
+  position: relative;
+}
+
+pre .copy-btn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: #ffffff;
+  color: var(--reltio-blue);
+  border: 1px solid var(--border-light);
+  border-radius: 4px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s ease, background 0.15s ease, color 0.15s ease;
+  user-select: none;
+}
+
+pre:hover .copy-btn { opacity: 1; }
+
+pre .copy-btn:hover {
+  background: var(--reltio-blue);
+  color: #ffffff;
+  border-color: var(--reltio-blue);
+}
+
+pre .copy-btn.copied {
+  background: #22863a;
+  color: #ffffff;
+  border-color: #22863a;
+  opacity: 1;
+}
+
+pre code {
+  background: transparent;
+  padding: 0;
+  color: inherit;
+  font-size: 0.875em;
+}
+
+/* Tables */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1rem 0;
+  font-size: 0.95em;
+}
+
+th, td {
+  border: 1px solid var(--border-light);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+th {
+  background: var(--reltio-midnight);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+tr:nth-child(even) td {
+  background: #fafbfc;
+}
+
+/* Blockquotes / callouts */
+blockquote {
+  border-left: 4px solid var(--reltio-bright-blue);
+  background: var(--bg-callout);
+  margin: 1rem 0;
+  padding: 0.75rem 1rem;
+  border-radius: 0 4px 4px 0;
+}
+
+blockquote p { margin: 0.25rem 0; }
+
+/* Disclaimer callout (last blockquote in the doc) */
+blockquote.disclaimer {
+  border-left-color: var(--reltio-gold);
+  background: var(--bg-disclaimer);
+}
+
+/* Horizontal rule */
+hr {
+  border: none;
+  border-top: 1px solid var(--border-light);
+  margin: 2.5rem 0 1.5rem;
+}
+
+/* Mermaid SVG — keep diagrams readable and centered */
+.diagram {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 1.5rem auto;
+  cursor: zoom-in;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.3s ease;
+  transform-origin: center center;
+  border-radius: 4px;
+}
+
+/* Click to enlarge — toggle class via JS; hover does nothing */
+.diagram.zoomed {
+  transform: scale(1.8);
+  box-shadow: 0 20px 60px rgba(0, 0, 51, 0.35);
+  position: relative;
+  z-index: 100;
+  background: #ffffff;
+  cursor: zoom-out;
+}
+
+/* highlight.js — GitHub-like theme, compact */
+.hljs { color: #24292e; background: var(--bg-code); }
+.hljs-comment, .hljs-quote { color: #6a737d; font-style: italic; }
+.hljs-keyword, .hljs-selector-tag { color: #d73a49; }
+.hljs-string, .hljs-attr { color: #032f62; }
+.hljs-number, .hljs-literal { color: #005cc5; }
+.hljs-title, .hljs-name { color: #6f42c1; }
+.hljs-section, .hljs-type { color: #22863a; }
+.hljs-tag { color: #22863a; }
+.hljs-built_in, .hljs-builtin-name { color: #e36209; }
+
+/* Footer banner (appears on index.html only) */
+.site-header {
+  border-bottom: 3px solid var(--reltio-gold);
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.site-header .subtitle {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-top: 0.25rem;
+}
+
+/* Glossary term — inline hover tooltip */
+.glossary-term {
+  border-bottom: 1px dashed var(--reltio-blue);
+  cursor: help;
+  position: relative;
+  white-space: nowrap;
+}
+
+.glossary-term::after {
+  content: attr(data-def);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  padding: 0.6rem 0.85rem;
+  background: var(--bg-callout);
+  color: var(--text-primary);
+  border: 1px dashed var(--reltio-bright-blue);
+  font-size: 0.82rem;
+  font-weight: 400;
+  line-height: 1.45;
+  border-radius: 5px;
+  box-shadow: 0 4px 14px rgba(0, 0, 204, 0.12);
+  white-space: normal;
+  text-align: left;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  z-index: 200;
+}
+
+.glossary-term:hover::after { opacity: 1; }
+
+/* Print */
+@media print {
+  body { max-width: none; padding: 1rem; }
+  a { color: var(--text-primary); text-decoration: none; }
+  pre, blockquote { page-break-inside: avoid; }
+}
+
+  </style>
+</head>
+<body>
+<h1 id="disclaimer">Disclaimer</h1>
+<p>These HOWTOs are generated with AI assistance using the official Reltio documentation as source material. They&#39;re a starting point for understanding a feature — not a guarantee of accuracy, and not a replacement for the <a href="https://docs.reltio.com">official Reltio documentation</a>.</p>
+<p>Two things to keep in mind.</p>
+<h2 id="model-non-determinism">Model non-determinism</h2>
+<p>AI models are probabilistic. Even with strict guardrails and a validation pass against the source documentation, generated content can misrepresent system behavior, flatten important edge cases, or introduce subtle inaccuracies. Verify anything you plan to act on in your own Reltio environment.</p>
+<h2 id="content-drift-since-the-snapshot">Content drift since the snapshot</h2>
+<p>Each guide shows the timestamp and topic count of the documentation snapshot it was generated from. The knowledge base behind these guides syncs twice a week — on Wednesdays and Fridays. Any documentation Reltio publishes between syncs isn&#39;t captured here, so at any given moment the content can lag the live <a href="https://docs.reltio.com">docs.reltio.com</a> by several days.</p>
+<p>If a guide describes behavior that doesn&#39;t match your current tenant, <a href="https://docs.reltio.com">docs.reltio.com</a> is the source of truth.</p>
+
+<script>
+  // Click-to-zoom for workflow diagrams — toggle zoomed class on click,
+  // dismiss on second click or by clicking anywhere outside the diagram.
+  document.querySelectorAll('.diagram').forEach(function (img) {
+    img.addEventListener('click', function (e) {
+      e.stopPropagation();
+      img.classList.toggle('zoomed');
+    });
+  });
+  document.addEventListener('click', function () {
+    document.querySelectorAll('.diagram.zoomed').forEach(function (img) {
+      img.classList.remove('zoomed');
+    });
+  });
+
+  // Copy button — top-right of every code block.
+  var ICON_COPY = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+  var ICON_CHECK = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>';
+  document.querySelectorAll('pre').forEach(function (pre) {
+    var btn = document.createElement('button');
+    btn.className = 'copy-btn';
+    btn.setAttribute('aria-label', 'Copy code');
+    btn.innerHTML = ICON_COPY;
+    pre.appendChild(btn);
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var code = pre.querySelector('code');
+      var text = code ? code.innerText : pre.innerText;
+      navigator.clipboard.writeText(text).then(function () {
+        btn.innerHTML = ICON_CHECK;
+        btn.classList.add('copied');
+        setTimeout(function () {
+          btn.innerHTML = ICON_COPY;
+          btn.classList.remove('copied');
+        }, 1500);
+      });
+    });
+  });
+</script>
+</body>
+</html>
