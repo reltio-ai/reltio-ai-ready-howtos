@@ -9,7 +9,7 @@ This repo is a **generator kit**. You fork it, open it in Claude Code, and gener
 > **This repo does not accept pull requests.** Fork it and keep your guides in your own fork.
 
 ```
-reltio-docs/docs.md        ← 3,237 topics of official Reltio documentation
+reltio-docs/docs.md        ← 3,000+ topics of official Reltio documentation
 reltio-docs/index.md       ← structured topic index
         │
         ▼
@@ -57,7 +57,7 @@ Generate a HOWTO about configuring match rules in Reltio
 Be specific — `"configure match rules"` produces a better guide than `"matching"`. The more precise the topic, the better the source discovery.
 
 The generator will:
-- Search the 3,237-topic docs corpus for relevant source material
+- Search the 3,000+-topic docs corpus for relevant source material
 - Refuse (with alternatives) if there isn't enough to write reliably
 - Write the guide following the style and structure conventions
 - Include a Mermaid workflow diagram when the topic has a real multi-step process
