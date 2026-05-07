@@ -97,18 +97,20 @@ pre .copy-btn {
   position: absolute;
   top: 0.5rem;
   right: 0.5rem;
-  padding: 0.2rem 0.55rem;
-  font-size: 0.75rem;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
   background: #ffffff;
   color: var(--reltio-blue);
   border: 1px solid var(--border-light);
   border-radius: 4px;
   cursor: pointer;
   opacity: 0;
-  transition: opacity 0.15s ease, background 0.15s ease;
+  transition: opacity 0.15s ease, background 0.15s ease, color 0.15s ease;
   user-select: none;
-  line-height: 1.5;
 }
 
 pre:hover .copy-btn { opacity: 1; }

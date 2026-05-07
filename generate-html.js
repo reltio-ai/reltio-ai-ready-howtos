@@ -290,20 +290,23 @@ ${bodyHtml}
   });
 
   // Copy button — top-right of every code block.
+  var ICON_COPY = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+  var ICON_CHECK = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>';
   document.querySelectorAll('pre').forEach(function (pre) {
     var btn = document.createElement('button');
     btn.className = 'copy-btn';
-    btn.textContent = 'Copy';
+    btn.setAttribute('aria-label', 'Copy code');
+    btn.innerHTML = ICON_COPY;
     pre.appendChild(btn);
     btn.addEventListener('click', function (e) {
       e.stopPropagation();
       var code = pre.querySelector('code');
       var text = code ? code.innerText : pre.innerText;
       navigator.clipboard.writeText(text).then(function () {
-        btn.textContent = 'Copied!';
+        btn.innerHTML = ICON_CHECK;
         btn.classList.add('copied');
         setTimeout(function () {
-          btn.textContent = 'Copy';
+          btn.innerHTML = ICON_COPY;
           btn.classList.remove('copied');
         }, 1500);
       });
