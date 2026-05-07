@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Configure survivorship rules for the Individual entity type</title>
+  <style>
+/* Reltio HOWTO — HTML styles
+ * Brand colors:
+ *   Midnight     #000033
+ *   Blue         #000066
+ *   Bright Blue  #0000CC
+ *   Gold         #FFCC00
+ */
+
+:root {
+  --reltio-midnight: #000033;
+  --reltio-blue: #000066;
+  --reltio-bright-blue: #0000CC;
+  --reltio-gold: #FFCC00;
+  --text-primary: #1a1a1a;
+  --text-muted: #555;
+  --border-light: #e1e4e8;
+  --bg-code: #f6f8fa;
+  --bg-callout: #f0f4ff;
+  --bg-disclaimer: #fff8e1;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text-primary);
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 4rem;
+  background: #ffffff;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--reltio-midnight);
+  font-weight: 600;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.25;
+}
+
+h1 {
+  font-size: 2.25rem;
+  border-bottom: 3px solid var(--reltio-gold);
+  padding-bottom: 0.5rem;
+  margin-top: 0;
+}
+
+h2 {
+  font-size: 1.6rem;
+  border-bottom: 1px solid var(--border-light);
+  padding-bottom: 0.3rem;
+  margin-top: 2.5rem;
+}
+
+h3 { font-size: 1.25rem; color: var(--reltio-blue); }
+h4 { font-size: 1.1rem; color: var(--reltio-blue); }
+
+/* Paragraphs and links */
+p { margin: 0.75rem 0; }
+
+a {
+  color: var(--reltio-bright-blue);
+  text-decoration: none;
+}
+a:hover { text-decoration: underline; }
+
+/* Lists */
+ul, ol { padding-left: 1.75rem; margin: 0.75rem 0; }
+li { margin: 0.25rem 0; }
+
+/* Code */
+code {
+  font-family: "SF Mono", Monaco, Consolas, "Liberation Mono", monospace;
+  font-size: 0.9em;
+  background: var(--bg-code);
+  padding: 0.15em 0.4em;
+  border-radius: 3px;
+  color: #d63384;
+}
+
+pre {
+  background: var(--bg-code);
+  border: 1px solid var(--border-light);
+  border-radius: 6px;
+  padding: 1rem;
+  overflow-x: auto;
+  line-height: 1.5;
+  position: relative;
+}
+
+pre .copy-btn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: #ffffff;
+  color: var(--reltio-blue);
+  border: 1px solid var(--border-light);
+  border-radius: 4px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s ease, background 0.15s ease, color 0.15s ease;
+  user-select: none;
+}
+
+pre:hover .copy-btn { opacity: 1; }
+
+pre .copy-btn:hover {
+  background: var(--reltio-blue);
+  color: #ffffff;
+  border-color: var(--reltio-blue);
+}
+
+pre .copy-btn.copied {
+  background: #22863a;
+  color: #ffffff;
+  border-color: #22863a;
+  opacity: 1;
+}
+
+pre code {
+  background: transparent;
+  padding: 0;
+  color: inherit;
+  font-size: 0.875em;
+}
+
+/* Tables */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1rem 0;
+  font-size: 0.95em;
+}
+
+th, td {
+  border: 1px solid var(--border-light);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+th {
+  background: var(--reltio-midnight);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+tr:nth-child(even) td {
+  background: #fafbfc;
+}
+
+/* Blockquotes / callouts */
+blockquote {
+  border-left: 4px solid var(--reltio-bright-blue);
+  background: var(--bg-callout);
+  margin: 1rem 0;
+  padding: 0.75rem 1rem;
+  border-radius: 0 4px 4px 0;
+}
+
+blockquote p { margin: 0.25rem 0; }
+
+/* Disclaimer callout (last blockquote in the doc) */
+blockquote.disclaimer {
+  border-left-color: var(--reltio-gold);
+  background: var(--bg-disclaimer);
+}
+
+/* Horizontal rule */
+hr {
+  border: none;
+  border-top: 1px solid var(--border-light);
+  margin: 2.5rem 0 1.5rem;
+}
+
+/* Mermaid SVG — keep diagrams readable and centered */
+.diagram {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 1.5rem auto;
+  cursor: zoom-in;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.3s ease;
+  transform-origin: center center;
+  border-radius: 4px;
+}
+
+/* Click to enlarge — toggle class via JS; hover does nothing */
+.diagram.zoomed {
+  transform: scale(1.8);
+  box-shadow: 0 20px 60px rgba(0, 0, 51, 0.35);
+  position: relative;
+  z-index: 100;
+  background: #ffffff;
+  cursor: zoom-out;
+}
+
+/* highlight.js — GitHub-like theme, compact */
+.hljs { color: #24292e; background: var(--bg-code); }
+.hljs-comment, .hljs-quote { color: #6a737d; font-style: italic; }
+.hljs-keyword, .hljs-selector-tag { color: #d73a49; }
+.hljs-string, .hljs-attr { color: #032f62; }
+.hljs-number, .hljs-literal { color: #005cc5; }
+.hljs-title, .hljs-name { color: #6f42c1; }
+.hljs-section, .hljs-type { color: #22863a; }
+.hljs-tag { color: #22863a; }
+.hljs-built_in, .hljs-builtin-name { color: #e36209; }
+
+/* Footer banner (appears on index.html only) */
+.site-header {
+  border-bottom: 3px solid var(--reltio-gold);
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.site-header .subtitle {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-top: 0.25rem;
+}
+
+/* Glossary term — inline hover tooltip */
+.glossary-term {
+  border-bottom: 1px dashed var(--reltio-blue);
+  cursor: help;
+  position: relative;
+  white-space: nowrap;
+}
+
+.glossary-term::after {
+  content: attr(data-def);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  padding: 0.6rem 0.85rem;
+  background: var(--bg-callout);
+  color: var(--text-primary);
+  border: 1px dashed var(--reltio-bright-blue);
+  font-size: 0.82rem;
+  font-weight: 400;
+  line-height: 1.45;
+  border-radius: 5px;
+  box-shadow: 0 4px 14px rgba(0, 0, 204, 0.12);
+  white-space: normal;
+  text-align: left;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  z-index: 200;
+}
+
+.glossary-term:hover::after { opacity: 1; }
+
+/* Print */
+@media print {
+  body { max-width: none; padding: 1rem; }
+  a { color: var(--text-primary); text-decoration: none; }
+  pre, blockquote { page-break-inside: avoid; }
+}
+
+  </style>
+</head>
+<body>
+<h1 id="howto-configure-survivorship-rules-for-the-individual-entity-type">HOWTO: Configure survivorship rules for the Individual entity type</h1>
+<p>Survivorship rules determine which attribute value becomes the <span class="glossary-term" data-def="The &quot;winning&quot; attribute value that Reltio selects from all contributed source values using the configured survivorship strategy. The OV is what the Hub displays and what API responses return by default.">operational value</span> — the single &quot;best&quot; value Reltio returns to applications and shows in the Hub — when multiple source systems contribute different values for the same Individual record.</p>
+<img class="diagram" src="data:image/svg+xml;base64,PHN2ZyBpZD0ibXktc3ZnIiB3aWR0aD0iMTAwJSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgY2xhc3M9ImZsb3djaGFydCIgc3R5bGU9Im1heC13aWR0aDogMTA1Ni4zOHB4OyBiYWNrZ3JvdW5kLWNvbG9yOiB0cmFuc3BhcmVudDsiIHZpZXdCb3g9IjAgMCAxMDU2LjM3NSA2NC4yNSIgcm9sZT0iZ3JhcGhpY3MtZG9jdW1lbnQgZG9jdW1lbnQiIGFyaWEtcm9sZWRlc2NyaXB0aW9uPSJmbG93Y2hhcnQtdjIiPjxzdHlsZT4jbXktc3Zne2ZvbnQtZmFtaWx5OiJ0cmVidWNoZXQgbXMiLHZlcmRhbmEsYXJpYWwsc2Fucy1zZXJpZjtmb250LXNpemU6MTRweDtmaWxsOiMwMDAwMzM7fUBrZXlmcmFtZXMgZWRnZS1hbmltYXRpb24tZnJhbWV7ZnJvbXtzdHJva2UtZGFzaG9mZnNldDowO319QGtleWZyYW1lcyBkYXNoe3Rve3N0cm9rZS1kYXNob2Zmc2V0OjA7fX0jbXktc3ZnIC5lZGdlLWFuaW1hdGlvbi1zbG93e3N0cm9rZS1kYXNoYXJyYXk6OSw1IWltcG9ydGFudDtzdHJva2UtZGFzaG9mZnNldDo5MDA7YW5pbWF0aW9uOmRhc2ggNTBzIGxpbmVhciBpbmZpbml0ZTtzdHJva2UtbGluZWNhcDpyb3VuZDt9I215LXN2ZyAuZWRnZS1hbmltYXRpb24tZmFzdHtzdHJva2UtZGFzaGFycmF5OjksNSFpbXBvcnRhbnQ7c3Ryb2tlLWRhc2hvZmZzZXQ6OTAwO2FuaW1hdGlvbjpkYXNoIDIwcyBsaW5lYXIgaW5maW5pdGU7c3Ryb2tlLWxpbmVjYXA6cm91bmQ7fSNteS1zdmcgLmVycm9yLWljb257ZmlsbDojZjBmNGZmO30jbXktc3ZnIC5lcnJvci10ZXh0e2ZpbGw6IzBmMGIwMDtzdHJva2U6IzBmMGIwMDt9I215LXN2ZyAuZWRnZS10aGlja25lc3Mtbm9ybWFse3N0cm9rZS13aWR0aDoxcHg7fSNteS1zdmcgLmVkZ2UtdGhpY2tuZXNzLXRoaWNre3N0cm9rZS13aWR0aDozLjVweDt9I215LXN2ZyAuZWRnZS1wYXR0ZXJuLXNvbGlke3N0cm9rZS1kYXNoYXJyYXk6MDt9I215LXN2ZyAuZWRnZS10aGlja25lc3MtaW52aXNpYmxle3N0cm9rZS13aWR0aDowO2ZpbGw6bm9uZTt9I215LXN2ZyAuZWRnZS1wYXR0ZXJuLWRhc2hlZHtzdHJva2UtZGFzaGFycmF5OjM7fSNteS1zdmcgLmVkZ2UtcGF0dGVybi1kb3R0ZWR7c3Ryb2tlLWRhc2hhcnJheToyO30jbXktc3ZnIC5tYXJrZXJ7ZmlsbDojMDAwMDMzO3N0cm9rZTojMDAwMDMzO30jbXktc3ZnIC5tYXJrZXIuY3Jvc3N7c3Ryb2tlOiMwMDAwMzM7fSNteS1zdmcgc3Zne2ZvbnQtZmFtaWx5OiJ0cmVidWNoZXQgbXMiLHZlcmRhbmEsYXJpYWwsc2Fucy1zZXJpZjtmb250LXNpemU6MTRweDt9I215LXN2ZyBwe21hcmdpbjowO30jbXktc3ZnIC5sYWJlbHtmb250LWZhbWlseToidHJlYnVjaGV0IG1zIix2ZXJkYW5hLGFyaWFsLHNhbnMtc2VyaWY7Y29sb3I6I2ZmZmZmZjt9I215LXN2ZyAuY2x1c3Rlci1sYWJlbCB0ZXh0e2ZpbGw6IzBmMGIwMDt9I215LXN2ZyAuY2x1c3Rlci1sYWJlbCBzcGFue2NvbG9yOiMwZjBiMDA7fSNteS1zdmcgLmNsdXN0ZXItbGFiZWwgc3BhbiBwe2JhY2tncm91bmQtY29sb3I6dHJhbnNwYXJlbnQ7fSNteS1zdmcgLmxhYmVsIHRleHQsI215LXN2ZyBzcGFue2ZpbGw6I2ZmZmZmZjtjb2xvcjojZmZmZmZmO30jbXktc3ZnIC5ub2RlIHJlY3QsI215LXN2ZyAubm9kZSBjaXJjbGUsI215LXN2ZyAubm9kZSBlbGxpcHNlLCNteS1zdmcgLm5vZGUgcG9seWdvbiwjbXktc3ZnIC5ub2RlIHBhdGh7ZmlsbDojMDAwMDY2O3N0cm9rZTojMDAwMDMzO3N0cm9rZS13aWR0aDoxcHg7fSNteS1zdmcgLnJvdWdoLW5vZGUgLmxhYmVsIHRleHQsI215LXN2ZyAubm9kZSAubGFiZWwgdGV4dCwjbXktc3ZnIC5pbWFnZS1zaGFwZSAubGFiZWwsI215LXN2ZyAuaWNvbi1zaGFwZSAubGFiZWx7dGV4dC1hbmNob3I6bWlkZGxlO30jbXktc3ZnIC5ub2RlIC5rYXRleCBwYXRoe2ZpbGw6IzAwMDtzdHJva2U6IzAwMDtzdHJva2Utd2lkdGg6MXB4O30jbXktc3ZnIC5yb3VnaC1ub2RlIC5sYWJlbCwjbXktc3ZnIC5ub2RlIC5sYWJlbCwjbXktc3ZnIC5pbWFnZS1zaGFwZSAubGFiZWwsI215LXN2ZyAuaWNvbi1zaGFwZSAubGFiZWx7dGV4dC1hbGlnbjpjZW50ZXI7fSNteS1zdmcgLm5vZGUuY2xpY2thYmxle2N1cnNvcjpwb2ludGVyO30jbXktc3ZnIC5yb290IC5hbmNob3IgcGF0aHtmaWxsOiMwMDAwMzMhaW1wb3J0YW50O3N0cm9rZS13aWR0aDowO3N0cm9rZTojMDAwMDMzO30jbXktc3ZnIC5hcnJvd2hlYWRQYXRoe2ZpbGw6IzBiMGIwYjt9I215LXN2ZyAuZWRnZVBhdGggLnBhdGh7c3Ryb2tlOiMwMDAwMzM7c3Ryb2tlLXdpZHRoOjFweDt9I215LXN2ZyAuZmxvd2NoYXJ0LWxpbmt7c3Ryb2tlOiMwMDAwMzM7ZmlsbDpub25lO30jbXktc3ZnIC5lZGdlTGFiZWx7YmFja2dyb3VuZC1jb2xvcjojZjBmNGZmO3RleHQtYWxpZ246Y2VudGVyO30jbXktc3ZnIC5lZGdlTGFiZWwgcHtiYWNrZ3JvdW5kLWNvbG9yOiNmMGY0ZmY7fSNteS1zdmcgLmVkZ2VMYWJlbCByZWN0e29wYWNpdHk6MC41O2JhY2tncm91bmQtY29sb3I6I2YwZjRmZjtmaWxsOiNmMGY0ZmY7fSNteS1zdmcgLmxhYmVsQmtne2JhY2tncm91bmQtY29sb3I6cmdiYSgyNDAsIDI0NCwgMjU1LCAwLjUpO30jbXktc3ZnIC5jbHVzdGVyIHJlY3R7ZmlsbDojZjBmNGZmO3N0cm9rZTojMDAwMENDO3N0cm9rZS13aWR0aDoxcHg7fSNteS1zdmcgLmNsdXN0ZXIgdGV4dHtmaWxsOiMwZjBiMDA7fSNteS1zdmcgLmNsdXN0ZXIgc3Bhbntjb2xvcjojMGYwYjAwO30jbXktc3ZnIGRpdi5tZXJtYWlkVG9vbHRpcHtwb3NpdGlvbjphYnNvbHV0ZTt0ZXh0LWFsaWduOmNlbnRlcjttYXgtd2lkdGg6MjAwcHg7cGFkZGluZzoycHg7Zm9udC1mYW1pbHk6InRyZWJ1Y2hldCBtcyIsdmVyZGFuYSxhcmlhbCxzYW5zLXNlcmlmO2ZvbnQtc2l6ZToxMnB4O2JhY2tncm91bmQ6I2YwZjRmZjtib3JkZXI6MXB4IHNvbGlkIGhzbCgyMjQsIDYwJSwgODcuMDU4ODIzNTI5NCUpO2JvcmRlci1yYWRpdXM6MnB4O3BvaW50ZXItZXZlbnRzOm5vbmU7ei1pbmRleDoxMDA7fSNteS1zdmcgLmZsb3djaGFydFRpdGxlVGV4dHt0ZXh0LWFuY2hvcjptaWRkbGU7Zm9udC1zaXplOjE4cHg7ZmlsbDojMDAwMDMzO30jbXktc3ZnIHJlY3QudGV4dHtmaWxsOm5vbmU7c3Ryb2tlLXdpZHRoOjA7fSNteS1zdmcgLmljb24tc2hhcGUsI215LXN2ZyAuaW1hZ2Utc2hhcGV7YmFja2dyb3VuZC1jb2xvcjojZjBmNGZmO3RleHQtYWxpZ246Y2VudGVyO30jbXktc3ZnIC5pY29uLXNoYXBlIHAsI215LXN2ZyAuaW1hZ2Utc2hhcGUgcHtiYWNrZ3JvdW5kLWNvbG9yOiNmMGY0ZmY7cGFkZGluZzoycHg7fSNteS1zdmcgLmljb24tc2hhcGUgLmxhYmVsIHJlY3QsI215LXN2ZyAuaW1hZ2Utc2hhcGUgLmxhYmVsIHJlY3R7b3BhY2l0eTowLjU7YmFja2dyb3VuZC1jb2xvcjojZjBmNGZmO2ZpbGw6I2YwZjRmZjt9I215LXN2ZyAubGFiZWwtaWNvbntkaXNwbGF5OmlubGluZS1ibG9jaztoZWlnaHQ6MWVtO292ZXJmbG93OnZpc2libGU7dmVydGljYWwtYWxpZ246LTAuMTI1ZW07fSNteS1zdmcgLm5vZGUgLmxhYmVsLWljb24gcGF0aHtmaWxsOmN1cnJlbnRDb2xvcjtzdHJva2U6cmV2ZXJ0O3N0cm9rZS13aWR0aDpyZXZlcnQ7fSNteS1zdmcgLm5vZGUgLm5lby1ub2Rle3N0cm9rZTojMDAwMDMzO30jbXktc3ZnIFtkYXRhLWxvb2s9Im5lbyJdLm5vZGUgcmVjdCwjbXktc3ZnIFtkYXRhLWxvb2s9Im5lbyJdLmNsdXN0ZXIgcmVjdCwjbXktc3ZnIFtkYXRhLWxvb2s9Im5lbyJdLm5vZGUgcG9seWdvbntzdHJva2U6dXJsKCNteS1zdmctZ3JhZGllbnQpO2ZpbHRlcjpkcm9wLXNoYWRvdyggMXB4IDJweCAycHggcmdiYSgxODUsMTg1LDE4NSwxKSk7fSNteS1zdmcgW2RhdGEtbG9vaz0ibmVvIl0ubm9kZSBwYXRoe3N0cm9rZTp1cmwoI215LXN2Zy1ncmFkaWVudCk7c3Ryb2tlLXdpZHRoOjFweDt9I215LXN2ZyBbZGF0YS1sb29rPSJuZW8iXS5ub2RlIC5vdXRlci1wYXRoe2ZpbHRlcjpkcm9wLXNoYWRvdyggMXB4IDJweCAycHggcmdiYSgxODUsMTg1LDE4NSwxKSk7fSNteS1zdmcgW2RhdGEtbG9vaz0ibmVvIl0ubm9kZSAubmVvLWxpbmUgcGF0aHtzdHJva2U6IzAwMDAzMztmaWx0ZXI6bm9uZTt9I215LXN2ZyBbZGF0YS1sb29rPSJuZW8iXS5ub2RlIGNpcmNsZXtzdHJva2U6dXJsKCNteS1zdmctZ3JhZGllbnQpO2ZpbHRlcjpkcm9wLXNoYWRvdyggMXB4IDJweCAycHggcmdiYSgxODUsMTg1LDE4NSwxKSk7fSNteS1zdmcgW2RhdGEtbG9vaz0ibmVvIl0ubm9kZSBjaXJjbGUgLnN0YXRlLXN0YXJ0e2ZpbGw6IzAwMDAwMDt9I215LXN2ZyBbZGF0YS1sb29rPSJuZW8iXS5pY29uLXNoYXBlIC5pY29ue2ZpbGw6dXJsKCNteS1zdmctZ3JhZGllbnQpO2ZpbHRlcjpkcm9wLXNoYWRvdyggMXB4IDJweCAycHggcmdiYSgxODUsMTg1LDE4NSwxKSk7fSNteS1zdmcgW2RhdGEtbG9vaz0ibmVvIl0uaWNvbi1zaGFwZSAuaWNvbi1uZW8gcGF0aHtzdHJva2U6dXJsKCNteS1zdmctZ3JhZGllbnQpO2ZpbHRlcjpkcm9wLXNoYWRvdyggMXB4IDJweCAycHggcmdiYSgxODUsMTg1LDE4NSwxKSk7fSNteS1zdmcgLmVkZ2VMYWJlbHtjb2xvcjojMDAwMDMzIWltcG9ydGFudDtiYWNrZ3JvdW5kLWNvbG9yOiNmMGY0ZmYhaW1wb3J0YW50O2ZvbnQtd2VpZ2h0OjUwMCFpbXBvcnRhbnQ7fSNteS1zdmcgLmVkZ2VMYWJlbCByZWN0LCNteS1zdmcgLmVkZ2VMYWJlbCBmb3JlaWduT2JqZWN0e2ZpbGw6I2YwZjRmZiFpbXBvcnRhbnQ7fSNteS1zdmcgOnJvb3R7LS1tZXJtYWlkLWZvbnQtZmFtaWx5OiJ0cmVidWNoZXQgbXMiLHZlcmRhbmEsYXJpYWwsc2Fucy1zZXJpZjt9PC9zdHlsZT48Zz48bWFya2VyIGlkPSJteS1zdmdfZmxvd2NoYXJ0LXYyLXBvaW50RW5kIiBjbGFzcz0ibWFya2VyIGZsb3djaGFydC12MiIgdmlld0JveD0iMCAwIDEwIDEwIiByZWZYPSI1IiByZWZZPSI1IiBtYXJrZXJVbml0cz0idXNlclNwYWNlT25Vc2UiIG1hcmtlcldpZHRoPSI4IiBtYXJrZXJIZWlnaHQ9IjgiIG9yaWVudD0iYXV0byI+PHBhdGggZD0iTSAwIDAgTCAxMCA1IEwgMCAxMCB6IiBjbGFzcz0iYXJyb3dNYXJrZXJQYXRoIiBzdHlsZT0ic3Ryb2tlLXdpZHRoOiAxOyBzdHJva2UtZGFzaGFycmF5OiAxLCAwOyIvPjwvbWFya2VyPjxtYXJrZXIgaWQ9Im15LXN2Z19mbG93Y2hhcnQtdjItcG9pbnRTdGFydCIgY2xhc3M9Im1hcmtlciBmbG93Y2hhcnQtdjIiIHZpZXdCb3g9IjAgMCAxMCAxMCIgcmVmWD0iNC41IiByZWZZPSI1IiBtYXJrZXJVbml0cz0idXNlclNwYWNlT25Vc2UiIG1hcmtlcldpZHRoPSI4IiBtYXJrZXJIZWlnaHQ9IjgiIG9yaWVudD0iYXV0byI+PHBhdGggZD0iTSAwIDUgTCAxMCAxMCBMIDEwIDAgeiIgY2xhc3M9ImFycm93TWFya2VyUGF0aCIgc3R5bGU9InN0cm9rZS13aWR0aDogMTsgc3Ryb2tlLWRhc2hhcnJheTogMSwgMDsiLz48L21hcmtlcj48bWFya2VyIGlkPSJteS1zdmdfZmxvd2NoYXJ0LXYyLXBvaW50RW5kLW1hcmdpbiIgY2xhc3M9Im1hcmtlciBmbG93Y2hhcnQtdjIiIHZpZXdCb3g9IjAgMCAxMS41IDE0IiByZWZYPSIxMS41IiByZWZZPSI3IiBtYXJrZXJVbml0cz0idXNlclNwYWNlT25Vc2UiIG1hcmtlcldpZHRoPSIxMC41IiBtYXJrZXJIZWlnaHQ9IjE0IiBvcmllbnQ9ImF1dG8iPjxwYXRoIGQ9Ik0gMCAwIEwgMTEuNSA3IEwgMCAxNCB6IiBjbGFzcz0iYXJyb3dNYXJrZXJQYXRoIiBzdHlsZT0ic3Ryb2tlLXdpZHRoOiAwOyBzdHJva2UtZGFzaGFycmF5OiAxLCAwOyIvPjwvbWFya2VyPjxtYXJrZXIgaWQ9Im15LXN2Z19mbG93Y2hhcnQtdjItcG9pbnRTdGFydC1tYXJnaW4iIGNsYXNzPSJtYXJrZXIgZmxvd2NoYXJ0LXYyIiB2aWV3Qm94PSIwIDAgMTEuNSAxNCIgcmVmWD0iMSIgcmVmWT0iNyIgbWFya2VyVW5pdHM9InVzZXJTcGFjZU9uVXNlIiBtYXJrZXJXaWR0aD0iMTEuNSIgbWFya2VySGVpZ2h0PSIxNCIgb3JpZW50PSJhdXRvIj48cG9seWdvbiBwb2ludHM9IjAsNyAxMS41LDE0IDExLjUsMCIgY2xhc3M9ImFycm93TWFya2VyUGF0aCIgc3R5bGU9InN0cm9rZS13aWR0aDogMDsgc3Ryb2tlLWRhc2hhcnJheTogMSwgMDsiLz48L21hcmtlcj48bWFya2VyIGlkPSJteS1zdmdfZmxvd2NoYXJ0LXYyLWNpcmNsZUVuZCIgY2xhc3M9Im1hcmtlciBmbG93Y2hhcnQtdjIiIHZpZXdCb3g9IjAgMCAxMCAxMCIgcmVmWD0iMTEiIHJlZlk9IjUiIG1hcmtlclVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgbWFya2VyV2lkdGg9IjExIiBtYXJrZXJIZWlnaHQ9IjExIiBvcmllbnQ9ImF1dG8iPjxjaXJjbGUgY3g9IjUiIGN5PSI1IiByPSI1IiBjbGFzcz0iYXJyb3dNYXJrZXJQYXRoIiBzdHlsZT0ic3Ryb2tlLXdpZHRoOiAxOyBzdHJva2UtZGFzaGFycmF5OiAxLCAwOyIvPjwvbWFya2VyPjxtYXJrZXIgaWQ9Im15LXN2Z19mbG93Y2hhcnQtdjItY2lyY2xlU3RhcnQiIGNsYXNzPSJtYXJrZXIgZmxvd2NoYXJ0LXYyIiB2aWV3Qm94PSIwIDAgMTAgMTAiIHJlZlg9Ii0xIiByZWZZPSI1IiBtYXJrZXJVbml0cz0idXNlclNwYWNlT25Vc2UiIG1hcmtlcldpZHRoPSIxMSIgbWFya2VySGVpZ2h0PSIxMSIgb3JpZW50PSJhdXRvIj48Y2lyY2xlIGN4PSI1IiBjeT0iNSIgcj0iNSIgY2xhc3M9ImFycm93TWFya2VyUGF0aCIgc3R5bGU9InN0cm9rZS13aWR0aDogMTsgc3Ryb2tlLWRhc2hhcnJheTogMSwgMDsiLz48L21hcmtlcj48bWFya2VyIGlkPSJteS1zdmdfZmxvd2NoYXJ0LXYyLWNpcmNsZUVuZC1tYXJnaW4iIGNsYXNzPSJtYXJrZXIgZmxvd2NoYXJ0LXYyIiB2aWV3Qm94PSIwIDAgMTAgMTAiIHJlZlk9IjUiIHJlZlg9IjEyLjI1IiBtYXJrZXJVbml0cz0idXNlclNwYWNlT25Vc2UiIG1hcmtlcldpZHRoPSIxNCIgbWFya2VySGVpZ2h0PSIxNCIgb3JpZW50PSJhdXRvIj48Y2lyY2xlIGN4PSI1IiBjeT0iNSIgcj0iNSIgY2xhc3M9ImFycm93TWFya2VyUGF0aCIgc3R5bGU9InN0cm9rZS13aWR0aDogMDsgc3Ryb2tlLWRhc2hhcnJheTogMSwgMDsiLz48L21hcmtlcj48bWFya2VyIGlkPSJteS1zdmdfZmxvd2NoYXJ0LXYyLWNpcmNsZVN0YXJ0LW1hcmdpbiIgY2xhc3M9Im1hcmtlciBmbG93Y2hhcnQtdjIiIHZpZXdCb3g9IjAgMCAxMCAxMCIgcmVmWD0iLTIiIHJlZlk9IjUiIG1hcmtlclVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgbWFya2VyV2lkdGg9IjE0IiBtYXJrZXJIZWlnaHQ9IjE0IiBvcmllbnQ9ImF1dG8iPjxjaXJjbGUgY3g9IjUiIGN5PSI1IiByPSI1IiBjbGFzcz0iYXJyb3dNYXJrZXJQYXRoIiBzdHlsZT0ic3Ryb2tlLXdpZHRoOiAwOyBzdHJva2UtZGFzaGFycmF5OiAxLCAwOyIvPjwvbWFya2VyPjxtYXJrZXIgaWQ9Im15LXN2Z19mbG93Y2hhcnQtdjItY3Jvc3NFbmQiIGNsYXNzPSJtYXJrZXIgY3Jvc3MgZmxvd2NoYXJ0LXYyIiB2aWV3Qm94PSIwIDAgMTEgMTEiIHJlZlg9IjEyIiByZWZZPSI1LjIiIG1hcmtlclVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgbWFya2VyV2lkdGg9IjExIiBtYXJrZXJIZWlnaHQ9IjExIiBvcmllbnQ9ImF1dG8iPjxwYXRoIGQ9Ik0gMSwxIGwgOSw5IE0gMTAsMSBsIC05LDkiIGNsYXNzPSJhcnJvd01hcmtlclBhdGgiIHN0eWxlPSJzdHJva2Utd2lkdGg6IDI7IHN0cm9rZS1kYXNoYXJyYXk6IDEsIDA7Ii8+PC9tYXJrZXI+PG1hcmtlciBpZD0ibXktc3ZnX2Zsb3djaGFydC12Mi1jcm9zc1N0YXJ0IiBjbGFzcz0ibWFya2VyIGNyb3NzIGZsb3djaGFydC12MiIgdmlld0JveD0iMCAwIDExIDExIiByZWZYPSItMSIgcmVmWT0iNS4yIiBtYXJrZXJVbml0cz0idXNlclNwYWNlT25Vc2UiIG1hcmtlcldpZHRoPSIxMSIgbWFya2VySGVpZ2h0PSIxMSIgb3JpZW50PSJhdXRvIj48cGF0aCBkPSJNIDEsMSBsIDksOSBNIDEwLDEgbCAtOSw5IiBjbGFzcz0iYXJyb3dNYXJrZXJQYXRoIiBzdHlsZT0ic3Ryb2tlLXdpZHRoOiAyOyBzdHJva2UtZGFzaGFycmF5OiAxLCAwOyIvPjwvbWFya2VyPjxtYXJrZXIgaWQ9Im15LXN2Z19mbG93Y2hhcnQtdjItY3Jvc3NFbmQtbWFyZ2luIiBjbGFzcz0ibWFya2VyIGNyb3NzIGZsb3djaGFydC12MiIgdmlld0JveD0iMCAwIDE1IDE1IiByZWZYPSIxNy43IiByZWZZPSI3LjUiIG1hcmtlclVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgbWFya2VyV2lkdGg9IjEyIiBtYXJrZXJIZWlnaHQ9IjEyIiBvcmllbnQ9ImF1dG8iPjxwYXRoIGQ9Ik0gMSwxIEwgMTQsMTQgTSAxLDE0IEwgMTQsMSIgY2xhc3M9ImFycm93TWFya2VyUGF0aCIgc3R5bGU9InN0cm9rZS13aWR0aDogMi41OyIvPjwvbWFya2VyPjxtYXJrZXIgaWQ9Im15LXN2Z19mbG93Y2hhcnQtdjItY3Jvc3NTdGFydC1tYXJnaW4iIGNsYXNzPSJtYXJrZXIgY3Jvc3MgZmxvd2NoYXJ0LXYyIiB2aWV3Qm94PSIwIDAgMTUgMTUiIHJlZlg9Ii0zLjUiIHJlZlk9IjcuNSIgbWFya2VyVW5pdHM9InVzZXJTcGFjZU9uVXNlIiBtYXJrZXJXaWR0aD0iMTIiIG1hcmtlckhlaWdodD0iMTIiIG9yaWVudD0iYXV0byI+PHBhdGggZD0iTSAxLDEgTCAxNCwxNCBNIDEsMTQgTCAxNCwxIiBjbGFzcz0iYXJyb3dNYXJrZXJQYXRoIiBzdHlsZT0ic3Ryb2tlLXdpZHRoOiAyLjU7IHN0cm9rZS1kYXNoYXJyYXk6IDEsIDA7Ii8+PC9tYXJrZXI+PGcgY2xhc3M9InJvb3QiPjxnIGNsYXNzPSJjbHVzdGVycyIvPjxnIGNsYXNzPSJlZGdlUGF0aHMiPjxwYXRoIGQ9Ik0xMzkuODEzLDMwLjVMMTQ0LjM5NiwzMC41QzE0OC45NzksMzAuNSwxNTguMTQ2LDMwLjUsMTY2LjY0NiwzMC41QzE3NS4xNDYsMzAuNSwxODIuOTc5LDMwLjUsMTg2Ljg5NiwzMC41TDE5MC44MTMsMzAuNSIgaWQ9Im15LXN2Zy1MX0FfQl8wIiBjbGFzcz0iZWRnZS10aGlja25lc3Mtbm9ybWFsIGVkZ2UtcGF0dGVybi1zb2xpZCBlZGdlLXRoaWNrbmVzcy1ub3JtYWwgZWRnZS1wYXR0ZXJuLXNvbGlkIGZsb3djaGFydC1saW5rIiBzdHlsZT0iOyIgZGF0YS1lZGdlPSJ0cnVlIiBkYXRhLWV0PSJlZGdlIiBkYXRhLWlkPSJMX0FfQl8wIiBkYXRhLXBvaW50cz0iVzNzaWVDSTZNVE01TGpneE1qVXNJbmtpT2pNd0xqVjlMSHNpZUNJNk1UWTNMak14TWpVc0lua2lPak13TGpWOUxIc2llQ0k2TVRrMExqZ3hNalVzSW5raU9qTXdMalY5WFE9PSIgZGF0YS1sb29rPSJjbGFzc2ljIiBtYXJrZXItZW5kPSJ1cmwoI215LXN2Z19mbG93Y2hhcnQtdjItcG9pbnRFbmQpIi8+PHBhdGggZD0iTTM4Ni4wNDcsMjAuMzcxTDM5NC4xMDQsMTkuNTE4QzQwMi4xNjEsMTguNjY0LDQxOC4yNzYsMTYuOTU3LDQzMy43MjksMTcuMDUxQzQ0OS4xODMsMTcuMTQ1LDQ2My45NzUsMTkuMDM5LDQ3MS4zNzEsMTkuOTg2TDQ3OC43NjcsMjAuOTM0IiBpZD0ibXktc3ZnLUxfQl9DXzAiIGNsYXNzPSJlZGdlLXRoaWNrbmVzcy1ub3JtYWwgZWRnZS1wYXR0ZXJuLXNvbGlkIGVkZ2UtdGhpY2tuZXNzLW5vcm1hbCBlZGdlLXBhdHRlcm4tc29saWQgZmxvd2NoYXJ0LWxpbmsiIHN0eWxlPSI7IiBkYXRhLWVkZ2U9InRydWUiIGRhdGEtZXQ9ImVkZ2UiIGRhdGEtaWQ9IkxfQl9DXzAiIGRhdGEtcG9pbnRzPSJXM3NpZUNJNk16ZzJMakEwTmpnM05Td2llU0k2TWpBdU16Y3hNVEkyTmpBM05qazFNak45TEhzaWVDSTZORE0wTGpNNU1EWXlOU3dpZVNJNk1UVXVNalY5TEhzaWVDSTZORGd5TGpjek5ETTNOU3dpZVNJNk1qRXVORFF4TmpVME1Ea3dPVE00T1RFMWZWMD0iIGRhdGEtbG9vaz0iY2xhc3NpYyIgbWFya2VyLWVuZD0idXJsKCNteS1zdmdfZmxvd2NoYXJ0LXYyLXBvaW50RW5kKSIvPjxwYXRoIGQ9Ik02MjQuMTg4LDMwLjVMNjMxLjMwNSwzMC41QzYzOC40MjIsMzAuNSw2NTIuNjU2LDMwLjUsNjY2LjIyNCwzMC41QzY3OS43OTIsMzAuNSw2OTIuNjkzLDMwLjUsNjk5LjE0MywzMC41TDcwNS41OTQsMzAuNSIgaWQ9Im15LXN2Zy1MX0NfRF8wIiBjbGFzcz0iZWRnZS10aGlja25lc3Mtbm9ybWFsIGVkZ2UtcGF0dGVybi1zb2xpZCBlZGdlLXRoaWNrbmVzcy1ub3JtYWwgZWRnZS1wYXR0ZXJuLXNvbGlkIGZsb3djaGFydC1saW5rIiBzdHlsZT0iOyIgZGF0YS1lZGdlPSJ0cnVlIiBkYXRhLWV0PSJlZGdlIiBkYXRhLWlkPSJMX0NfRF8wIiBkYXRhLXBvaW50cz0iVzNzaWVDSTZOakkwTGpFNE56VXNJbmtpT2pNd0xqVjlMSHNpZUNJNk5qWTJMamc1TURZeU5Td2llU0k2TXpBdU5YMHNleUo0SWpvM01Ea3VOVGt6TnpVc0lua2lPak13TGpWOVhRPT0iIGRhdGEtbG9vaz0iY2xhc3NpYyIgbWFya2VyLWVuZD0idXJsKCNteS1zdmdfZmxvd2NoYXJ0LXYyLXBvaW50RW5kKSIvPjxwYXRoIGQ9Ik00ODIuNzM0LDM5LjU1OEw0NzQuNjc3LDQwLjU5QzQ2Ni42Miw0MS42MjIsNDUwLjUwNSw0My42ODYsNDM1LjA1NCw0My45MzVDNDE5LjYwMiw0NC4xODMsNDA0LjgxMyw0Mi42MTcsMzk3LjQxOSw0MS44MzRMMzkwLjAyNSw0MS4wNSIgaWQ9Im15LXN2Zy1MX0NfQl8wIiBjbGFzcz0iZWRnZS10aGlja25lc3Mtbm9ybWFsIGVkZ2UtcGF0dGVybi1zb2xpZCBlZGdlLXRoaWNrbmVzcy1ub3JtYWwgZWRnZS1wYXR0ZXJuLXNvbGlkIGZsb3djaGFydC1saW5rIiBzdHlsZT0iOyIgZGF0YS1lZGdlPSJ0cnVlIiBkYXRhLWV0PSJlZGdlIiBkYXRhLWlkPSJMX0NfQl8wIiBkYXRhLXBvaW50cz0iVzNzaWVDSTZORGd5TGpjek5ETTNOU3dpZVNJNk16a3VOVFU0TXpRMU9UQTVNRFl4TURsOUxIc2llQ0k2TkRNMExqTTVNRFl5TlN3aWVTSTZORFV1TnpWOUxIc2llQ0k2TXpnMkxqQTBOamczTlN3aWVTSTZOREF1TmpJNE9EY3pNemt5TXpBME56ZDlYUT09IiBkYXRhLWxvb2s9ImNsYXNzaWMiIG1hcmtlci1lbmQ9InVybCgjbXktc3ZnX2Zsb3djaGFydC12Mi1wb2ludEVuZCkiLz48cGF0aCBkPSJNODQzLjUxNiwzMC41TDg0OC4wOTksMzAuNUM4NTIuNjgyLDMwLjUsODYxLjg0OSwzMC41LDg3MC4zNDksMzAuNUM4NzguODQ5LDMwLjUsODg2LjY4MiwzMC41LDg5MC41OTksMzAuNUw4OTQuNTE2LDMwLjUiIGlkPSJteS1zdmctTF9EX0VfMCIgY2xhc3M9ImVkZ2UtdGhpY2tuZXNzLW5vcm1hbCBlZGdlLXBhdHRlcm4tc29saWQgZWRnZS10aGlja25lc3Mtbm9ybWFsIGVkZ2UtcGF0dGVybi1zb2xpZCBmbG93Y2hhcnQtbGluayIgc3R5bGU9IjsiIGRhdGEtZWRnZT0idHJ1ZSIgZGF0YS1ldD0iZWRnZSIgZGF0YS1pZD0iTF9EX0VfMCIgZGF0YS1wb2ludHM9Ilczc2llQ0k2T0RRekxqVXhOVFl5TlN3aWVTSTZNekF1Tlgwc2V5SjRJam80TnpFdU1ERTFOakkxTENKNUlqb3pNQzQxZlN4N0luZ2lPamc1T0M0MU1UVTJNalVzSW5raU9qTXdMalY5WFE9PSIgZGF0YS1sb29rPSJjbGFzc2ljIiBtYXJrZXItZW5kPSJ1cmwoI215LXN2Z19mbG93Y2hhcnQtdjItcG9pbnRFbmQpIi8+PC9nPjxnIGNsYXNzPSJlZGdlTGFiZWxzIj48ZyBjbGFzcz0iZWRnZUxhYmVsIj48ZyBjbGFzcz0ibGFiZWwiIGRhdGEtaWQ9IkxfQV9CXzAiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDAsIDApIj48Zm9yZWlnbk9iamVjdCB3aWR0aD0iMCIgaGVpZ2h0PSIwIj48ZGl2IHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hodG1sIiBjbGFzcz0ibGFiZWxCa2ciIHN0eWxlPSJkaXNwbGF5OiB0YWJsZS1jZWxsOyB3aGl0ZS1zcGFjZTogbm93cmFwOyBsaW5lLWhlaWdodDogMS41OyBtYXgtd2lkdGg6IDIwMHB4OyB0ZXh0LWFsaWduOiBjZW50ZXI7Ij48c3BhbiBjbGFzcz0iZWRnZUxhYmVsIj48L3NwYW4+PC9kaXY+PC9mb3JlaWduT2JqZWN0PjwvZz48L2c+PGcgY2xhc3M9ImVkZ2VMYWJlbCI+PGcgY2xhc3M9ImxhYmVsIiBkYXRhLWlkPSJMX0JfQ18wIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwLCAwKSI+PGZvcmVpZ25PYmplY3Qgd2lkdGg9IjAiIGhlaWdodD0iMCI+PGRpdiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94aHRtbCIgY2xhc3M9ImxhYmVsQmtnIiBzdHlsZT0iZGlzcGxheTogdGFibGUtY2VsbDsgd2hpdGUtc3BhY2U6IG5vd3JhcDsgbGluZS1oZWlnaHQ6IDEuNTsgbWF4LXdpZHRoOiAyMDBweDsgdGV4dC1hbGlnbjogY2VudGVyOyI+PHNwYW4gY2xhc3M9ImVkZ2VMYWJlbCI+PC9zcGFuPjwvZGl2PjwvZm9yZWlnbk9iamVjdD48L2c+PC9nPjxnIGNsYXNzPSJlZGdlTGFiZWwiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDY2Ni44OTA2MjUsIDMwLjUpIj48ZyBjbGFzcz0ibGFiZWwiIGRhdGEtaWQ9IkxfQ19EXzAiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xNS4yMDMxMjUsIC0xMC41KSI+PGZvcmVpZ25PYmplY3Qgd2lkdGg9IjMwLjQwNjI1IiBoZWlnaHQ9IjIxIj48ZGl2IHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hodG1sIiBjbGFzcz0ibGFiZWxCa2ciIHN0eWxlPSJkaXNwbGF5OiB0YWJsZS1jZWxsOyB3aGl0ZS1zcGFjZTogbm93cmFwOyBsaW5lLWhlaWdodDogMS41OyBtYXgtd2lkdGg6IDIwMHB4OyB0ZXh0LWFsaWduOiBjZW50ZXI7Ij48c3BhbiBjbGFzcz0iZWRnZUxhYmVsIj48cD5WYWxpZDwvcD48L3NwYW4+PC9kaXY+PC9mb3JlaWduT2JqZWN0PjwvZz48L2c+PGcgY2xhc3M9ImVkZ2VMYWJlbCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNDM0LjM5MDYyNSwgNDUuNzUpIj48ZyBjbGFzcz0ibGFiZWwiIGRhdGEtaWQ9IkxfQ19CXzAiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0yMC44NDM3NSwgLTEwLjUpIj48Zm9yZWlnbk9iamVjdCB3aWR0aD0iNDEuNjg3NSIgaGVpZ2h0PSIyMSI+PGRpdiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94aHRtbCIgY2xhc3M9ImxhYmVsQmtnIiBzdHlsZT0iZGlzcGxheTogdGFibGUtY2VsbDsgd2hpdGUtc3BhY2U6IG5vd3JhcDsgbGluZS1oZWlnaHQ6IDEuNTsgbWF4LXdpZHRoOiAyMDBweDsgdGV4dC1hbGlnbjogY2VudGVyOyI+PHNwYW4gY2xhc3M9ImVkZ2VMYWJlbCI+PHA+SW52YWxpZDwvcD48L3NwYW4+PC9kaXY+PC9mb3JlaWduT2JqZWN0PjwvZz48L2c+PGcgY2xhc3M9ImVkZ2VMYWJlbCI+PGcgY2xhc3M9ImxhYmVsIiBkYXRhLWlkPSJMX0RfRV8wIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwLCAwKSI+PGZvcmVpZ25PYmplY3Qgd2lkdGg9IjAiIGhlaWdodD0iMCI+PGRpdiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94aHRtbCIgY2xhc3M9ImxhYmVsQmtnIiBzdHlsZT0iZGlzcGxheTogdGFibGUtY2VsbDsgd2hpdGUtc3BhY2U6IG5vd3JhcDsgbGluZS1oZWlnaHQ6IDEuNTsgbWF4LXdpZHRoOiAyMDBweDsgdGV4dC1hbGlnbjogY2VudGVyOyI+PHNwYW4gY2xhc3M9ImVkZ2VMYWJlbCI+PC9zcGFuPjwvZGl2PjwvZm9yZWlnbk9iamVjdD48L2c+PC9nPjwvZz48ZyBjbGFzcz0ibm9kZXMiPjxnIGNsYXNzPSJub2RlIGRlZmF1bHQiIGlkPSJteS1zdmctZmxvd2NoYXJ0LUEtMCIgZGF0YS1sb29rPSJjbGFzc2ljIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSg3My45MDYyNSwgMzAuNSkiPjxyZWN0IGNsYXNzPSJiYXNpYyBsYWJlbC1jb250YWluZXIiIHN0eWxlPSIiIHg9Ii02NS45MDYyNSIgeT0iLTIyLjUiIHdpZHRoPSIxMzEuODEyNSIgaGVpZ2h0PSI0NSIvPjxnIGNsYXNzPSJsYWJlbCIgc3R5bGU9IiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTQxLjkwNjI1LCAtMTAuNSkiPjxyZWN0Lz48Zm9yZWlnbk9iamVjdCB3aWR0aD0iODMuODEyNSIgaGVpZ2h0PSIyMSI+PGRpdiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94aHRtbCIgc3R5bGU9ImRpc3BsYXk6IHRhYmxlLWNlbGw7IHdoaXRlLXNwYWNlOiBub3dyYXA7IGxpbmUtaGVpZ2h0OiAxLjU7IG1heC13aWR0aDogMjAwcHg7IHRleHQtYWxpZ246IGNlbnRlcjsiPjxzcGFuIGNsYXNzPSJub2RlTGFiZWwiPjxwPkdldCBMMyBjb25maWc8L3A+PC9zcGFuPjwvZGl2PjwvZm9yZWlnbk9iamVjdD48L2c+PC9nPjxnIGNsYXNzPSJub2RlIGRlZmF1bHQiIGlkPSJteS1zdmctZmxvd2NoYXJ0LUItMSIgZGF0YS1sb29rPSJjbGFzc2ljIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgyOTAuNDI5Njg3NSwgMzAuNSkiPjxyZWN0IGNsYXNzPSJiYXNpYyBsYWJlbC1jb250YWluZXIiIHN0eWxlPSIiIHg9Ii05NS42MTcxODc1IiB5PSItMjIuNSIgd2lkdGg9IjE5MS4yMzQzNzUiIGhlaWdodD0iNDUiLz48ZyBjbGFzcz0ibGFiZWwiIHN0eWxlPSIiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC03MS42MTcxODc1LCAtMTAuNSkiPjxyZWN0Lz48Zm9yZWlnbk9iamVjdCB3aWR0aD0iMTQzLjIzNDM3NSIgaGVpZ2h0PSIyMSI+PGRpdiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94aHRtbCIgc3R5bGU9ImRpc3BsYXk6IHRhYmxlLWNlbGw7IHdoaXRlLXNwYWNlOiBub3dyYXA7IGxpbmUtaGVpZ2h0OiAxLjU7IG1heC13aWR0aDogMjAwcHg7IHRleHQtYWxpZ246IGNlbnRlcjsiPjxzcGFuIGNsYXNzPSJub2RlTGFiZWwiPjxwPkVkaXQgc3Vydml2b3JzaGlwIGdyb3VwPC9wPjwvc3Bhbj48L2Rpdj48L2ZvcmVpZ25PYmplY3Q+PC9nPjwvZz48ZyBjbGFzcz0ibm9kZSBkZWZhdWx0IiBpZD0ibXktc3ZnLWZsb3djaGFydC1DLTMiIGRhdGEtbG9vaz0iY2xhc3NpYyIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNTUzLjQ2MDkzNzUsIDMwLjUpIj48cmVjdCBjbGFzcz0iYmFzaWMgbGFiZWwtY29udGFpbmVyIiBzdHlsZT0iIiB4PSItNzAuNzI2NTYyNSIgeT0iLTIyLjUiIHdpZHRoPSIxNDEuNDUzMTI1IiBoZWlnaHQ9IjQ1Ii8+PGcgY2xhc3M9ImxhYmVsIiBzdHlsZT0iIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtNDYuNzI2NTYyNSwgLTEwLjUpIj48cmVjdC8+PGZvcmVpZ25PYmplY3Qgd2lkdGg9IjkzLjQ1MzEyNSIgaGVpZ2h0PSIyMSI+PGRpdiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94aHRtbCIgc3R5bGU9ImRpc3BsYXk6IHRhYmxlLWNlbGw7IHdoaXRlLXNwYWNlOiBub3dyYXA7IGxpbmUtaGVpZ2h0OiAxLjU7IG1heC13aWR0aDogMjAwcHg7IHRleHQtYWxpZ246IGNlbnRlcjsiPjxzcGFuIGNsYXNzPSJub2RlTGFiZWwiPjxwPlZhbGlkYXRlIGNvbmZpZzwvcD48L3NwYW4+PC9kaXY+PC9mb3JlaWduT2JqZWN0PjwvZz48L2c+PGcgY2xhc3M9Im5vZGUgZGVmYXVsdCIgaWQ9Im15LXN2Zy1mbG93Y2hhcnQtRC01IiBkYXRhLWxvb2s9ImNsYXNzaWMiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDc3Ni41NTQ2ODc1LCAzMC41KSI+PHJlY3QgY2xhc3M9ImJhc2ljIGxhYmVsLWNvbnRhaW5lciIgc3R5bGU9IiIgeD0iLTY2Ljk2MDkzNzUiIHk9Ii0yMi41IiB3aWR0aD0iMTMzLjkyMTg3NSIgaGVpZ2h0PSI0NSIvPjxnIGNsYXNzPSJsYWJlbCIgc3R5bGU9IiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTQyLjk2MDkzNzUsIC0xMC41KSI+PHJlY3QvPjxmb3JlaWduT2JqZWN0IHdpZHRoPSI4NS45MjE4NzUiIGhlaWdodD0iMjEiPjxkaXYgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGh0bWwiIHN0eWxlPSJkaXNwbGF5OiB0YWJsZS1jZWxsOyB3aGl0ZS1zcGFjZTogbm93cmFwOyBsaW5lLWhlaWdodDogMS41OyBtYXgtd2lkdGg6IDIwMHB4OyB0ZXh0LWFsaWduOiBjZW50ZXI7Ij48c3BhbiBjbGFzcz0ibm9kZUxhYmVsIj48cD5QVVQgTDMgY29uZmlnPC9wPjwvc3Bhbj48L2Rpdj48L2ZvcmVpZ25PYmplY3Q+PC9nPjwvZz48ZyBjbGFzcz0ibm9kZSBkZWZhdWx0IiBpZD0ibXktc3ZnLWZsb3djaGFydC1FLTkiIGRhdGEtbG9vaz0iY2xhc3NpYyIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoOTczLjQ0NTMxMjUsIDMwLjUpIj48cmVjdCBjbGFzcz0iYmFzaWMgbGFiZWwtY29udGFpbmVyIiBzdHlsZT0iIiB4PSItNzQuOTI5Njg3NSIgeT0iLTIyLjUiIHdpZHRoPSIxNDkuODU5Mzc1IiBoZWlnaHQ9IjQ1Ii8+PGcgY2xhc3M9ImxhYmVsIiBzdHlsZT0iIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtNTAuOTI5Njg3NSwgLTEwLjUpIj48cmVjdC8+PGZvcmVpZ25PYmplY3Qgd2lkdGg9IjEwMS44NTkzNzUiIGhlaWdodD0iMjEiPjxkaXYgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGh0bWwiIHN0eWxlPSJkaXNwbGF5OiB0YWJsZS1jZWxsOyB3aGl0ZS1zcGFjZTogbm93cmFwOyBsaW5lLWhlaWdodDogMS41OyBtYXgtd2lkdGg6IDIwMHB4OyB0ZXh0LWFsaWduOiBjZW50ZXI7Ij48c3BhbiBjbGFzcz0ibm9kZUxhYmVsIj48cD5WZXJpZnkgT1YgdmFsdWVzPC9wPjwvc3Bhbj48L2Rpdj48L2ZvcmVpZ25PYmplY3Q+PC9nPjwvZz48L2c+PC9nPjwvZz48ZGVmcz48ZmlsdGVyIGlkPSJteS1zdmctZHJvcC1zaGFkb3ciIGhlaWdodD0iMTMwJSIgd2lkdGg9IjEzMCUiPjxmZURyb3BTaGFkb3cgZHg9IjQiIGR5PSI0IiBzdGREZXZpYXRpb249IjAiIGZsb29kLW9wYWNpdHk9IjAuMDYiIGZsb29kLWNvbG9yPSIjMDAwMDAwIi8+PC9maWx0ZXI+PC9kZWZzPjxkZWZzPjxmaWx0ZXIgaWQ9Im15LXN2Zy1kcm9wLXNoYWRvdy1zbWFsbCIgaGVpZ2h0PSIxNTAlIiB3aWR0aD0iMTUwJSI+PGZlRHJvcFNoYWRvdyBkeD0iMiIgZHk9IjIiIHN0ZERldmlhdGlvbj0iMCIgZmxvb2Qtb3BhY2l0eT0iMC4wNiIgZmxvb2QtY29sb3I9IiMwMDAwMDAiLz48L2ZpbHRlcj48L2RlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJteS1zdmctZ3JhZGllbnQiIGdyYWRpZW50VW5pdHM9Im9iamVjdEJvdW5kaW5nQm94IiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzAwMDAzMyIgc3RvcC1vcGFjaXR5PSIxIi8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSJoc2woMCwgMCUsIDg2LjA3ODQzMTM3MjUlKSIgc3RvcC1vcGFjaXR5PSIxIi8+PC9saW5lYXJHcmFkaWVudD48L3N2Zz4=" alt="Workflow diagram" /><h2 id="overview">Overview</h2>
+<p>This guide walks you through configuring <span class="glossary-term" data-def="A named configuration object on an entity type that groups survivorship mappings together. Every entity type has a default group; non-default groups can be role-specific.">survivorship group</span> and <span class="glossary-term" data-def="The algorithm Reltio uses to determine the operational value for an attribute. Common strategies include LUD (last update date), SRC_SYS (source system priority), Frequency (most common value), Aggregation (all values win), MinValue, MaxValue, and OtherAttributeWinnerCrosswalk.">survivorship strategy</span> for the <code>Individual</code> <span class="glossary-term" data-def="A named category of master data objects in Reltio — such as Individual, Organization, or Product. Each entity type has its own attributes, match rules, and survivorship configuration.">entity type</span> using the Configuration API. You&#39;ll read your current <span class="glossary-term" data-def="The customer-owned configuration layer of a Reltio tenant. Defines entity types, attributes, sources, match rules, and survivorship groups. L1 and L2 are Reltio-managed; only L3 is editable by customers.">L3 configuration</span>, add or update a survivorship group with per-attribute rules, set a default strategy, and verify the result by fetching an Individual entity with survivorship applied.</p>
+<p>This guide is for these Reltio roles: <strong>Reltio Configurator</strong>, <strong>Developer</strong>. For more information on data unification roles in the <strong>Reltio Context Intelligence Platform</strong>, see <a href="https://docs.reltio.com/en/roles/about-roles">About roles</a>.</p>
+<h2 id="contents">Contents</h2>
+<ol>
+<li><a href="#1-getting-started">Getting started</a></li>
+<li><a href="#2-key-concepts">Key concepts</a></li>
+<li><a href="#3-get-your-current-l3-configuration">Get your current L3 configuration</a></li>
+<li><a href="#4-configure-a-survivorship-group-for-individual">Configure a survivorship group for Individual</a></li>
+<li><a href="#5-set-the-default-survivorship-strategy">Set the default survivorship strategy</a></li>
+<li><a href="#6-add-a-fallback-strategy">Add a fallback strategy</a></li>
+<li><a href="#7-verify-survivorship-with-get-entity">Verify survivorship with Get Entity</a></li>
+<li><a href="#8-troubleshooting">Troubleshooting</a></li>
+<li><a href="#9-further-reading">Further reading</a></li>
+<li><a href="#10-glossary">Glossary</a></li>
+</ol>
+<h2 id="1-getting-started">1. Getting started</h2>
+<p>Before you begin, confirm the following:</p>
+<ul>
+<li><strong>Access token</strong> — you have a valid bearer token. See <a href="HOWTO-authenticate-and-use-reltio-apis.html">HOWTO: Authenticate and use Reltio APIs</a> if you need one.</li>
+<li><strong>System Administrator or Reltio Configurator access</strong> — your application client must have permission to read and write tenant configuration.</li>
+<li><strong>Your tenant URL</strong> — in the format <code>https://{env}.reltio.com/reltio/api/{tenantId}</code>. Replace <code>{TenantURL}</code> with this value throughout this guide.</li>
+<li><strong>A JSON editor</strong> — you&#39;ll be editing L3 configuration JSON. VS Code with the JSON extension or any comparable editor works well.</li>
+<li><strong>Existing Individual entity type</strong> — the <code>Individual</code> entity type must already exist in your L3.</li>
+</ul>
+<blockquote>
+<p><strong>Important:</strong> Always retrieve the L3 configuration using <code>_noinheritance</code> before editing, and always validate before applying. Never PUT a consolidated (inherited) configuration back to your tenant.</p>
+</blockquote>
+<blockquote>
+<p><strong>Learn more:</strong> <a href="https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/configuration-api?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs">Configuration API</a></p>
+</blockquote>
+<h2 id="2-key-concepts">2. Key concepts</h2>
+<p>Understand these concepts before editing your configuration.</p>
+<p id="glossary-operational-value-ov"><strong>Operational value (OV):</strong> When multiple source systems contribute values to the same attribute on an entity, Reltio calculates a single &quot;best&quot; value — the operational value — in real time. The OV is what the Hub displays and what API responses return by default.</p>
+<p id="glossary-survivorship-strategy"><strong>Survivorship strategy:</strong> The algorithm Reltio applies to pick the OV. Strategies range from <code>LUD</code> (most recently updated value wins) to <code>SRC_SYS</code> (a ranked list of source systems determines priority). <code>LUD</code> is the default when no strategy is explicitly configured.</p>
+<p id="glossary-survivorship-group"><strong>Survivorship group:</strong> A named set of per-attribute survivorship mappings defined for an entity type. Every entity type must have exactly one group marked <code>&quot;default&quot;: true</code>. Non-default groups apply to users with specific roles.</p>
+<p id="glossary-survivorship-mapping"><strong>Survivorship mapping:</strong> A single rule entry inside a survivorship group that pairs one attribute with one strategy. For example: apply <code>SRC_SYS</code> with source priority <code>[CRM, ERP]</code> to the <code>FirstName</code> attribute.</p>
+<p id="glossary-l3-configuration"><strong>L3 configuration:</strong> The customer-owned configuration layer. Survivorship rules are defined here — in the <code>survivorshipGroups</code> section of the <code>entityTypes</code> object for <code>Individual</code>.</p>
+<blockquote>
+<p><strong>Learn more:</strong> <a href="https://docs.reltio.com/en/objectives/resolve-potential-matches/potential-matching-at-a-glance/potential-matching-navigation/design-survivorship-rules?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs">Design survivorship rules</a></p>
+</blockquote>
+<h2 id="3-get-your-current-l3-configuration">3. Get your current L3 configuration</h2>
+<p>Before editing, retrieve the L3 layer using <code>_noinheritance</code> to avoid reading inherited L1/L2 rules.</p>
+<p><code>GET {TenantURL}/configuration?_noinheritance</code></p>
+<p><strong>Request</strong></p>
+<pre><code class="language-bash hljs">curl -X GET <span class="hljs-string">&quot;{TenantURL}/configuration?_noinheritance&quot;</span> \
+  -H <span class="hljs-string">&quot;Authorization: Bearer YOUR_ACCESS_TOKEN&quot;</span></code></pre>
+<p><strong>Response (excerpt)</strong></p>
+<pre><code class="language-json hljs"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;URI&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;configuration&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;entityTypes&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
+    <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">&quot;URI&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;configuration/entityTypes/Individual&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;survivorshipGroups&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
+        <span class="hljs-punctuation">{</span>
+          <span class="hljs-attr">&quot;URI&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;configuration/entityTypes/Individual/survivorshipGroups/default&quot;</span><span class="hljs-punctuation">,</span>
+          <span class="hljs-attr">&quot;default&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span><span class="hljs-punctuation">,</span>
+          <span class="hljs-attr">&quot;mapping&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-punctuation">]</span>
+        <span class="hljs-punctuation">}</span>
+      <span class="hljs-punctuation">]</span>
+    <span class="hljs-punctuation">}</span>
+  <span class="hljs-punctuation">]</span>
+<span class="hljs-punctuation">}</span></code></pre>
+<p>Save this response — you&#39;ll modify the <code>survivorshipGroups</code> section and PUT it back.</p>
+<blockquote>
+<p><strong>Note:</strong> If <code>survivorshipGroups</code> is absent or <code>mapping</code> is empty, all Individual attributes are using the default <code>LUD</code> strategy inherited from the platform.</p>
+</blockquote>
+<blockquote>
+<p><strong>Learn more:</strong> <a href="https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/configuration-api/get-configuration?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs">GET Configuration</a></p>
+</blockquote>
+<h2 id="4-configure-a-survivorship-group-for-individual">4. Configure a survivorship group for Individual</h2>
+<p>You can configure survivorship rules either by updating the full L3 via <code>PUT /configuration</code> or by using the dedicated <code>survivorshipGroups</code> sub-resource endpoint.</p>
+<h3 id="option-a-survivorshipgroups-sub-resource-recommended-for-targeted-updates">Option A — survivorshipGroups sub-resource (recommended for targeted updates)</h3>
+<p><code>POST {TenantURL}/configuration/entityTypes/Individual/survivorshipGroups/{groupUri}</code></p>
+<p>Use this endpoint to create or replace a single survivorship group without touching the rest of the L3.</p>
+<p><strong>Request — create a default survivorship group</strong></p>
+<pre><code class="language-bash hljs">curl -X POST <span class="hljs-string">&quot;{TenantURL}/configuration/entityTypes/Individual/survivorshipGroups/default&quot;</span> \
+  -H <span class="hljs-string">&quot;Authorization: Bearer YOUR_ACCESS_TOKEN&quot;</span> \
+  -H <span class="hljs-string">&quot;Content-Type: application/json&quot;</span> \
+  -d <span class="hljs-string">&#x27;{
+    &quot;URI&quot;: &quot;configuration/entityTypes/Individual/survivorshipGroups/default&quot;,
+    &quot;default&quot;: true,
+    &quot;mapping&quot;: [
+      {
+        &quot;attribute&quot;: &quot;configuration/entityTypes/Individual/attributes/FirstName&quot;,
+        &quot;survivorshipStrategy&quot;: &quot;SRC_SYS&quot;,
+        &quot;sourcesUriOrder&quot;: [
+          &quot;configuration/sources/CRM&quot;,
+          &quot;configuration/sources/ERP&quot;
+        ]
+      },
+      {
+        &quot;attribute&quot;: &quot;configuration/entityTypes/Individual/attributes/LastName&quot;,
+        &quot;survivorshipStrategy&quot;: &quot;OtherAttributeWinnerCrosswalk&quot;,
+        &quot;primaryAttributeUri&quot;: &quot;configuration/entityTypes/Individual/attributes/FirstName&quot;
+      },
+      {
+        &quot;attribute&quot;: &quot;configuration/entityTypes/Individual/attributes/MiddleName&quot;,
+        &quot;survivorshipStrategy&quot;: &quot;SRC_SYS&quot;
+      },
+      {
+        &quot;attribute&quot;: &quot;configuration/entityTypes/Individual/attributes/Email&quot;,
+        &quot;survivorshipStrategy&quot;: &quot;LUD&quot;
+      }
+    ]
+  }&#x27;</span></code></pre>
+<p>This configuration does the following:</p>
+<ul>
+<li><strong>FirstName</strong> — the value from the highest-priority source wins. CRM takes priority over ERP.</li>
+<li><strong>LastName</strong> — follows FirstName&#39;s winner <span class="glossary-term" data-def="A pointer that links a Reltio entity back to its original record in a source system, storing the source system URI and the record&#39;s unique ID in that system.">crosswalk</span>. If the winning crosswalk for FirstName came from CRM, the LastName value from that same CRM crosswalk becomes the OV.</li>
+<li><strong>MiddleName</strong> — source system priority applies; the <code>sourcesUriOrder</code> at the group level is used when not specified per mapping.</li>
+<li><strong>Email</strong> — the most recently updated value wins.</li>
+</ul>
+<h3 id="option-b-full-l3-put">Option B — full L3 PUT</h3>
+<p>To configure survivorship as part of a broader L3 update:</p>
+<ol>
+<li>Add the <code>survivorshipGroups</code> section to the <code>Individual</code> entity type in your saved L3 JSON.</li>
+<li>Validate the configuration (see step below).</li>
+<li>PUT the full L3.</li>
+</ol>
+<p><strong>Validate before applying</strong></p>
+<pre><code class="language-bash hljs">curl -X GET <span class="hljs-string">&quot;{TenantURL}/_validateTenantConfiguration&quot;</span> \
+  -H <span class="hljs-string">&quot;Authorization: Bearer YOUR_ACCESS_TOKEN&quot;</span></code></pre>
+<p>Fix any errors returned before proceeding. Common error codes are <code>1812</code> and <code>1813</code>.</p>
+<p><strong>Apply the updated L3</strong></p>
+<pre><code class="language-bash hljs">curl -X PUT <span class="hljs-string">&quot;{TenantURL}/configuration&quot;</span> \
+  -H <span class="hljs-string">&quot;Authorization: Bearer YOUR_ACCESS_TOKEN&quot;</span> \
+  -H <span class="hljs-string">&quot;Content-Type: application/json&quot;</span> \
+  -d @your-updated-l3.json</code></pre>
+<h3 id="retrieve-the-survivorship-group-to-confirm">Retrieve the survivorship group to confirm</h3>
+<pre><code class="language-bash hljs">curl -X GET <span class="hljs-string">&quot;{TenantURL}/configuration/entityTypes/Individual/survivorshipGroups/default&quot;</span> \
+  -H <span class="hljs-string">&quot;Authorization: Bearer YOUR_ACCESS_TOKEN&quot;</span></code></pre>
+<h3 id="key-rules">Key rules</h3>
+<ul>
+<li>Every entity type must have exactly one group marked <code>&quot;default&quot;: true</code>.</li>
+<li>Attributes not listed in a mapping use the default survivorship strategy (<code>LUD</code> unless you&#39;ve overridden it — see section 5).</li>
+<li>You can&#39;t configure survivorship on sub-attributes of referenced attributes. Survivorship for those is governed by the referenced entity type&#39;s own rules.</li>
+<li>Survivorship rules are applied in real time — changes take effect immediately on the next attribute value request.</li>
+</ul>
+<blockquote>
+<p><strong>Important:</strong> After changing the survivorship strategy, reindex your tenant to get correct search results for OV values. See <a href="https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/tasks-api/reindex-data-task?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs">Reindex Data Task</a>.</p>
+</blockquote>
+<blockquote>
+<p><strong>Learn more:</strong> <a href="https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/configuration-api/configuring-survivorship-rules-in-the-l3?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs">Configuring survivorship rules in the L3</a></p>
+</blockquote>
+<h2 id="5-set-the-default-survivorship-strategy">5. Set the default survivorship strategy</h2>
+<p>By default, <code>LUD</code> (Last Update Date) applies to any attribute that doesn&#39;t have an explicit <span class="glossary-term" data-def="A single rule entry within a survivorship group that associates one attribute with one survivorship strategy and its parameters.">survivorship mapping</span>. You can change the default at either the tenant level or the entity type level.</p>
+<h3 id="set-the-default-at-the-entity-type-level-recommended">Set the default at the entity type level (recommended)</h3>
+<p>Add <code>defaultSurvivorshipStrategy</code> to the <code>Individual</code> entity type in your L3:</p>
+<pre><code class="language-json hljs"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;URI&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;configuration/entityTypes/Individual&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;defaultSurvivorshipStrategy&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Frequency&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;survivorshipGroups&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>...<span class="hljs-punctuation">]</span>
+<span class="hljs-punctuation">}</span></code></pre>
+<p>This overrides the tenant-level default for all Individual attributes that don&#39;t have an explicit mapping.</p>
+<h3 id="set-the-default-at-the-tenant-level">Set the default at the tenant level</h3>
+<p>In the root of your L3, define <code>survivorshipStrategies</code> with exactly one entry marked <code>&quot;default&quot;: true</code>:</p>
+<pre><code class="language-json hljs"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;survivorshipStrategies&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
+    <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">&quot;uri&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;configuration/survivorshipStrategies/LUD&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;label&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Recency&quot;</span>
+    <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">&quot;uri&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;configuration/survivorshipStrategies/Aggregation&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;label&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;All values win&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;default&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span>
+    <span class="hljs-punctuation">}</span>
+  <span class="hljs-punctuation">]</span>
+<span class="hljs-punctuation">}</span></code></pre>
+<h3 id="valid-default-strategies">Valid default strategies</h3>
+<p>Only these strategies are valid as the default value: <code>LUD</code>, <code>OldestValue</code>, <code>WinnerEntityCrosswalk</code>, <code>Aggregation</code>, <code>Frequency</code>. Strategies like <code>MinValue</code> and <code>SRC_SYS</code> can&#39;t be set as defaults — a configuration error occurs if you try.</p>
+<blockquote>
+<p><strong>Note:</strong> If no default is explicitly configured, <code>LUD</code> is used automatically for backward compatibility.</p>
+</blockquote>
+<blockquote>
+<p><strong>Learn more:</strong> <a href="https://docs.reltio.com/en/objectives/resolve-potential-matches/potential-matching-at-a-glance/potential-matching-navigation/design-survivorship-rules/configure-default-survivorship-strategy?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs">Configure default survivorship strategy</a></p>
+</blockquote>
+<h2 id="6-add-a-fallback-strategy">6. Add a fallback strategy</h2>
+<p>A <span class="glossary-term" data-def="A secondary survivorship rule that applies when the primary strategy produces zero winners or more than one winner. Configured per attribute using the fallbackStrategies parameter.">fallback strategy</span> kicks in when the primary survivorship strategy can&#39;t pick a single winner — for example, when two records from the same source contribute different values, and <code>SRC_SYS</code> can&#39;t break the tie.</p>
+<p>Add <code>fallbackStrategies</code> to any mapping entry:</p>
+<pre><code class="language-json hljs"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;attribute&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;configuration/entityTypes/Individual/attributes/LastName&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;survivorshipStrategy&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;OtherAttributeWinnerCrosswalk&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;primaryAttributeUri&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;configuration/entityTypes/Individual/attributes/FirstName&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;fallbackStrategies&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
+    <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">&quot;attribute&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;configuration/entityTypes/Individual/attributes/LastName&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;survivorshipStrategy&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;SRC_SYS&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;sourcesUriOrder&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
+        <span class="hljs-string">&quot;configuration/sources/CRM&quot;</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-string">&quot;configuration/sources/ERP&quot;</span>
+      <span class="hljs-punctuation">]</span>
+    <span class="hljs-punctuation">}</span>
+  <span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;fallbackUsingCriteria&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;ZERO_OR_MORE_THAN_ONE&quot;</span>
+<span class="hljs-punctuation">}</span></code></pre>
+<p>The <code>fallbackUsingCriteria</code> controls when fallback triggers:</p>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>When fallback applies</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>MORE_THAN_ONE</code> (default)</td>
+<td>Primary strategy found more than one winner</td>
+</tr>
+<tr>
+<td><code>ZERO</code></td>
+<td>Primary strategy found zero winners</td>
+</tr>
+<tr>
+<td><code>ZERO_OR_MORE_THAN_ONE</code></td>
+<td>Either zero or more than one winner</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><strong>Important:</strong> Fallback strategies are not inherited from other attributes. Each attribute must have its own <code>fallbackStrategies</code> defined separately.</p>
+</blockquote>
+<blockquote>
+<p><strong>Learn more:</strong> <a href="https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/configuration-api/configuring-fallback-strategies-for-survivorship-rules?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs">Configuring fallback strategies for survivorship rules</a></p>
+</blockquote>
+<h2 id="7-verify-survivorship-with-get-entity">7. Verify survivorship with Get Entity</h2>
+<p>After applying your configuration, verify that OV values are calculated correctly by fetching an Individual entity.</p>
+<p><code>GET {TenantURL}/entities/{entityUri}?ov=true</code></p>
+<p><strong>Request</strong></p>
+<pre><code class="language-bash hljs">curl -X GET <span class="hljs-string">&quot;{TenantURL}/entities/{entityUri}?ov=true&quot;</span> \
+  -H <span class="hljs-string">&quot;Authorization: Bearer YOUR_ACCESS_TOKEN&quot;</span></code></pre>
+<p><strong>Response (excerpt)</strong></p>
+<pre><code class="language-json hljs"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;uri&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;entities/ABC123&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;attributes&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">&quot;FirstName&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
+      <span class="hljs-punctuation">{</span> <span class="hljs-attr">&quot;value&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Jane&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-attr">&quot;ov&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span><span class="hljs-punctuation">,</span> <span class="hljs-attr">&quot;crosswalk&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span> <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;configuration/sources/CRM&quot;</span> <span class="hljs-punctuation">}</span> <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-punctuation">{</span> <span class="hljs-attr">&quot;value&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Janet&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-attr">&quot;ov&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><span class="hljs-punctuation">,</span> <span class="hljs-attr">&quot;crosswalk&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span> <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;configuration/sources/ERP&quot;</span> <span class="hljs-punctuation">}</span> <span class="hljs-punctuation">}</span>
+    <span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;LastName&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
+      <span class="hljs-punctuation">{</span> <span class="hljs-attr">&quot;value&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Smith&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-attr">&quot;ov&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span><span class="hljs-punctuation">,</span> <span class="hljs-attr">&quot;crosswalk&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span> <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;configuration/sources/CRM&quot;</span> <span class="hljs-punctuation">}</span> <span class="hljs-punctuation">}</span>
+    <span class="hljs-punctuation">]</span>
+  <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">}</span></code></pre>
+<p>Confirm the correct source&#39;s value has <code>&quot;ov&quot;: true</code>. If the OV doesn&#39;t match your expected strategy, check:</p>
+<ol>
+<li>That the survivorship group was saved correctly — re-fetch via <code>GET /survivorshipGroups/default</code>.</li>
+<li>That source URIs in <code>sourcesUriOrder</code> match the actual source names in your tenant configuration.</li>
+<li>Whether any values are <span class="glossary-term" data-def="An attribute value that has been explicitly flagged to always be the OV, bypassing all survivorship rules. Pinned values always win regardless of strategy.">pinned</span> — pinned values override all survivorship rules.</li>
+</ol>
+<blockquote>
+<p><strong>Learn more:</strong> <a href="https://docs.reltio.com/en/developer-resources/entity-management-apis/entity-management-apis-at-a-glance/entities-api/get-entity/get-entity-with-survivorship-rules?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs">Get Entity with Survivorship Rules</a></p>
+</blockquote>
+<h2 id="8-troubleshooting">8. Troubleshooting</h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Cause</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>All attributes have <code>&quot;ov&quot;: false</code></td>
+<td>No matching source in <code>sourcesUriOrder</code> and no fallback configured</td>
+<td>Verify source URIs match <code>configuration/sources/{name}</code> in your L3</td>
+</tr>
+<tr>
+<td>OV doesn&#39;t change after updating configuration</td>
+<td>Survivorship is calculated just-in-time but search index lags</td>
+<td>Run a Reindex Data Task to update search results</td>
+</tr>
+<tr>
+<td>Configuration validation error 1812 or 1813</td>
+<td>Invalid survivorship mapping (unknown strategy or missing required field)</td>
+<td>Check the <code>survivorshipStrategy</code> value and required parameters in the mapping</td>
+</tr>
+<tr>
+<td>Non-default survivorship group not applying</td>
+<td>Group not associated with the correct user role via a Ruleset</td>
+<td>Verify the Ruleset configuration links the group to the intended role</td>
+</tr>
+<tr>
+<td><code>&quot;ov&quot;: true</code> on an unexpected value</td>
+<td>A value is pinned — pinned values always win</td>
+<td>Check whether any attribute value has been pinned via the Reltio Hub or Attribute API</td>
+</tr>
+<tr>
+<td><code>fallbackStrategies</code> not working</td>
+<td><code>fallbackUsingCriteria</code> default is <code>MORE_THAN_ONE</code> — fallback won&#39;t trigger on zero winners</td>
+<td>Set <code>fallbackUsingCriteria</code> to <code>ZERO_OR_MORE_THAN_ONE</code> if you need both cases covered</td>
+</tr>
+</tbody></table>
+<h2 id="9-further-reading">9. Further reading</h2>
+<ul>
+<li><a href="https://docs.reltio.com/en/objectives/resolve-potential-matches/potential-matching-at-a-glance/potential-matching-navigation/design-survivorship-rules/survivorship-rules?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs">Survivorship Rules</a> — full strategy reference including all parameters</li>
+<li><a href="https://docs.reltio.com/en/objectives/resolve-potential-matches/potential-matching-at-a-glance/potential-matching-navigation/design-survivorship-rules/configure-default-survivorship-strategy?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs">Configure default survivorship strategy</a></li>
+<li><a href="https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/configuration-api/configuring-survivorship-rules-in-the-l3?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs">Configuring survivorship rules in the L3</a></li>
+<li><a href="https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/configuration-api/manage-configuration-sub-resources/survivorship-groups-for-entity-types?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs">Survivorship groups for entity types API</a></li>
+<li><a href="https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/configuration-api/configuring-fallback-strategies-for-survivorship-rules?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs">Configuring fallback strategies for survivorship rules</a></li>
+<li><a href="https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/tasks-api/reindex-data-task?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs">Reindex Data Task</a> — required after strategy changes for correct search results</li>
+<li><a href="HOWTO-authenticate-and-use-reltio-apis.html">HOWTO: Authenticate and use Reltio APIs</a> — get the access token you need for all calls in this guide</li>
+</ul>
+<h2 id="10-glossary">10. Glossary</h2>
+<p id="glossary-crosswalk"><strong>Crosswalk:</strong> A pointer that links a Reltio entity back to its original record in a source system, storing the source system URI and the record&#39;s unique ID in that system.</p>
+<p id="glossary-entity-type"><strong>Entity type:</strong> A named category of master data objects in Reltio — such as <code>Individual</code>, <code>Organization</code>, or <code>Product</code>. Each entity type has its own attributes, match rules, and survivorship configuration.</p>
+<p id="glossary-fallback-strategy"><strong>Fallback strategy:</strong> A secondary survivorship rule that applies when the primary strategy produces zero winners or more than one winner. Configured per attribute using the <code>fallbackStrategies</code> parameter.</p>
+<p id="glossary-l3-configuration"><strong>L3 configuration:</strong> The customer-owned configuration layer of a Reltio tenant. Defines entity types, attributes, sources, match rules, and survivorship groups. L1 and L2 are Reltio-managed; only L3 is editable by customers.</p>
+<p id="glossary-operational-value-ov"><strong>Operational value (OV):</strong> The &quot;winning&quot; attribute value that Reltio selects from all contributed source values using the configured survivorship strategy. The OV is what the Hub displays and what API responses return by default.</p>
+<p id="glossary-pinned-value"><strong>Pinned value:</strong> An attribute value that has been explicitly flagged to always be the OV, bypassing all survivorship rules. Pinned values always win regardless of strategy.</p>
+<p id="glossary-survivorship-group"><strong>Survivorship group:</strong> A named configuration object on an entity type that groups survivorship mappings together. Every entity type has a default group; non-default groups can be role-specific.</p>
+<p id="glossary-survivorship-mapping"><strong>Survivorship mapping:</strong> A single rule entry within a survivorship group that associates one attribute with one survivorship strategy and its parameters.</p>
+<p id="glossary-survivorship-strategy"><strong>Survivorship strategy:</strong> The algorithm Reltio uses to determine the operational value for an attribute. Common strategies include <code>LUD</code> (last update date), <code>SRC_SYS</code> (source system priority), <code>Frequency</code> (most common value), <code>Aggregation</code> (all values win), <code>MinValue</code>, <code>MaxValue</code>, and <code>OtherAttributeWinnerCrosswalk</code>.</p>
+<hr>
+<blockquote class="disclaimer">
+<p id="glossary-disclaimer"><strong>Disclaimer:</strong> AI-generated from the Reltio documentation snapshot 2026-05-06 02:14 UTC (3,240 topics). AI output can contain subtle inaccuracies, and the knowledge base syncs twice a week — so the content here may lag <a href="https://docs.reltio.com">docs.reltio.com</a>. Verify anything critical against the official docs and your own tenant. Full disclaimer: <a href="DISCLAIMER.html">DISCLAIMER.md</a>.</p>
+</blockquote>
+
+<script>
+  // Click-to-zoom for workflow diagrams — toggle zoomed class on click,
+  // dismiss on second click or by clicking anywhere outside the diagram.
+  document.querySelectorAll('.diagram').forEach(function (img) {
+    img.addEventListener('click', function (e) {
+      e.stopPropagation();
+      img.classList.toggle('zoomed');
+    });
+  });
+  document.addEventListener('click', function () {
+    document.querySelectorAll('.diagram.zoomed').forEach(function (img) {
+      img.classList.remove('zoomed');
+    });
+  });
+
+  // Copy button — top-right of every code block.
+  var ICON_COPY = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+  var ICON_CHECK = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>';
+  document.querySelectorAll('pre').forEach(function (pre) {
+    var btn = document.createElement('button');
+    btn.className = 'copy-btn';
+    btn.setAttribute('aria-label', 'Copy code');
+    btn.innerHTML = ICON_COPY;
+    pre.appendChild(btn);
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var code = pre.querySelector('code');
+      var text = code ? code.innerText : pre.innerText;
+      navigator.clipboard.writeText(text).then(function () {
+        btn.innerHTML = ICON_CHECK;
+        btn.classList.add('copied');
+        setTimeout(function () {
+          btn.innerHTML = ICON_COPY;
+          btn.classList.remove('copied');
+        }, 1500);
+      });
+    });
+  });
+</script>
+</body>
+</html>
