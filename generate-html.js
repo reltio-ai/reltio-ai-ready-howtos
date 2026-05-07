@@ -322,6 +322,26 @@ function loadCss() {
   return fs.readFileSync(path.join(TEMPLATE_DIR, "styles.css"), "utf-8");
 }
 
+function loadCorpusMeta() {
+  const docsPath = path.join(REPO_ROOT, "reltio-docs", "docs.md");
+  if (!fs.existsSync(docsPath)) return null;
+  const header = fs.readFileSync(docsPath, "utf-8").slice(0, 300);
+  const tsMatch = header.match(/_Generated:\s*(.+?)_/);
+  const topicsMatch = header.match(/_Topics:\s*(\d+)_/);
+  if (!tsMatch || !topicsMatch) return null;
+  const count = parseInt(topicsMatch[1], 10).toLocaleString("en-US");
+  return { timestamp: tsMatch[1].trim(), topics: count };
+}
+
+function injectCorpusMeta(html, meta) {
+  if (!meta) return html;
+  // Replace any snapshot date + topic count in the disclaimer blockquote
+  return html.replace(
+    /snapshot \d{4}-\d{2}-\d{2} \d{2}:\d{2} UTC \([\d,]+ topics\)/g,
+    `snapshot ${meta.timestamp} (${meta.topics} topics)`
+  );
+}
+
 // --- Glossary link resolution ---
 
 function resolveGlossaryLinks(html) {
@@ -392,6 +412,7 @@ function processHowto(mdFilePath, css) {
   html = rewriteLinks(html);
   html = flagDisclaimerBlockquote(html);
   html = resolveGlossaryLinks(html);
+  html = injectCorpusMeta(html, loadCorpusMeta());
 
   fs.writeFileSync(outputFile, wrapHtml(title, html, css));
   return { baseName, title, outputFile };
