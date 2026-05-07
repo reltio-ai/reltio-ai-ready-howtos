@@ -4,10 +4,6 @@ Generate hands-on HOWTO guides for the Reltio Context Intelligence Platform — 
 
 ## How it works
 
-This repo is a **generator kit**. You fork it, open it in Claude Code, and generate HOWTOs tailored to your use cases. The guides your team generates go into your own copy.
-
-> **This repo does not accept pull requests.** Fork it and keep your guides in your own fork.
-
 ```
 reltio-docs/docs.md        ← 3,000+ topics of official Reltio documentation
 reltio-docs/index.md       ← structured topic index
@@ -21,7 +17,9 @@ reltio-docs/index.md       ← structured topic index
    howtos/HOWTO-*.md       ← guides you generate (your fork, your content)
    howtos-html/            ← rendered HTML, auto-generated on every commit
 ```
+This repo is a **generator kit**. You fork it, open it in Claude Code, and generate HOWTOs tailored to your use cases. The guides your team generates go into your own copy.
 
+> **This repo does not accept pull requests.** Fork it and keep your guides in your own fork.
 Every guide is generated against the official Reltio docs corpus. If a topic isn't covered in the docs, the generator refuses rather than fabricating content.
 
 ## Quickstart
