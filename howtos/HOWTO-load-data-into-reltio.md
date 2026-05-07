@@ -1,476 +1,325 @@
 # HOWTO: Load Data into Reltio
 
-A practical, step-by-step guide to loading your first data into a Reltio tenant — from preparing your file to verifying the results.
+Load entity, relationship, and interaction data into the Reltio Context Intelligence Platform using the Data Loader application in the Console or the Data Loader API.
 
----
+## Overview
 
-## Table of Contents
+This guide covers how to use the Data Loader to bring data from files or cloud storage into a Reltio tenant. It walks through accessing the application, selecting a file source, mapping columns to attributes, setting an update preference, and monitoring the job to completion.
 
-| Step | What You'll Do |
-|------|----------------|
-| [1](#step-1-understand-what-the-data-loader-does) | Understand what the Data Loader does |
-| [2](#step-2-prepare-your-data-file) | Prepare your data file |
-| [3](#step-3-set-up-crosswalks) | Set up crosswalks so Reltio can track your records |
-| [4](#step-4-load-entities-via-the-api) | Load entities via the API |
-| [5](#step-5-load-entities-via-the-console-ui) | Load entities via the Console UI |
-| [6](#step-6-map-your-columns-to-attributes) | Map your file columns to Reltio attributes |
-| [7](#step-7-consolidate-multiple-records-into-one-entity) | Consolidate multiple records into one entity |
-| [8](#step-8-load-relationships) | Load relationships between entities |
-| [9](#step-9-monitor-your-job-and-handle-errors) | Monitor your job and handle errors |
-| [10](#step-10-verify-the-loaded-data) | Verify the loaded data |
+**Audience:** Developer, Data Product Owner, System Administrator
 
----
+## Contents
 
-## Prerequisites
+1. [Getting started](#1-getting-started)
+2. [Access the Data Loader application](#2-access-the-data-loader-application)
+3. [Load entities into a tenant](#3-load-entities-into-a-tenant)
+4. [Map source columns to attributes](#4-map-source-columns-to-attributes)
+5. [Specify record update preference](#5-specify-record-update-preference)
+6. [Consolidate multiple records into one entity](#6-consolidate-multiple-records-into-one-entity)
+7. [Load relationships into a tenant](#7-load-relationships-into-a-tenant)
+8. [Monitor jobs and handle errors](#8-monitor-jobs-and-handle-errors)
+9. [Glossary](#9-glossary)
 
-### 1. A configured tenant
+## 1. Getting started
 
-You need a Reltio tenant with entity types already defined. If you followed the [Top 10 APIs setup](./HOWTO-SETUP-for-top-10-reltio-apis.md), you already have `Individual` and `Organization` entity types.
+Before you begin, confirm you have the following:
 
-### 2. An access token
+- **Role** — the global role `ROLE_DATALOADER` is required to configure and use the [Data Loader](#glossary). Contact your Data Loader administrator for access.
+- **Tenant** — a Reltio tenant with entity types already defined.
+- **Input file** — a file in one of the supported formats: CSV, Excel (`.xlsx`), JSON, or RELTIO_JSON.
+- **Reltio Console access** — you reach the Data Loader through the Console application.
 
-All API calls need a Bearer token. See [HOWTO: Authenticate](./HOWTO-authenticate-and-use-reltio-apis.md) to get one.
+> **Note:** Tenants provisioned for China can only access the Data Loader APIs — the Data Loader in the Console is not accessible for those tenants.
 
-```bash
-export TOKEN="your_access_token"
-export TENANT="https://na07-prod.reltio.com/reltio/api/YOUR_TENANT_ID"
-```
+**Supported data sources:**
 
-### 3. Tools
+The [Data Loader](#glossary) can pull files from:
 
-- `curl` for API calls
-- `jq` for readable JSON output (`brew install jq` / `apt install jq`)
-- Access to the Reltio Console UI (for Steps 5-6)
-
----
-
-## Step 1: Understand What the Data Loader Does
-
-The Data Loader takes records from a file (CSV, Excel, or JSON), maps them to your tenant's entity types and attributes, and creates entities in Reltio. Each record gets a **crosswalk** — a pointer back to its source system — so Reltio always knows where the data came from.
-
-You can load:
-- **Entities** (e.g., customers, organizations)
-- **Relationships** (e.g., "Jane works at Acme Corp")
-- **Interactions** (e.g., transactions, events — requires Reltio Intelligent 360)
-
-There are two ways to load data:
-1. **API** — POST entities directly (best for automation and pipelines)
-2. **Console UI** — upload a file through the Data Loader interface (best for one-off loads and business users)
-
----
-
-## Step 2: Prepare Your Data File
-
-### Supported file formats
-
-| Format | Max Size (Local Upload) | Max Size (Remote/Cloud) | Notes |
-|--------|------------------------|------------------------|-------|
-| **CSV** | 50 MB | No limit (10 GB with consolidation) | Must follow RFC 4180 standard |
-| **MS Excel** | 50 MB | No limit (10 GB with consolidation) | `.xlsx` format |
-| **JSON** | No limit | No limit (10 GB with consolidation) | Standard Reltio JSON structure |
-| **RELTIO_JSON** | No limit | No limit | Skips transformation — raw Reltio format |
-
-### Supported remote sources
-
-If your file is larger than 50 MB, upload it to one of these cloud locations first:
-
+- Your local machine (up to 50 MB per file)
 - Amazon S3
-- Google Cloud Storage (GCP)
+- Google Cloud Storage (GCS)
 - Microsoft Azure Blob Storage
 - SFTP
 
-### Example CSV file
+**Supported file types:**
 
-Here's a simple CSV for loading Individual entities:
+| Format | Notes |
+|--------|-------|
+| CSV | Recommended format. The software transforms JSON and Excel to CSV before loading. |
+| Excel (`.xlsx`) | Use plain format — formulas and cell formatting are not supported. |
+| JSON | Transformed to CSV before loading. |
+| RELTIO_JSON | Skips transformation — raw Reltio format used directly. |
 
-```csv
-SourceID,FirstName,LastName,Email
-CRM-001,Jane,Smith,jane.smith@example.com
-CRM-002,John,Doe,john.doe@example.com
-CRM-003,Maria,Garcia,maria.garcia@example.com
-```
+**Data types you can load:**
 
-> **Important:** Reltio automatically trims leading/trailing spaces, tabs, and newlines from values (except for RELTIO_JSON format). You don't need to clean whitespace yourself.
+- [Entities](#glossary) (for example, customers, organizations, products)
+- [Relationships](#glossary) (for example, Employment between an Individual and an Organization)
+- Interactions (available on Reltio Intelligent 360 tenants only)
 
----
+> **Learn more:** [Data Loader at a glance](https://docs.reltio.com/en/applications/console/tenant-management-applications/data-loader-at-a-glance)
 
-## Step 3: Set Up Crosswalks
+## 2. Access the Data Loader application
 
-Every record you load must have a **crosswalk** — this is how Reltio tracks which source system a record came from and what its ID is in that system.
+Follow these steps to navigate to the Data Loader in the Reltio Console:
 
-A crosswalk has two required fields:
+1. On the Reltio home page, select the **App Selector** icon at the upper right.
+2. In the **App Selector** dialog, select **Console**.
+3. On the **Console** home page, under the **Tenant Management** section, select **Data Loader**.
+4. At the top of the page, from the **Select tenant** dropdown menu, select the [tenant](#glossary) you want to work with.
 
-| Field | What It Is | Example |
-|-------|-----------|---------|
-| **Type** | The source system URI from your tenant config | `configuration/sources/CRM` |
-| **Value** | The unique record ID in that source system | `CRM-001` |
+The Data Loader home page displays a **Job Definitions** area where you can work with **Drafts** and **Completed** jobs.
 
-> **Rule of thumb:** If you're loading 10,000+ records, crosswalks are **mandatory**. For smaller loads, Reltio generates a default crosswalk, but you should always provide your own for traceability.
+> **Learn more:** [Get started with Data Loader](https://docs.reltio.com/en/applications/console/tenant-management-applications/data-loader-at-a-glance/get-started-with-data-loader)
 
-### Why crosswalks matter
+## 3. Load entities into a tenant
 
-- They let you look up entities by source system ID later (`GET /entities?filter=equals(crosswalks.value,'CRM-001')`)
-- They prevent duplicates — if you load the same crosswalk twice, Reltio updates the existing entity instead of creating a new one
-- They enable the **upsert pattern**: load once to create, load again to update
+The high-level [Data Loader workflow](#glossary) for loading entities follows these steps:
 
----
+1. Create a new job or duplicate an existing job.
+2. Select the input file from the required source system.
+3. Define new mappings or use an existing mapping to map file columns to entity attributes.
+4. Specify the records update preference.
+5. Analyze key metrics from the input file (optional) before proceeding with the data load.
+6. Start the data load.
+7. Review data load completion metrics.
 
-## Step 4: Load Entities via the API
+### Step-by-step procedure
 
-**API:** `POST {TenantURL}/entities`
+1. Open your tenant in the **Data Loader**.
+2. In the **Job Definition** tab, select **LOAD DATA** and then **Entities** to create a new data load job.
+3. On the **Entities data load** page, in the **Upload** section, fill in the following details:
+   - **Job definition Name** — enter a name for this job.
+   - **Entity type** — select the entity type that matches the data in your file (for example, Organizations, Contacts).
+   - **Select file** — choose your source and provide file details:
 
-This is the programmatic way to load data — ideal for integrations and automated pipelines.
+**Source: My Computer**
 
-### Load a single entity
+- Drop your file on the page or select **BROWSE FILE**.
+- Select the file type: **CSV**, **Excel (.xlsx)**, **JSON**, or **RELTIO_JSON**.
+- For CSV files, specify the **file delimiter type**: Comma (`,`), Semicolon (`;`), Single pipe (`|`), or Double pipe (`||`).
+- Select or clear the **First row is a header** checkbox for CSV or Excel files.
 
-```bash
-curl -s -X POST "${TENANT}/entities" \
-  -H "Authorization: Bearer ${TOKEN}" \
-  -H "Content-Type: application/json" \
-  -d '[
-    {
-      "type": "configuration/entityTypes/Individual",
-      "attributes": {
-        "FirstName": [{ "value": "Jane" }],
-        "LastName": [{ "value": "Smith" }],
-        "Email": [{ "value": "jane.smith@example.com" }]
-      },
-      "crosswalks": [
-        {
-          "type": "configuration/sources/CRM",
-          "value": "CRM-001"
-        }
-      ]
-    }
-  ]' | jq .
-```
+> **Note:** When you upload a file from your local file system, the file size must not exceed 50 MB.
 
-### Response
+**Source: Amazon S3**
 
-```json
-[
-  {
-    "uri": "entities/abc123",
-    "type": "configuration/entityTypes/Individual",
-    "crosswalks": [
-      {
-        "type": "configuration/sources/CRM",
-        "value": "CRM-001"
-      }
-    ]
-  }
-]
-```
+Provide your Amazon S3 credentials:
 
-### Load a batch of entities
+| Credential | Description |
+|-----------|-------------|
+| **Account Name** | The Amazon S3 account name |
+| **Bucket Name** | Name of the bucket or folder where the file is located |
+| **AWS Key** | The AWS account access key (alphanumeric) |
+| **AWS Secret** | The AWS secret key or password (alphanumeric) |
+| **Role** | AWS IAM role (recommended — more secure than key/secret) |
+| **External ID** | External ID for the configured AWS IAM role |
+| **S3 file path** | The S3 bucket path for the input file |
+| **Region Information** | Example: `us-west-1` |
 
-The body is always a JSON array — you can include up to **1,000 entities per request**:
+> **Tip:** Reltio recommends using an AWS IAM role rather than key/secret credentials — it is a more secure way to provide access to files in an S3 bucket.
 
-```bash
-curl -s -X POST "${TENANT}/entities" \
-  -H "Authorization: Bearer ${TOKEN}" \
-  -H "Content-Type: application/json" \
-  -d '[
-    {
-      "type": "configuration/entityTypes/Individual",
-      "attributes": {
-        "FirstName": [{ "value": "Jane" }],
-        "LastName": [{ "value": "Smith" }],
-        "Email": [{ "value": "jane.smith@example.com" }]
-      },
-      "crosswalks": [{ "type": "configuration/sources/CRM", "value": "CRM-001" }]
-    },
-    {
-      "type": "configuration/entityTypes/Individual",
-      "attributes": {
-        "FirstName": [{ "value": "John" }],
-        "LastName": [{ "value": "Doe" }],
-        "Email": [{ "value": "john.doe@example.com" }]
-      },
-      "crosswalks": [{ "type": "configuration/sources/CRM", "value": "CRM-002" }]
-    },
-    {
-      "type": "configuration/entityTypes/Individual",
-      "attributes": {
-        "FirstName": [{ "value": "Maria" }],
-        "LastName": [{ "value": "Garcia" }],
-        "Email": [{ "value": "maria.garcia@example.com" }]
-      },
-      "crosswalks": [{ "type": "configuration/sources/CRM", "value": "CRM-003" }]
-    }
-  ]' | jq .
-```
+**Source: Google Cloud Storage**
 
-### Key rules
+Provide your GCS credentials including **Account Name**, **Bucket name**, **File path**, **Project-ID**, **Project Key**, **Client ID**, and **Client Email**.
 
-- **The body is always an array** — even for a single entity, wrap it in `[ ]`
-- **Max 1,000 entities per POST** — for larger loads, split into batches
-- **Max 50 MB per request body** — exceeding this returns a `413 Payload Too Large` error
-- **Attributes are always arrays of objects** — `"FirstName": [{ "value": "Jane" }]`, not `"FirstName": "Jane"`
+**Source: Azure Blob Storage**
 
-### What can go wrong
+Provide your Azure credentials:
 
-| Error | Cause | Fix |
-|-------|-------|-----|
-| `401` | Token expired | Get a fresh token |
-| `400` | Invalid entity type or attribute | Check your type path matches the tenant configuration |
-| `413` | Request body too large | Split into smaller batches (< 50 MB) |
-| `429` | Rate limit exceeded | Add a delay between requests; implement exponential backoff |
+| Credential | Description |
+|-----------|-------------|
+| **Azure Account Name** | Your Azure storage account name |
+| **Access Key** | Found under **Access keys** in your Azure storage account |
+| **Container Name** | The name of the container in your Azure storage account |
+| **File path** | The file path within your Azure container |
 
----
+**Source: SFTP**
 
-## Step 5: Load Entities via the Console UI
+Provide SFTP credentials: **Account Name**, **SFTP username**, **SFTP password**, **SFTP host**, and **SFTP file path**.
 
-If you prefer a visual workflow or you're doing a one-off data load, the Console Data Loader is the way to go.
+4. For remote sources (Amazon S3, GCS, Azure Blob Storage, SFTP), select the **Save the source settings** checkbox to store credentials for reuse.
+5. Select **CONTINUE** to proceed to the mapping stage.
 
-### The workflow
+> **Learn more:** [Load entities into a tenant](https://docs.reltio.com/en/objectives/load-and-export-data/data-loading-at-a-glance/data-loading-operation/load-data-with-data-loader/load-entities-into-a-tenant)
 
-1. **Log in** to the Reltio Console
-2. Navigate to **Data Loader** in the left sidebar
-3. **Create a new job** (or duplicate an existing one)
-4. **Select your input file** — upload from your computer (< 50 MB) or connect to S3/GCS/Azure/SFTP
-5. **Select the source system** — this determines the crosswalk type (e.g., CRM, ERP)
-6. **Define your mapping** — map file columns to entity attributes (see Step 6)
-7. **Choose your update preference** — create new entities, update existing, or upsert
-8. **Analyze** (optional) — preview key metrics from your file before loading
-9. **Start the load**
-10. **Review results** — check completion metrics and any errors
+## 4. Map source columns to attributes
 
-> **Tip:** You can only load one data type per job (entities, relationships, or interactions). Create separate jobs for each type.
-
----
-
-## Step 6: Map Your Columns to Attributes
-
-When using the Console Data Loader, you need to tell Reltio which columns in your file correspond to which entity attributes.
+After uploading a file, you map the file's columns to the corresponding entity attributes in Reltio's data model. The **Map** section displays the content of the uploaded file.
 
 ### Manual mapping
 
-For each column in your file, select the corresponding Reltio attribute:
+1. On the **Map** section, select **Map Attributes**. The right side panel displays the available attributes.
+2. Select **Select Mapping** to choose an existing mapping, or select **New Mapping** to create one.
+3. Click a column header in the file preview.
+4. On the right panel, select the required attribute to map it.
+5. Repeat for each column you want to map.
+6. For reference attributes (such as Address), expand the attribute in the right panel to map its nested fields.
+7. To split a column into two (for example, splitting a full name into first and last name), select **More Options** on a column header and choose **Split Column**.
+8. To join two columns into one, select **More Options** and choose **Join Column**.
+9. Select **Continue** when all required attributes are mapped.
+10. In the **Save mapping** dialog, select **SAVE AND CONTINUE**.
 
-| File Column | Maps To |
-|-------------|---------|
-| `SourceID` | Crosswalk > Value |
-| `FirstName` | `configuration/entityTypes/Individual/attributes/FirstName` |
-| `LastName` | `configuration/entityTypes/Individual/attributes/LastName` |
-| `Email` | `configuration/entityTypes/Individual/attributes/Email` |
+> **Note:** You can add a default value to a simple or nested attribute without mapping it to any column of the input file.
 
-### AI automapping (if enabled)
+### AI-assisted auto-mapping
 
-If your tenant has `agentsConfig.aiEnabled: true`, you can use the **AI Automapping API** to get mapping suggestions automatically:
+If your tenant has `aiEnabled` set to `true` in the physical configuration (under `agentsConfig`), you can use the **Auto-map** feature:
 
-```bash
-curl -s -X POST "${DL_HOST}/api/ai/${TENANT_ID}/map" \
-  -H "Authorization: Bearer ${TOKEN}" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "entityTypeUri": "configuration/entityTypes/Individual",
-    "headers": ["SourceID", "FirstName", "LastName", "Email"],
-    "sampleData": [
-      ["CRM-001", "Jane", "Smith", "jane.smith@example.com"],
-      ["CRM-002", "John", "Doe", "john.doe@example.com"]
-    ]
-  }' | jq .
-```
+1. On the **Map** section, select **Auto-map**.
+2. In the **Auto-map columns** dialog, select **Start Auto-Mapping**.
+3. Review the suggested [column mappings](#glossary). Auto-mapped columns display an icon above the column name, the mapped attribute, and the confidence level of the match.
+4. Map any remaining unmapped columns manually.
+5. Select **Continue** to save.
 
-The API returns suggestions with confidence levels (high or medium). Review them before accepting.
+> **Note:** Auto-mapping does not overwrite manual mappings. If a column is already mapped, the existing mapping remains unchanged.
 
-### Advanced crosswalk settings
+> **Learn more:** [Map Source Columns to Attributes](https://docs.reltio.com/en/objectives/load-and-export-data/data-loading-at-a-glance/data-loading-operation/load-data-with-data-loader/load-entities-into-a-tenant/map-source-columns-to-attributes)
 
-When mapping crosswalks, you can also configure:
+## 5. Specify record update preference
 
-| Setting | Purpose |
-|---------|---------|
-| **Source table** | Sub-categorize records within a source |
-| **External info** | Attach metadata to the crosswalk |
-| **Create date** | Override the entity creation timestamp |
-| **Update date** | Override the entity update timestamp |
-| **Delete date** | Mark the crosswalk as deleted |
-| **Data Provider** | Mark source as authoritative (selected by default) |
-| **Contributor Provider** | Mark source as supplementary |
+After mapping, you specify how records in the file should update existing data in Reltio. This is the **Define** stage.
 
----
+Select either **Full Update** or **Partial Update**:
 
-## Step 7: Consolidate Multiple Records into One Entity
+| Option | Behavior |
+|--------|---------|
+| **Partial Update** | Only the mapped attributes are updated. Attributes not present in the file remain unchanged. |
+| **Full Update** | The mapped attributes are updated, and any attributes not present in the file are set to null. |
 
-By default, the Data Loader creates one entity per row. But what if your file has multiple rows for the same person — say, two addresses for the same customer?
+> **Note:** If any attributes or columns are missing, **Full Update** can cause those attributes to become null values. Use **Partial Update** to prevent data loss.
 
-### How consolidation works
+**Additional options in the Define stage:**
 
-If two rows share the same **crosswalk value**, Reltio merges them into a single entity with multi-value attributes:
+- **Execute LCA** — when enabled (default), Lifecycle Assessment (LCA) and Data Validation Functions (DVF) are applied as part of the data load.
+- **Enable Data Change Request (DCR)** — when enabled, a DCR is created for each entity loaded, and the entity is loaded only after the DCR is approved. Available only on tenants with Workflow enabled. The number of DCRs that can be created per job is limited to 1,000.
+- **Recurring Job Definition** — schedule the job to run on a recurring basis. Scheduling is not available when the input file is loaded from the local file system.
 
-**Input file:**
+After setting your preferences, you can:
 
-| SourceID | FirstName | LastName | Email |
-|----------|-----------|----------|-------|
-| CRM-001 | Jane | Smith | jane.smith@work.com |
-| CRM-001 | Jane | Smith | jane.smith@personal.com |
+- Select **SAVE AS DRAFT** to save the job for later.
+- Select **LOAD DATA** to start the load immediately.
+- Select **SUGGEST LOAD DATA** (when DCR is enabled) to submit the load for approval.
 
-**Result:** One entity with crosswalk `CRM-001` and two Email values.
+> **Learn more:** [Specify record update preference](https://docs.reltio.com/en/objectives/load-and-export-data/data-loading-at-a-glance/data-loading-operation/load-data-with-data-loader/load-entities-into-a-tenant/specify-record-update-preference)
+
+## 6. Consolidate multiple records into one entity
+
+By default, the [Data Loader](#glossary) creates a single entity from multiple records that share the same [crosswalk](#glossary) value. This is called record consolidation or grouping.
+
+**Example:** Two rows with crosswalk `ABC` and different `FirstName` values — `John` and `Johnny` — are merged into one entity with a multi-value `FirstName` attribute containing both values.
+
+### Key considerations
+
+- Source file formats for consolidation must be CSV or Excel (`.xlsx`) only — RELTIO_JSON is not supported.
+- The total size of all source files in any consolidation job cannot exceed 10 GB.
+- If the total number of values for any single attribute exceeds 10,000 during grouping, the job fails with a status of `ERROR`.
+- Merge records can come from a single file or multiple files within the same job.
 
 ### Enable consolidation
 
-**Via API:** Add `groupingEnabled: true` to your data load job configuration.
+In the **Define** stage when creating a job, select **Consolidate records with same crosswalk value**.
 
-**Via Console UI:** Toggle "Consolidate records with same crosswalk value" when creating the job.
+To enable or disable consolidation per project via the API:
 
-### Limitations
-
-- Works with **CSV and Excel only** (not RELTIO_JSON)
-- Max file size: **10 GB**
-- If a single entity accumulates more than **10,000 attribute values** during consolidation, the job fails with an ERROR status
-
----
-
-## Step 8: Load Relationships
-
-**API:** `POST {TenantURL}/relations`
-
-Once you've loaded entities, you can create relationships between them. You need the entity URIs from Step 4.
-
-### Example: Create an Employment relationship
-
-```bash
-curl -s -X POST "${TENANT}/relations" \
-  -H "Authorization: Bearer ${TOKEN}" \
-  -H "Content-Type: application/json" \
-  -d '[
-    {
-      "type": "configuration/relationTypes/Employment",
-      "startObject": {
-        "objectURI": "entities/abc123"
-      },
-      "endObject": {
-        "objectURI": "entities/def456"
-      },
-      "attributes": {
-        "Title": [{ "value": "Software Engineer" }]
-      },
-      "crosswalks": [
-        {
-          "type": "configuration/sources/CRM",
-          "value": "REL-001"
-        }
-      ]
-    }
-  ]' | jq .
+```
+PUT {{dataloader_uri}}/dataloader/api/{{tenantId}}/project/{{projectId}}
+Body: {"groupingEnabled": true}
 ```
 
-### Via the Console UI
+> **Learn more:** [Create one entity from multiple records](https://docs.reltio.com/en/objectives/load-and-export-data/data-loading-at-a-glance/data-loading-operation/load-data-with-data-loader/load-entities-into-a-tenant/create-one-entity-from-multiple-records)
 
-Loading relationships through the Data Loader requires a file with columns for:
-- **Start entity crosswalk** (the "from" entity)
-- **End entity crosswalk** (the "to" entity)
-- **Relationship attributes** (e.g., Title, StartDate)
+## 7. Load relationships into a tenant
 
-> **Important:** Load your entities first, then your relationships. The entities must exist before you can link them.
+You can load two types of [relationships](#glossary) between entities: unidirectional and bidirectional. For example, a Healthcare Provider (HCP) can be associated with multiple Healthcare Organizations (HCOs), and vice versa.
 
----
+### Steps
 
-## Step 9: Monitor Your Job and Handle Errors
+1. In the Data Loader, select **LOAD DATA** and then **Relationships**.
+2. Select your source and file, following the same steps as loading entities (see section 3).
+3. In the **Map** section, select **Map Attributes** to map file columns to relationship attributes.
+4. Select the relationship type from the dropdown list. Types include HCP-HCO, HCO-HCP, Individual-Organization, and so on.
+5. Map the crosswalk columns for the start object and the end object.
+6. Map relationship attributes (for example, `Desc`, `StartDate`, `EndDate`).
+7. Select **Continue** and save the mapping.
+8. Specify the record update preference (see section 5).
+9. Select **LOAD DATA** to start the load.
+
+> **Note:** You must map the crosswalks for both the start object and the end object. The relationship type determines which attributes appear in the mapping panel.
+
+> **Learn more:** [Load relationships into a tenant](https://docs.reltio.com/en/objectives/load-and-export-data/data-loading-at-a-glance/data-loading-operation/load-data-with-data-loader/load-relationships-into-a-tenant)
+
+## 8. Monitor jobs and handle errors
+
+After starting a data load, the job appears in the **Job Status** page under the **PENDING** tab.
 
 ### Job statuses
 
 | Status | Meaning |
 |--------|---------|
-| `SCHEDULED` | Job is queued, waiting to run |
-| `RUNNING` | Job is actively processing |
+| `PENDING` | Job is queued, waiting to run |
 | `COMPLETED` | All records loaded successfully |
 | `COMPLETED_WITH_ERRORS` | Some records failed — check the error file |
-| `STOPPED` | Job was stopped due to error threshold or manual intervention |
-| `ERROR` | Job failed entirely |
+| `STOPPED` | Job was stopped because the error threshold was reached or the job was manually stopped |
+| `ERROR` | Job failed entirely (for example, exceeded the 10,000 attribute value limit during consolidation) |
 
 ### Error threshold
 
-By default, if more than **15%** of records fail (for loads of 10,000+ records), the job is stopped. This prevents bad data from flooding your tenant.
+The Data Loader uses a configurable error threshold rate. For jobs with more than 10,000 rows, if the rate of failed records reaches or exceeds the threshold, the job is stopped to prevent large error files from being generated. The default threshold is **15%**.
+
+Example error message: `The job was stopped as error threshold limit 15% was reached. Actual is 16.8% (306 to 1819 profiles)`.
+
+You can set a custom threshold in the [job definition](#glossary):
+
+```json
+{
+  "additionalAttributes": {
+    "errorThreshold": 25
+  }
+}
+```
+
+> **Note:** The error threshold applies only when there are more than 10,000 records to process.
+
+### Stop a pending job
+
+1. In the **Job Status** page, select **Pending** to see pending jobs.
+2. Select the icon on the right of the date for the job you want to stop.
+3. Select **Stop job**.
+4. Select **Yes** to confirm.
+
+The job moves to the **Completed** tab with a status of `STOPPED`.
 
 ### Download error files
 
-Error files are available as a ZIP download containing CSV files. Each file includes:
-- All the original input attributes
+When a job completes with errors, you can download an error file from the job details. Error files are in CSV format and include:
+
+- All original input attributes for the failed rows
 - An error message column explaining what went wrong
 
-Each error file contains a maximum of 1,000 records.
+### Job priority and scheduling
 
-### Job priority
+You can set job priority to **High**, **Normal** (default), or **Low**. Higher-priority jobs run before lower-priority ones. Jobs with the same priority run in creation order (FIFO). You can also schedule a job to run on a recurring basis from the job definition.
 
-If you have multiple loads queued, you can control the order:
+> **Learn more:** [Data Loader at a glance](https://docs.reltio.com/en/applications/console/tenant-management-applications/data-loader-at-a-glance)
 
-| Priority | Behavior |
-|----------|----------|
-| **High** | Runs before Normal and Low jobs |
-| **Normal** (default) | Standard processing order |
-| **Low** | Runs after all High and Normal jobs |
+## 9. Glossary
 
-Jobs with the same priority are processed in creation order (FIFO).
+**Column mapping:** The configuration that connects each column in a source file to the corresponding attribute in Reltio's data model, enabling the Data Loader to transform and load data correctly.
 
-You can also **pause and resume** active jobs — useful if you need to reprioritize.
+**Crosswalk:** A pointer that links a Reltio entity back to its original record in a source system, storing the source system URI and the record's unique ID in that system.
 
----
+**Data Loader:** The Reltio application in the Console that enables you to prepare and upload data from files or cloud storage into a tenant. Requires the `ROLE_DATALOADER` global role.
 
-## Step 10: Verify the Loaded Data
+**Data Loader workflow:** The sequence of steps for loading data using the Data Loader: create or duplicate a job → select file → map columns → specify update preference → optionally analyze → load → review results.
 
-After your load completes, confirm the data landed correctly.
+**Entity:** A master data record in Reltio — for example, an Individual, Organization, or Product. Entities are the primary data type loaded via the Data Loader.
 
-### Search for your entities
+**Job definition:** The configuration object in the Data Loader that stores all settings for a data load job, including source file details, column mappings, update preferences, and scheduling information.
 
-```bash
-curl -s -X GET "${TENANT}/entities?filter=equals(type,'configuration/entityTypes/Individual')&max=5" \
-  -H "Authorization: Bearer ${TOKEN}" | jq '.[] | {uri, type, FirstName: .attributes.FirstName[0].value, LastName: .attributes.LastName[0].value}'
-```
+**Relationship:** A typed link between two entities in Reltio — for example, an Employment relationship connecting an Individual entity to an Organization entity.
 
-### Look up a specific entity by crosswalk
-
-```bash
-curl -s -X GET "${TENANT}/entities?filter=equals(crosswalks.value,'CRM-001')" \
-  -H "Authorization: Bearer ${TOKEN}" | jq .
-```
-
-### Check entity count
-
-```bash
-curl -s -X GET "${TENANT}/entities?filter=equals(type,'configuration/entityTypes/Individual')&count=true&max=0" \
-  -H "Authorization: Bearer ${TOKEN}" | jq .
-```
-
-### What to check
-
-- **Entity count** matches your expected number of records
-- **Attribute values** are correct (not truncated, correctly typed)
-- **Crosswalks** are present and point to the right source
-- **Relationships** link the correct entities (if applicable)
+**Tenant:** An isolated Reltio environment associated with a specific organization or project. Each tenant has its own data, configuration, and users, identified by a unique tenant ID.
 
 ---
 
-## Quick Reference
-
-### API Endpoints
-
-| Operation | Method | Endpoint |
-|-----------|--------|----------|
-| Load entities | `POST` | `{TenantURL}/entities` |
-| Load relationships | `POST` | `{TenantURL}/relations` |
-| Search entities | `GET` | `{TenantURL}/entities?filter=...` |
-| Crosswalk lookup | `GET` | `{TenantURL}/entities?filter=equals(crosswalks.value,'...')` |
-
-### Limits
-
-| What | Limit |
-|------|-------|
-| Entities per POST | 1,000 |
-| POST body size | 50 MB |
-| Local file upload | 50 MB |
-| Consolidation file size | 10 GB |
-| Error threshold (default) | 15% |
-| Max values per entity during consolidation | 10,000 |
-| Large dataset auto-optimization | 10M+ rows |
-
----
-
-## Further Reading
-
-- [HOWTO: Authenticate with Reltio](./HOWTO-authenticate-and-use-reltio-apis.md) — Get your access token
-- [HOWTO: Top 10 Reltio APIs](./HOWTO-top-10-reltio-apis.md) — Work with entities after loading
-- [Reltio Official Documentation](https://docs.reltio.com) — Full Data Loader reference
-
-*Guide based on Reltio documentation (March 2026).*
+> **Disclaimer:** AI-generated from the Reltio documentation snapshot 2026-05-06 02:14 UTC (3,240 topics). AI output can contain subtle inaccuracies, and the knowledge base syncs twice a week — so the content here may lag [docs.reltio.com](https://docs.reltio.com). Verify anything critical against the official docs and your own tenant. Full disclaimer: [DISCLAIMER.md](../DISCLAIMER.md).

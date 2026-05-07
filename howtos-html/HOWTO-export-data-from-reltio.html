@@ -283,268 +283,132 @@ hr {
 </head>
 <body>
 <h1 id="howto-export-data-from-reltio">HOWTO: Export Data from Reltio</h1>
-<p>A step-by-step guide to exporting entities, relations, activity logs, and merge trees from Reltio — using the Export Service API and the Console UI.</p>
-<hr>
-<h2 id="table-of-contents">Table of contents</h2>
-<table>
-<thead>
-<tr>
-<th>Step</th>
-<th>What you&#39;ll do</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><a href="#step-1-understand-how-reltio-export-works">1</a></td>
-<td>Understand how Reltio export works</td>
-</tr>
-<tr>
-<td><a href="#step-2-get-your-export-service-url">2</a></td>
-<td>Get your Export Service URL</td>
-</tr>
-<tr>
-<td><a href="#step-3-export-entities">3</a></td>
-<td>Export entities</td>
-</tr>
-<tr>
-<td><a href="#step-4-export-with-filters">4</a></td>
-<td>Export with filters</td>
-</tr>
-<tr>
-<td><a href="#step-5-export-relations">5</a></td>
-<td>Export relations</td>
-</tr>
-<tr>
-<td><a href="#step-6-export-activity-log-data">6</a></td>
-<td>Export activity log data</td>
-</tr>
-<tr>
-<td><a href="#step-7-check-export-task-status">7</a></td>
-<td>Check export task status</td>
-</tr>
-<tr>
-<td><a href="#step-8-split-exports-into-multiple-files">8</a></td>
-<td>Split exports into multiple files</td>
-</tr>
-<tr>
-<td><a href="#step-9-export-using-the-console-ui">9</a></td>
-<td>Export using the Console UI</td>
-</tr>
-</tbody></table>
-<hr>
-<h2 id="prerequisites">Prerequisites</h2>
-<p>You need these before starting:</p>
-<table>
-<thead>
-<tr>
-<th>What</th>
-<th>Example</th>
-<th>Where to get it</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><strong>Client ID</strong></td>
-<td><code>my_app_client</code></td>
-<td>Reltio Console &gt; Security &gt; Client Credentials</td>
-</tr>
-<tr>
-<td><strong>Client Secret</strong></td>
-<td><code>s3cretV4lue</code></td>
-<td>Same location as Client ID</td>
-</tr>
-<tr>
-<td><strong>Tenant ID</strong></td>
-<td><code>HKlMR3wNbRT3PMo</code></td>
-<td>Reltio Console &gt; Tenant overview</td>
-</tr>
-<tr>
-<td><strong>Environment URL</strong></td>
-<td><code>https://na07-prod.reltio.com</code></td>
-<td>Your Reltio admin</td>
-</tr>
-<tr>
-<td><strong>Access token</strong></td>
-<td><code>eyJhbGciOiJSUzI1NiIs...</code></td>
-<td>See <a href="HOWTO-authenticate-and-use-reltio-apis.html">HOWTO: Authenticate</a></td>
-</tr>
-</tbody></table>
-<h3 id="set-up-your-environment-variables">Set up your environment variables</h3>
-<pre><code class="language-bash hljs"><span class="hljs-built_in">export</span> TOKEN=<span class="hljs-string">&quot;eyJhbGciOiJSUzI1NiIs...&quot;</span>
-<span class="hljs-built_in">export</span> TENANT=<span class="hljs-string">&quot;https://na07-prod.reltio.com/reltio/api/HKlMR3wNbRT3PMo&quot;</span>
-<span class="hljs-built_in">export</span> EXPORT_URL=<span class="hljs-string">&quot;https://na07-prod.reltio.com/jobs&quot;</span></code></pre>
-<blockquote>
-<p><strong>Note:</strong> The <code>EXPORT_URL</code> is your Reltio instance name plus <code>/jobs</code>. Replace <code>na07-prod.reltio.com</code> with your actual environment hostname.</p>
-</blockquote>
-<h3 id="install-tools">Install tools</h3>
-<p>All examples use <code>curl</code>. Install <code>jq</code> for readable JSON output (<code>brew install jq</code> / <code>apt install jq</code>).</p>
-<h3 id="key-thing-to-know-before-you-start">Key thing to know before you start</h3>
-<p>Your export permissions match your Reltio Server access — the same data you can read via the API, you can export.</p>
-<hr>
-<h2 id="step-1-understand-how-reltio-export-works">Step 1: Understand how Reltio export works</h2>
-<p>The Export Service extracts data from Reltio and uploads the results as CSV or JSON files to cloud storage (AWS S3, Google Cloud Storage, or Azure Blob Storage). You receive an email with download links when the job finishes.</p>
-<h3 id="the-3-stage-workflow">The 3-stage workflow</h3>
-<p>Every export follows the same pattern:</p>
-<pre><code class="hljs"><span class="hljs-number">1.</span> Schedule <span class="hljs-keyword">a</span> <span class="hljs-built_in">new</span> export job (API returns <span class="hljs-keyword">a</span> task ID)
-         │
-         ▼
-<span class="hljs-number">2.</span> Track <span class="hljs-keyword">the</span> task status (<span class="hljs-keyword">using</span> <span class="hljs-keyword">the</span> task ID)
-         │
-         ▼
-<span class="hljs-number">3.</span> Receive <span class="hljs-keyword">an</span> email <span class="hljs-keyword">with</span> links <span class="hljs-built_in">to</span> <span class="hljs-keyword">the</span> output <span class="hljs-built_in">file</span>(s)</code></pre>
-<h3 id="what-you-can-export">What you can export</h3>
+<p>Export entities, relations, activity logs, and merge trees from the Reltio Context Intelligence Platform using the Export Service API or the Console UI Export application.</p>
+<h2 id="overview">Overview</h2>
+<p>This guide covers the two methods for exporting data from Reltio: the Export Service API for automation and integration pipelines, and the Export application in the Console UI for interactive, one-off exports. It explains supported data types, output formats, file splitting, and job monitoring.</p>
+<p><strong>Audience:</strong> Developer, Data Product Owner, System Administrator</p>
+<h2 id="contents">Contents</h2>
+<ol>
+<li><a href="#1-getting-started">Getting started</a></li>
+<li><a href="#2-export-entities-via-api">Export entities via API</a></li>
+<li><a href="#3-export-relations-via-api">Export relations via API</a></li>
+<li><a href="#4-export-activity-log-data-via-api">Export activity log data via API</a></li>
+<li><a href="#5-monitor-and-manage-export-tasks">Monitor and manage export tasks</a></li>
+<li><a href="#6-split-exports-into-multiple-files">Split exports into multiple files</a></li>
+<li><a href="#7-export-using-the-console-ui">Export using the Console UI</a></li>
+<li><a href="#8-glossary">Glossary</a></li>
+</ol>
+<h2 id="1-getting-started">1. Getting started</h2>
+<p>Before you run any export, confirm you have the following:</p>
+<ul>
+<li><strong>Reltio access token</strong> — same permissions as your Reltio Server access. See <a href="HOWTO-authenticate-and-use-reltio-apis.html">HOWTO: Authenticate and use Reltio APIs</a>.</li>
+<li><strong>Export Service URL</strong> — your environment hostname plus <code>/jobs</code>. For example: <code>https://na07-prod.reltio.com/jobs</code>.</li>
+<li><strong>Tenant ID</strong> — available from Reltio Console &gt; Tenant overview.</li>
+<li><strong>curl</strong> and optionally <strong>jq</strong> for JSON output (<code>brew install jq</code> / <code>apt install jq</code>).</li>
+</ul>
+<p>Set environment variables for the examples throughout this guide:</p>
+<pre><code class="language-bash hljs"><span class="hljs-built_in">export</span> TOKEN=<span class="hljs-string">&quot;YOUR_ACCESS_TOKEN&quot;</span>
+<span class="hljs-built_in">export</span> EXPORT_URL=<span class="hljs-string">&quot;https://na07-prod.reltio.com/jobs&quot;</span>
+<span class="hljs-built_in">export</span> TENANT_ID=<span class="hljs-string">&quot;YOUR_TENANT_ID&quot;</span></code></pre>
+<p><strong>What you can export:</strong></p>
+<p>The Export Service supports four <span class="glossary-term" data-def="A background task created by the Export Service that extracts data, uploads it to cloud storage (AWS S3, GCS, or Azure Blob Storage), and sends an email notification with download links when complete.">export job</span> types:</p>
 <table>
 <thead>
 <tr>
 <th>Data type</th>
-<th>API endpoint</th>
-<th>What it includes</th>
+<th>Endpoint path</th>
 </tr>
 </thead>
 <tbody><tr>
-<td><strong>Entities</strong></td>
-<td><code>POST {ExportServiceURL}/export/{tenant}/entities</code></td>
-<td>All entity attributes, crosswalks, and metadata</td>
+<td>Entities</td>
+<td><code>/export/{tenant}/entities</code></td>
 </tr>
 <tr>
-<td><strong>Relations</strong></td>
-<td><code>POST {ExportServiceURL}/export/{tenant}/relations</code></td>
-<td>Relation attributes, start/end object references</td>
+<td>Relations</td>
+<td><code>/export/{tenant}/relations</code></td>
 </tr>
 <tr>
-<td><strong>Activity log</strong></td>
-<td><code>POST {ExportServiceURL}/export/{tenant}/activities</code></td>
-<td>Audit trail of changes (defaults to last 4 months)</td>
+<td>Activity log</td>
+<td><code>/export/{tenant}/activities</code></td>
 </tr>
 <tr>
-<td><strong>Merge tree</strong></td>
-<td>Entity Management API (separate endpoint)</td>
-<td>Merge history and contributor tracking</td>
+<td>Merge tree (crosswalks tree)</td>
+<td><code>/export/{tenant}/entities/_crosswalksTree</code></td>
 </tr>
 </tbody></table>
-<h3 id="output-formats">Output formats</h3>
-<table>
-<thead>
-<tr>
-<th>Format</th>
-<th>Best for</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><strong>CSV</strong></td>
-<td>Spreadsheets, flat-file integrations</td>
-<td>Default format. Two variants: Flattened (default) and Exploded</td>
-</tr>
-<tr>
-<td><strong>JSON</strong></td>
-<td>API integrations, programmatic processing</td>
-<td>More efficient than CSV export</td>
-</tr>
-</tbody></table>
-<h3 id="compression-formats">Compression formats</h3>
-<table>
-<thead>
-<tr>
-<th>Format</th>
-<th>Extension</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><strong>GZIP</strong></td>
-<td><code>.gz</code></td>
-<td>Default. Compresses a single file. Better compression ratio for individual files</td>
-</tr>
-<tr>
-<td><strong>ZIP</strong></td>
-<td><code>.zip</code></td>
-<td>Compresses multiple files and directories into one archive</td>
-</tr>
-</tbody></table>
-<hr>
-<h2 id="step-2-get-your-export-service-url">Step 2: Get your Export Service URL</h2>
-<p>The Export Service URL follows this pattern:</p>
-<pre><code class="hljs"><span class="hljs-symbol">https:</span><span class="hljs-comment">//{environment}.reltio.com/jobs</span></code></pre>
-<p>For example, if your environment is <code>na07-prod.reltio.com</code>, your Export Service URL is:</p>
-<pre><code class="hljs">https://na07-prod.reltio.com/jobs</code></pre>
-<p>Save it as an environment variable for the rest of this guide:</p>
-<pre><code class="language-bash hljs"><span class="hljs-built_in">export</span> EXPORT_URL=<span class="hljs-string">&quot;https://na07-prod.reltio.com/jobs&quot;</span></code></pre>
+<p><strong>Output formats:</strong> CSV (default, two variants) or JSON. <strong>Compression:</strong> GZIP (<code>.gz</code>, default) or ZIP (<code>.zip</code>).</p>
+<p><strong>File naming:</strong> Output files follow the default template <code>part_&lt;part-number&gt;</code> (for example, <code>entities/testName/part_00001.csv.gz</code>). Numbering starts at zero.</p>
 <blockquote>
-<p><strong>Note:</strong> Replace <code>na07-prod.reltio.com</code> with your actual Reltio environment hostname.</p>
+<p><strong>Important:</strong> Your export permissions match your Reltio Server access — you can only export data that your account can read via the API.</p>
 </blockquote>
-<hr>
-<h2 id="step-3-export-entities">Step 3: Export entities</h2>
-<p><strong>API:</strong> <code>POST {ExportServiceURL}/export/{tenant}/entities</code></p>
-<p>This is the most common export. It filters and exports all entities (or a subset), uploads the result to cloud storage, and sends you an email with download links.</p>
-<h3 id="request">Request</h3>
-<p>Export all entities as CSV, including only Operational Values (OV):</p>
-<pre><code class="language-bash hljs">curl -s -X POST <span class="hljs-string">&quot;<span class="hljs-variable">${EXPORT_URL}</span>/export/HKlMR3wNbRT3PMo/entities&quot;</span> \
+<blockquote>
+<p><strong>Learn more:</strong> <a href="https://docs.reltio.com/en/objectives/load-and-export-data/data-exporting-at-a-glance/data-exporting-operation/export-data-using-reltio-export-service">Export data using Reltio export service</a></p>
+</blockquote>
+<h2 id="2-export-entities-via-api">2. Export entities via API</h2>
+<p>Use this endpoint to export all entities, or a filtered subset, to cloud storage. The <span class="glossary-term" data-def="The Reltio service responsible for extracting and packaging data from a tenant for external use. Accessed at {environment}/jobs and distinct from the Entities API used for individual record operations.">Export Service</span> schedules the job, uploads the result to S3/GCS/Azure, and emails you the download links.</p>
+<p><strong>Endpoint:</strong> <code>POST {ExportServiceURL}/export/{tenant}/entities</code></p>
+<p><strong>Required headers:</strong></p>
+<pre><code class="hljs"><span class="hljs-keyword">Authorization</span>: Bearer {token}
+Content-<span class="hljs-keyword">Type</span>: application/<span class="hljs-type">json</span></code></pre>
+<h3 id="basic-request">Basic request</h3>
+<p>Export all entities in CSV format, returning only Operational Values:</p>
+<pre><code class="language-bash hljs">curl -s -X POST <span class="hljs-string">&quot;<span class="hljs-variable">${EXPORT_URL}</span>/export/<span class="hljs-variable">${TENANT_ID}</span>/entities&quot;</span> \
   -H <span class="hljs-string">&quot;Authorization: Bearer <span class="hljs-variable">${TOKEN}</span>&quot;</span> \
   -H <span class="hljs-string">&quot;Content-Type: application/json&quot;</span> \
   -d <span class="hljs-string">&#x27;{
     &quot;ovOnly&quot;: true
-  }&#x27;</span> | jq .</code></pre>
+  }&#x27;</span></code></pre>
 <h3 id="response">Response</h3>
 <pre><code class="language-json hljs"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">&quot;exportType&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;ENTITIES&quot;</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">&quot;status&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;scheduled&quot;</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">&quot;details&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Export job has been scheduled. Result will be sent to your email: user@example.com&quot;</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">&quot;taskIds&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
-    <span class="hljs-string">&quot;831272d6-1685-49cc-a98c-c8965d04bc0d&quot;</span>
-  <span class="hljs-punctuation">]</span>
+  <span class="hljs-attr">&quot;taskIds&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">&quot;831272d6-1685-49cc-a98c-c8965d04bc0d&quot;</span><span class="hljs-punctuation">]</span>
 <span class="hljs-punctuation">}</span></code></pre>
-<p>Save the task ID — you&#39;ll use it to track the export status.</p>
-<pre><code class="language-bash hljs"><span class="hljs-built_in">export</span> TASK_ID=<span class="hljs-string">&quot;831272d6-1685-49cc-a98c-c8965d04bc0d&quot;</span></code></pre>
-<h3 id="key-parameters">Key parameters</h3>
+<p>Save the task ID — you need it to track status (see section 5).</p>
+<h3 id="key-query-parameters">Key query parameters</h3>
 <table>
 <thead>
 <tr>
 <th>Parameter</th>
-<th>Type</th>
 <th>Default</th>
-<th>What it does</th>
+<th>Description</th>
 </tr>
 </thead>
 <tbody><tr>
 <td><code>fileFormat</code></td>
-<td>Query</td>
 <td><code>csv</code></td>
-<td>Output format: <code>csv</code> or <code>json</code>. JSON is more efficient</td>
+<td>Output format: <code>csv</code> or <code>json</code></td>
 </tr>
 <tr>
 <td><code>dateFormat</code></td>
-<td>Query</td>
-<td><code>timestamp</code></td>
-<td>Date format: <code>timestamp</code> or <code>readable</code></td>
+<td><code>TIMESTAMP</code></td>
+<td>Date format: <code>TIMESTAMP</code> or <code>READABLE</code></td>
 </tr>
 <tr>
 <td><code>activeness</code></td>
-<td>Query</td>
 <td><code>ALL</code></td>
-<td>Which entities: <code>ALL</code>, <code>ACTIVE</code>, or <code>NOT_ACTIVE</code></td>
+<td>Filter by status: <code>ALL</code>, <code>ACTIVE</code>, or <code>NOT_ACTIVE</code></td>
 </tr>
 <tr>
 <td><code>skipPostprocessing</code></td>
-<td>Query</td>
 <td><code>true</code></td>
-<td>If <code>true</code>, returns links to raw partial files. If <code>false</code>, combines files first</td>
+<td><code>true</code> returns links to raw partial files; <code>false</code> combines files first</td>
 </tr>
 <tr>
 <td><code>select</code></td>
-<td>Query</td>
 <td>All fields</td>
-<td>Comma-separated list of fields to export (e.g., <code>type,attributes.FirstName</code>)</td>
+<td>Comma-separated field list (for example, <code>type,attributes.FirstName</code>)</td>
 </tr>
 <tr>
 <td><code>email</code></td>
-<td>Query</td>
 <td>Requesting user</td>
-<td>Comma-separated email addresses for notifications</td>
+<td>Notification email addresses (comma-separated)</td>
 </tr>
 <tr>
-<td><code>sendHidden</code></td>
-<td>Query</td>
-<td><code>true</code></td>
-<td>Include hidden attributes in the export</td>
+<td><code>partSize</code></td>
+<td>Not set</td>
+<td>Split output into files of this size (minimum 100 MB; see section 6)</td>
 </tr>
 </tbody></table>
 <h3 id="key-body-parameters">Key body parameters</h3>
@@ -552,226 +416,168 @@ hr {
 <thead>
 <tr>
 <th>Parameter</th>
-<th>Type</th>
 <th>Default</th>
-<th>What it does</th>
+<th>Description</th>
 </tr>
 </thead>
 <tbody><tr>
 <td><code>ovOnly</code></td>
-<td>Boolean</td>
 <td><code>true</code></td>
-<td>If <code>true</code>, exports only attributes with <code>ov=true</code> (<strong>Operational Values</strong> — the winning values chosen by survivorship rules)</td>
+<td>Export only attributes where <code>ov=true</code> (the winning values from survivorship rules)</td>
 </tr>
 <tr>
 <td><code>includeType</code></td>
-<td>JSON array</td>
 <td>All types</td>
-<td>Limits export to specific entity types</td>
+<td>Limit export to specific <span class="glossary-term" data-def="A master data record in Reltio — for example, an Individual, Organization, or Product. Entities are the primary data type exported via the Export Service.">entity</span> types (JSON array of type URIs)</td>
 </tr>
 <tr>
 <td><code>updateTimeFilter</code></td>
-<td>JSON object</td>
 <td>None</td>
-<td>Filters by update time range: <code>{&quot;since&quot;: 1394726957000, &quot;to&quot;: 1394726959000}</code></td>
+<td>Filter by update time: <code>{&quot;since&quot;: 1394726957000, &quot;to&quot;: 1394726959000}</code></td>
 </tr>
 </tbody></table>
-<blockquote>
-<p><strong>Tip:</strong> Export to JSON when you&#39;re feeding the data into another system programmatically — it&#39;s more efficient than CSV.</p>
-</blockquote>
-<h3 id="what-can-go-wrong">What can go wrong</h3>
-<table>
-<thead>
-<tr>
-<th>Error</th>
-<th>Cause</th>
-<th>Fix</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>401</code></td>
-<td>Token expired</td>
-<td>Get a fresh token</td>
-</tr>
-<tr>
-<td><code>PERIODIC_TASKS_PER_TENANT_LIMIT_EXCEEDED</code></td>
-<td>Too many background tasks running</td>
-<td>Wait for current tasks to complete before starting new ones</td>
-</tr>
-</tbody></table>
-<hr>
-<h2 id="step-4-export-with-filters">Step 4: Export with filters</h2>
-<p>You don&#39;t always want to export everything. Use filters and body parameters to narrow the export to exactly what you need.</p>
-<h3 id="export-specific-entity-types">Export specific entity types</h3>
+<h3 id="filter-and-select-examples">Filter and select examples</h3>
 <p>Export only <code>Individual</code> entities updated since a specific timestamp:</p>
-<pre><code class="language-bash hljs">curl -s -X POST <span class="hljs-string">&quot;<span class="hljs-variable">${EXPORT_URL}</span>/export/HKlMR3wNbRT3PMo/entities&quot;</span> \
+<pre><code class="language-bash hljs">curl -s -X POST <span class="hljs-string">&quot;<span class="hljs-variable">${EXPORT_URL}</span>/export/<span class="hljs-variable">${TENANT_ID}</span>/entities&quot;</span> \
   -H <span class="hljs-string">&quot;Authorization: Bearer <span class="hljs-variable">${TOKEN}</span>&quot;</span> \
   -H <span class="hljs-string">&quot;Content-Type: application/json&quot;</span> \
   -d <span class="hljs-string">&#x27;{
     &quot;ovOnly&quot;: true,
-    &quot;includeType&quot;: [
-      &quot;configuration/entityTypes/Individual&quot;
-    ],
-    &quot;updateTimeFilter&quot;: {
-      &quot;since&quot;: 1394726957000
-    }
-  }&#x27;</span> | jq .</code></pre>
-<h3 id="export-with-a-query-filter">Export with a query filter</h3>
-<p>Use the <code>filter</code> query parameter to apply conditions — the same filter syntax as the Entities API:</p>
-<pre><code class="language-bash hljs">curl -s -X POST <span class="hljs-string">&quot;<span class="hljs-variable">${EXPORT_URL}</span>/export/HKlMR3wNbRT3PMo/entities?filter=equals(type,&#x27;configuration/entityTypes/Individual&#x27;)&quot;</span> \
+    &quot;includeType&quot;: [&quot;configuration/entityTypes/Individual&quot;],
+    &quot;updateTimeFilter&quot;: {&quot;since&quot;: 1394726957000}
+  }&#x27;</span></code></pre>
+<p>Export only specific fields:</p>
+<pre><code class="language-bash hljs">curl -s -X POST <span class="hljs-string">&quot;<span class="hljs-variable">${EXPORT_URL}</span>/export/<span class="hljs-variable">${TENANT_ID}</span>/entities?select=type,attributes.FirstName,createdTime&quot;</span> \
   -H <span class="hljs-string">&quot;Authorization: Bearer <span class="hljs-variable">${TOKEN}</span>&quot;</span> \
   -H <span class="hljs-string">&quot;Content-Type: application/json&quot;</span> \
-  -d <span class="hljs-string">&#x27;{}&#x27;</span> | jq .</code></pre>
-<h3 id="export-only-specific-fields">Export only specific fields</h3>
-<p>Use the <code>select</code> query parameter to limit which fields appear in the output:</p>
-<pre><code class="language-bash hljs">curl -s -X POST <span class="hljs-string">&quot;<span class="hljs-variable">${EXPORT_URL}</span>/export/HKlMR3wNbRT3PMo/entities?select=type,attributes.FirstName,attributes.Address.City,createdTime&quot;</span> \
+  -d <span class="hljs-string">&#x27;{&quot;ovOnly&quot;: true}&#x27;</span></code></pre>
+<p>Export as JSON instead of CSV:</p>
+<pre><code class="language-bash hljs">curl -s -X POST <span class="hljs-string">&quot;<span class="hljs-variable">${EXPORT_URL}</span>/export/<span class="hljs-variable">${TENANT_ID}</span>/entities?fileFormat=json&quot;</span> \
   -H <span class="hljs-string">&quot;Authorization: Bearer <span class="hljs-variable">${TOKEN}</span>&quot;</span> \
   -H <span class="hljs-string">&quot;Content-Type: application/json&quot;</span> \
-  -d <span class="hljs-string">&#x27;{
-    &quot;ovOnly&quot;: true
-  }&#x27;</span> | jq .</code></pre>
-<h3 id="export-only-active-entities">Export only active entities</h3>
-<pre><code class="language-bash hljs">curl -s -X POST <span class="hljs-string">&quot;<span class="hljs-variable">${EXPORT_URL}</span>/export/HKlMR3wNbRT3PMo/entities?activeness=ACTIVE&quot;</span> \
-  -H <span class="hljs-string">&quot;Authorization: Bearer <span class="hljs-variable">${TOKEN}</span>&quot;</span> \
-  -H <span class="hljs-string">&quot;Content-Type: application/json&quot;</span> \
-  -d <span class="hljs-string">&#x27;{
-    &quot;ovOnly&quot;: true
-  }&#x27;</span> | jq .</code></pre>
-<h3 id="export-as-json-instead-of-csv">Export as JSON instead of CSV</h3>
-<pre><code class="language-bash hljs">curl -s -X POST <span class="hljs-string">&quot;<span class="hljs-variable">${EXPORT_URL}</span>/export/HKlMR3wNbRT3PMo/entities?fileFormat=json&quot;</span> \
-  -H <span class="hljs-string">&quot;Authorization: Bearer <span class="hljs-variable">${TOKEN}</span>&quot;</span> \
-  -H <span class="hljs-string">&quot;Content-Type: application/json&quot;</span> \
-  -d <span class="hljs-string">&#x27;{
-    &quot;ovOnly&quot;: true
-  }&#x27;</span> | jq .</code></pre>
+  -d <span class="hljs-string">&#x27;{&quot;ovOnly&quot;: true}&#x27;</span></code></pre>
 <blockquote>
 <p><strong>Note:</strong> The query <code>filter</code> parameter takes priority over the body <code>filter</code> parameter if both are specified.</p>
 </blockquote>
-<hr>
-<h2 id="step-5-export-relations">Step 5: Export relations</h2>
-<p><strong>API:</strong> <code>POST {ExportServiceURL}/export/{tenant}/relations</code></p>
-<p>Exports relations (links between entities) in the same way as entity exports — uploads the result to cloud storage and emails you the download links.</p>
-<h3 id="request">Request</h3>
-<p>Export all relations as CSV:</p>
-<pre><code class="language-bash hljs">curl -s -X POST <span class="hljs-string">&quot;<span class="hljs-variable">${EXPORT_URL}</span>/export/HKlMR3wNbRT3PMo/relations&quot;</span> \
+<blockquote>
+<p><strong>Important:</strong> If the background task limit for your <span class="glossary-term" data-def="An isolated Reltio environment associated with a specific organization or project. Each tenant has its own data, configuration, and users, identified by a unique tenant ID.">tenant</span> is exceeded, the export returns the error <code>PERIODIC_TASKS_PER_TENANT_LIMIT_EXCEEDED</code>. Use the Export Tasks Management API to check active tasks before starting new ones.</p>
+</blockquote>
+<blockquote>
+<p><strong>Learn more:</strong> <a href="https://docs.reltio.com/en/objectives/load-and-export-data/data-exporting-at-a-glance/data-exporting-operation/export-data-using-reltio-export-service/export-entities">Export entities</a></p>
+</blockquote>
+<h2 id="3-export-relations-via-api">3. Export relations via API</h2>
+<p>Exports relations (links between entities) in the same way as entity exports — schedules the job, uploads the result to cloud storage, and emails you the download links.</p>
+<p><strong>Endpoint:</strong> <code>POST {ExportServiceURL}/export/{tenant}/relations</code></p>
+<h3 id="basic-request">Basic request</h3>
+<pre><code class="language-bash hljs">curl -s -X POST <span class="hljs-string">&quot;<span class="hljs-variable">${EXPORT_URL}</span>/export/<span class="hljs-variable">${TENANT_ID}</span>/relations&quot;</span> \
   -H <span class="hljs-string">&quot;Authorization: Bearer <span class="hljs-variable">${TOKEN}</span>&quot;</span> \
   -H <span class="hljs-string">&quot;Content-Type: application/json&quot;</span> \
   -d <span class="hljs-string">&#x27;{
     &quot;ovOnly&quot;: true,
-    &quot;includeType&quot;: [
-      &quot;configuration/relationTypes/Employment&quot;
-    ]
-  }&#x27;</span> | jq .</code></pre>
+    &quot;includeType&quot;: [&quot;configuration/relationTypes/Employment&quot;]
+  }&#x27;</span></code></pre>
 <h3 id="response">Response</h3>
 <pre><code class="language-json hljs"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">&quot;exportType&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;RELATIONS&quot;</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">&quot;status&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;scheduled&quot;</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">&quot;details&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Export job has been scheduled. Result will be sent to your email: user@example.com&quot;</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">&quot;taskIds&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
-    <span class="hljs-string">&quot;57fd98c7-924f-443c-b7bc-902b41a60a2e&quot;</span>
-  <span class="hljs-punctuation">]</span>
+  <span class="hljs-attr">&quot;taskIds&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">&quot;57fd98c7-924f-443c-b7bc-902b41a60a2e&quot;</span><span class="hljs-punctuation">]</span>
 <span class="hljs-punctuation">}</span></code></pre>
-<h3 id="relation-specific-parameters">Relation-specific parameters</h3>
-<p>Relations exports support most of the same parameters as entity exports, plus a few extra:</p>
+<h3 id="relation-specific-query-parameters">Relation-specific query parameters</h3>
 <table>
 <thead>
 <tr>
 <th>Parameter</th>
-<th>Type</th>
 <th>Default</th>
-<th>What it does</th>
+<th>Description</th>
 </tr>
 </thead>
 <tbody><tr>
 <td><code>returnVotes</code></td>
-<td>Query</td>
 <td><code>false</code></td>
 <td>Include votes in the export</td>
 </tr>
 <tr>
 <td><code>sePrefix</code></td>
-<td>Query</td>
 <td><code>false</code></td>
 <td>Add <code>StartObject</code>/<code>EndObject</code> prefixes to CSV columns</td>
 </tr>
 <tr>
 <td><code>options</code></td>
-<td>Query</td>
 <td>None</td>
-<td>Comma-separated options: <code>searchByOv</code>, <code>resolveMergedEntities</code>, <code>resolveRelationEdgeTypes</code>, <code>parallelExecution</code></td>
+<td>Comma-separated: <code>searchByOv</code>, <code>resolveMergedEntities</code>, <code>resolveRelationEdgeTypes</code>, <code>parallelExecution</code></td>
 </tr>
 </tbody></table>
 <blockquote>
-<p><strong>Tip:</strong> Use the <code>resolveMergedEntities</code> option to get winner URIs for start/end objects — useful when entities have been merged since the relation was created.</p>
+<p><strong>Tip:</strong> Use <code>resolveMergedEntities</code> to get winner URIs for start/end objects — useful when entities have been merged since the relation was created.</p>
 </blockquote>
-<hr>
-<h2 id="step-6-export-activity-log-data">Step 6: Export activity log data</h2>
-<p><strong>API:</strong> <code>POST {ExportServiceURL}/export/{tenant}/activities</code></p>
-<p>Exports the audit trail of changes made to your tenant&#39;s data. By default, this returns the last 4 months of activity.</p>
-<h3 id="request">Request</h3>
-<p>Export all activity log data (last 4 months by default):</p>
-<pre><code class="language-bash hljs">curl -s -X POST <span class="hljs-string">&quot;<span class="hljs-variable">${EXPORT_URL}</span>/export/HKlMR3wNbRT3PMo/activities&quot;</span> \
+<blockquote>
+<p><strong>Learn more:</strong> <a href="https://docs.reltio.com/en/objectives/load-and-export-data/data-exporting-at-a-glance/data-exporting-operation/export-data-using-reltio-export-service/export-relations">Export relations</a></p>
+</blockquote>
+<h2 id="4-export-activity-log-data-via-api">4. Export activity log data via API</h2>
+<p>Exports the <span class="glossary-term" data-def="An audit trail of all changes made to data in a Reltio tenant, including creates, updates, merges, and deletes. Exportable via the /activities endpoint; defaults to the last 4 months.">activity log</span> — the audit trail of changes made to your tenant&#39;s data. By default, the endpoint returns the last 4 months of activity.</p>
+<p><strong>Endpoint:</strong> <code>POST {ExportServiceURL}/export/{tenant}/activities</code></p>
+<h3 id="basic-request">Basic request</h3>
+<pre><code class="language-bash hljs">curl -s -X POST <span class="hljs-string">&quot;<span class="hljs-variable">${EXPORT_URL}</span>/export/<span class="hljs-variable">${TENANT_ID}</span>/activities&quot;</span> \
   -H <span class="hljs-string">&quot;Authorization: Bearer <span class="hljs-variable">${TOKEN}</span>&quot;</span> \
   -H <span class="hljs-string">&quot;Content-Type: application/json&quot;</span> \
-  -d <span class="hljs-string">&#x27;{}&#x27;</span> | jq .</code></pre>
+  -d <span class="hljs-string">&#x27;{}&#x27;</span></code></pre>
 <h3 id="response">Response</h3>
 <pre><code class="language-json hljs"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">&quot;exportType&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;ACTIVITY_LOG&quot;</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">&quot;status&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;scheduled&quot;</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">&quot;details&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Export job has been scheduled. Result will be sent to your email: user@example.com&quot;</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">&quot;taskIds&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
-    <span class="hljs-string">&quot;f30e5d99-a57d-46fb-bad0-70b2575fdd26&quot;</span>
-  <span class="hljs-punctuation">]</span>
+  <span class="hljs-attr">&quot;taskIds&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">&quot;f30e5d99-a57d-46fb-bad0-70b2575fdd26&quot;</span><span class="hljs-punctuation">]</span>
 <span class="hljs-punctuation">}</span></code></pre>
-<h3 id="export-activity-data-for-a-specific-time-range">Export activity data for a specific time range</h3>
+<h3 id="export-a-custom-time-range">Export a custom time range</h3>
 <p>Use the <code>filter</code> query parameter with a <code>timestamp</code> condition to override the 4-month default. The timestamp value is in milliseconds:</p>
-<pre><code class="language-bash hljs">curl -s -X POST <span class="hljs-string">&quot;<span class="hljs-variable">${EXPORT_URL}</span>/export/HKlMR3wNbRT3PMo/activities?filter=gt(timestamp,1560800276000)&quot;</span> \
+<pre><code class="language-bash hljs">curl -s -X POST <span class="hljs-string">&quot;<span class="hljs-variable">${EXPORT_URL}</span>/export/<span class="hljs-variable">${TENANT_ID}</span>/activities?filter=gt(timestamp,1560800276000)&quot;</span> \
   -H <span class="hljs-string">&quot;Authorization: Bearer <span class="hljs-variable">${TOKEN}</span>&quot;</span> \
   -H <span class="hljs-string">&quot;Content-Type: application/json&quot;</span> \
-  -d <span class="hljs-string">&#x27;{}&#x27;</span> | jq .</code></pre>
-<p>This exports all activities from June 17, 2019 onward.</p>
+  -d <span class="hljs-string">&#x27;{}&#x27;</span></code></pre>
+<h3 id="key-parameters">Key parameters</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>filter</code></td>
+<td>Last 4 months</td>
+<td>Time range filter using <code>gt(timestamp,&lt;ms&gt;)</code></td>
+</tr>
+<tr>
+<td><code>dateFormat</code></td>
+<td><code>TIMESTAMP</code></td>
+<td>Date format: <code>TIMESTAMP</code> or <code>READABLE</code></td>
+</tr>
+</tbody></table>
 <blockquote>
-<p><strong>Note:</strong> As a best practice, always specify a time period filter when exporting activity log data. Retention and searching limits for activity log data are governed by your tenant&#39;s quotas and limits.</p>
+<p><strong>Note:</strong> As a best practice, always specify a time period filter when exporting activity log data. Retention and searching limits are governed by your tenant&#39;s quotas.</p>
 </blockquote>
-<hr>
-<h2 id="step-7-check-export-task-status">Step 7: Check export task status</h2>
-<p><strong>API:</strong> <code>GET {ExportServiceURL}/tasks</code></p>
-<p>Export jobs run asynchronously. After you schedule one, use the Tasks API to check its progress.</p>
-<h3 id="request">Request</h3>
-<p>Get all active export tasks:</p>
+<blockquote>
+<p><strong>Learn more:</strong> <a href="https://docs.reltio.com/en/objectives/load-and-export-data/data-exporting-at-a-glance/data-exporting-operation/export-data-using-reltio-export-service/exporting-activity-log-data">Exporting Activity Log Data</a></p>
+</blockquote>
+<h2 id="5-monitor-and-manage-export-tasks">5. Monitor and manage export tasks</h2>
+<p>Export jobs run asynchronously. After scheduling a job, use the Tasks API to check its progress.</p>
+<p><strong>Endpoint:</strong> <code>GET {ExportServiceURL}/tasks</code></p>
+<h3 id="check-active-tasks">Check active tasks</h3>
 <pre><code class="language-bash hljs">curl -s -X GET <span class="hljs-string">&quot;<span class="hljs-variable">${EXPORT_URL}</span>/tasks&quot;</span> \
-  -H <span class="hljs-string">&quot;Authorization: Bearer <span class="hljs-variable">${TOKEN}</span>&quot;</span> | jq .</code></pre>
-<h3 id="response">Response</h3>
-<pre><code class="language-json hljs"><span class="hljs-punctuation">[</span>
-  <span class="hljs-punctuation">{</span>
-    <span class="hljs-attr">&quot;id&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;7fe02b5b-9685-4f4e-b8c2-3cf6819dbf89&quot;</span><span class="hljs-punctuation">,</span>
-    <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;com.reltio.export.tasks.v4.ExportTask&quot;</span><span class="hljs-punctuation">,</span>
-    <span class="hljs-attr">&quot;status&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;PROCESSING&quot;</span><span class="hljs-punctuation">,</span>
-    <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;entity-export-task[...]&quot;</span><span class="hljs-punctuation">,</span>
-    <span class="hljs-attr">&quot;parameters&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
-      <span class="hljs-attr">&quot;tenantId&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;HKlMR3wNbRT3PMo&quot;</span><span class="hljs-punctuation">,</span>
-      <span class="hljs-attr">&quot;fileFormat&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;CSV&quot;</span><span class="hljs-punctuation">,</span>
-      <span class="hljs-attr">&quot;exportType&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;ENTITIES&quot;</span><span class="hljs-punctuation">,</span>
-      ...
-    <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
-    <span class="hljs-attr">&quot;currentState&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
-      <span class="hljs-attr">&quot;numberOfObjects&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">507016</span><span class="hljs-punctuation">,</span>
-      <span class="hljs-attr">&quot;numberOfProcessedObjects&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123456</span><span class="hljs-punctuation">,</span>
-      <span class="hljs-attr">&quot;status&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Processing&quot;</span>
-    <span class="hljs-punctuation">}</span>
-  <span class="hljs-punctuation">}</span>
-<span class="hljs-punctuation">]</span></code></pre>
+  -H <span class="hljs-string">&quot;Authorization: Bearer <span class="hljs-variable">${TOKEN}</span>&quot;</span></code></pre>
 <h3 id="task-statuses">Task statuses</h3>
 <table>
 <thead>
 <tr>
 <th>Status</th>
-<th>What it means</th>
+<th>Meaning</th>
 </tr>
 </thead>
 <tbody><tr>
 <td><code>SCHEDULED</code></td>
-<td>Job is queued and waiting to start</td>
+<td>Job is queued, waiting to start</td>
 </tr>
 <tr>
 <td><code>PROCESSING</code></td>
@@ -799,31 +605,24 @@ hr {
 </tr>
 <tr>
 <td><code>WAITING_FOR_RESOURCE</code></td>
-<td>Job is temporarily suspended because your tenant has too many active tasks</td>
+<td>Job is temporarily suspended because the tenant has too many active tasks</td>
 </tr>
 </tbody></table>
-<h3 id="pagination">Pagination</h3>
-<p>Use <code>max</code> and <code>offset</code> to paginate through active tasks:</p>
-<pre><code class="language-bash hljs">curl -s -X GET <span class="hljs-string">&quot;<span class="hljs-variable">${EXPORT_URL}</span>/tasks?max=10&amp;offset=0&quot;</span> \
-  -H <span class="hljs-string">&quot;Authorization: Bearer <span class="hljs-variable">${TOKEN}</span>&quot;</span> | jq .</code></pre>
 <h3 id="force-stop-a-running-export">Force stop a running export</h3>
-<p>If you need to cancel an export job, use the force stop API:</p>
 <pre><code class="language-bash hljs">curl -s -X PUT <span class="hljs-string">&quot;<span class="hljs-variable">${EXPORT_URL}</span>/tasks/<span class="hljs-variable">${TASK_ID}</span>/_forceStop&quot;</span> \
-  -H <span class="hljs-string">&quot;Authorization: Bearer <span class="hljs-variable">${TOKEN}</span>&quot;</span> | jq .</code></pre>
-<p><strong>Response:</strong></p>
-<pre><code class="language-json hljs"><span class="hljs-punctuation">{</span>
-  <span class="hljs-attr">&quot;status&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;success&quot;</span>
-<span class="hljs-punctuation">}</span></code></pre>
+  -H <span class="hljs-string">&quot;Authorization: Bearer <span class="hljs-variable">${TOKEN}</span>&quot;</span></code></pre>
 <blockquote>
 <p><strong>Note:</strong> Force stop is available to Administrators only.</p>
 </blockquote>
-<hr>
-<h2 id="step-8-split-exports-into-multiple-files">Step 8: Split exports into multiple files</h2>
-<p>For large exports, split the output into multiple files using the <code>partSize</code> parameter. Each file is capped at the size you specify (before compression).</p>
+<blockquote>
+<p><strong>Learn more:</strong> <a href="https://docs.reltio.com/en/objectives/load-and-export-data/data-exporting-at-a-glance/data-exporting-operation/export-data-using-reltio-export-service">Export data using Reltio export service</a></p>
+</blockquote>
+<h2 id="6-split-exports-into-multiple-files">6. Split exports into multiple files</h2>
+<p>For large exports, split the output into multiple files using the <code>partSize</code> query parameter. Each file is capped at the size you specify before compression.</p>
 <h3 id="how-it-works">How it works</h3>
 <ol>
 <li>Add <code>partSize</code> to your export request as a query parameter.</li>
-<li>Set <code>skipPostprocessing=false</code> — <code>partSize</code> is ignored when <code>skipPostprocessing</code> is <code>true</code>.</li>
+<li>Set <code>skipPostprocessing=false</code> — <code>partSize</code> is ignored when <code>skipPostprocessing=true</code>.</li>
 <li>The Export Service splits the output into files no larger than your <code>partSize</code> value.</li>
 <li>Download links appear in the task&#39;s <code>currentState.exportUrls</code> field (an array of strings).</li>
 </ol>
@@ -832,69 +631,37 @@ hr {
 <thead>
 <tr>
 <th>Format</th>
-<th>Description</th>
 <th>Example</th>
 </tr>
 </thead>
 <tbody><tr>
-<td><code>[X]</code> or <code>[X]b</code></td>
-<td>Size in bytes</td>
-<td><code>104857600</code> (100 MB)</td>
+<td>Bytes</td>
+<td><code>104857600</code></td>
 </tr>
 <tr>
-<td><code>[X]k</code> or <code>[X]kb</code></td>
-<td>Size in kilobytes</td>
+<td>Kilobytes</td>
 <td><code>102400k</code></td>
 </tr>
 <tr>
-<td><code>[X]m</code> or <code>[X]mb</code></td>
-<td>Size in megabytes</td>
-<td><code>100m</code> (100 MB)</td>
+<td>Megabytes</td>
+<td><code>100m</code></td>
 </tr>
 <tr>
-<td><code>[X]g</code> or <code>[X]gb</code></td>
-<td>Size in gigabytes</td>
-<td><code>1GB</code></td>
-</tr>
-<tr>
-<td><code>[X]t</code> or <code>[X]tb</code></td>
-<td>Size in terabytes</td>
-<td><code>1T</code></td>
+<td>Gigabytes</td>
+<td><code>1g</code></td>
 </tr>
 </tbody></table>
 <blockquote>
-<p><strong>Important:</strong> The minimum <code>partSize</code> is <strong>100 MB</strong> (104857600 bytes). You can&#39;t specify a smaller value.</p>
+<p><strong>Important:</strong> The minimum <code>partSize</code> is 100 MB (104857600 bytes).</p>
 </blockquote>
-<h3 id="request">Request</h3>
-<p>Export entities split into 100 MB files:</p>
-<pre><code class="language-bash hljs">curl -s -X POST <span class="hljs-string">&quot;<span class="hljs-variable">${EXPORT_URL}</span>/export/HKlMR3wNbRT3PMo/entities?partSize=100m&amp;skipPostprocessing=false&quot;</span> \
+<h3 id="example-request">Example request</h3>
+<pre><code class="language-bash hljs">curl -s -X POST <span class="hljs-string">&quot;<span class="hljs-variable">${EXPORT_URL}</span>/export/<span class="hljs-variable">${TENANT_ID}</span>/entities?partSize=100m&amp;skipPostprocessing=false&quot;</span> \
   -H <span class="hljs-string">&quot;Authorization: Bearer <span class="hljs-variable">${TOKEN}</span>&quot;</span> \
   -H <span class="hljs-string">&quot;Content-Type: application/json&quot;</span> \
-  -d <span class="hljs-string">&#x27;{
-    &quot;ovOnly&quot;: true
-  }&#x27;</span> | jq .</code></pre>
-<h3 id="how-download-links-differ">How download links differ</h3>
-<table>
-<thead>
-<tr>
-<th>Scenario</th>
-<th>Download link field</th>
-<th>Type</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><strong>Without</strong> <code>partSize</code></td>
-<td><code>currentState.exportUrl</code></td>
-<td>String (single URL)</td>
-</tr>
-<tr>
-<td><strong>With</strong> <code>partSize</code></td>
-<td><code>currentState.exportUrls</code></td>
-<td>Array of strings (one URL per file part)</td>
-</tr>
-</tbody></table>
+  -d <span class="hljs-string">&#x27;{&quot;ovOnly&quot;: true}&#x27;</span></code></pre>
+<p><strong>Download links:</strong> Without <code>partSize</code>, the download link is a single string at <code>currentState.exportUrl</code>. With <code>partSize</code>, the links are an array at <code>currentState.exportUrls</code> — one URL per file part.</p>
 <p>Output files follow the naming convention <code>_part_[N]</code>, where <code>[N]</code> is the file number.</p>
-<h3 id="which-endpoints-support-splitting">Which endpoints support splitting</h3>
+<p><strong>Supported endpoints for splitting:</strong></p>
 <ul>
 <li><code>POST {ExportServiceURL}/export/{tenant}/entities</code></li>
 <li><code>POST {ExportServiceURL}/export/{tenant}/entities/_crosswalksTree</code></li>
@@ -902,145 +669,40 @@ hr {
 <li><code>POST {ExportServiceURL}/export/{tenant}/activities</code></li>
 </ul>
 <blockquote>
-<p><strong>Note:</strong> The <code>partSize</code> controls the <strong>unarchived</strong> size of each output file. For example, <code>partSize=100m</code> means each uncompressed file is 100 MB — the downloaded <code>.zip</code> or <code>.gz</code> file will be smaller due to compression.</p>
+<p><strong>Note:</strong> <code>partSize</code> controls the unarchived size of each output file. The downloaded <code>.gz</code> or <code>.zip</code> file will be smaller due to compression.</p>
 </blockquote>
-<hr>
-<h2 id="step-9-export-using-the-console-ui">Step 9: Export using the Console UI</h2>
-<p>If you prefer a visual interface over the API, use the Export application in Reltio Console.</p>
+<blockquote>
+<p><strong>Learn more:</strong> <a href="https://docs.reltio.com/en/objectives/load-and-export-data/data-exporting-at-a-glance/data-exporting-operation/export-data-using-reltio-export-service">Export data using Reltio export service</a></p>
+</blockquote>
+<h2 id="7-export-using-the-console-ui">7. Export using the Console UI</h2>
+<p>If you prefer a visual interface over the API, use the Export application in the Reltio Console. You can also use the Console to export entities and relationships together and produce a single output file.</p>
 <h3 id="steps">Steps</h3>
 <ol>
-<li>In the Hub or in <a href="https://console.reltio.com">Reltio Console</a>, select <strong>Export</strong>, then select <strong>New Export Job</strong>.</li>
-<li>Select and filter the data to export. Use the filters to refine your selection.</li>
-<li>Choose your job details:<ul>
-<li><strong>File format</strong>: CSV Flattened, JSON, or CSV Exploded</li>
-</ul>
-</li>
+<li>In the Hub or in the Reltio Console, select <strong>Export</strong>, then select <strong>New Export Job</strong>.</li>
+<li>Select and filter the data to export.</li>
+<li>Choose your job details — select the file format: <strong>CSV Flattened</strong>, <strong>JSON</strong>, or <strong>CSV Exploded</strong>.</li>
 <li>Select <strong>Run</strong>.</li>
-<li>Once the job appears in the <strong>COMPLETED</strong> list, download the export file(s).</li>
+<li>The job appears on the <strong>PENDING</strong> list. Track it by name.</li>
+<li>Once the job appears on the <strong>COMPLETED</strong> list, download the export file(s). The Export Service uploads results to tenant storage and sends an email with links.</li>
 </ol>
 <blockquote>
-<p><strong>Important:</strong> The <strong>CSV Exploded</strong> format can result in low export performance, large export files, or failure of the export job. The more values that entities have, the higher the risk. Use <strong>CSV Flattened</strong> or <strong>JSON</strong> instead.</p>
+<p><strong>Important:</strong> The <strong>CSV Exploded</strong> format can result in low export performance, large export files, or job failure. The more values that entities have, the higher the risk. Use <strong>CSV Flattened</strong> or <strong>JSON</strong> instead.</p>
 </blockquote>
-<hr>
-<h2 id="quick-reference">Quick reference</h2>
-<h3 id="all-endpoints-at-a-glance">All endpoints at a glance</h3>
-<table>
-<thead>
-<tr>
-<th>#</th>
-<th>Operation</th>
-<th>Method</th>
-<th>Endpoint</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>1</td>
-<td>Export entities</td>
-<td><code>POST</code></td>
-<td><code>{ExportServiceURL}/export/{tenant}/entities</code></td>
-</tr>
-<tr>
-<td>2</td>
-<td>Export relations</td>
-<td><code>POST</code></td>
-<td><code>{ExportServiceURL}/export/{tenant}/relations</code></td>
-</tr>
-<tr>
-<td>3</td>
-<td>Export activity log</td>
-<td><code>POST</code></td>
-<td><code>{ExportServiceURL}/export/{tenant}/activities</code></td>
-</tr>
-<tr>
-<td>4</td>
-<td>Export crosswalks tree</td>
-<td><code>POST</code></td>
-<td><code>{ExportServiceURL}/export/{tenant}/entities/_crosswalksTree</code></td>
-</tr>
-<tr>
-<td>5</td>
-<td>Get active tasks</td>
-<td><code>GET</code></td>
-<td><code>{ExportServiceURL}/tasks</code></td>
-</tr>
-<tr>
-<td>6</td>
-<td>Force stop a task</td>
-<td><code>PUT</code></td>
-<td><code>{ExportServiceURL}/tasks/{taskId}/_forceStop</code></td>
-</tr>
-</tbody></table>
-<h3 id="common-query-parameters-all-export-endpoints">Common query parameters (all export endpoints)</h3>
-<table>
-<thead>
-<tr>
-<th>Parameter</th>
-<th>Default</th>
-<th>Values</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>fileFormat</code></td>
-<td><code>csv</code></td>
-<td><code>csv</code>, <code>json</code></td>
-</tr>
-<tr>
-<td><code>dateFormat</code></td>
-<td><code>timestamp</code></td>
-<td><code>timestamp</code>, <code>readable</code></td>
-</tr>
-<tr>
-<td><code>activeness</code></td>
-<td><code>ALL</code></td>
-<td><code>ALL</code>, <code>ACTIVE</code>, <code>NOT_ACTIVE</code></td>
-</tr>
-<tr>
-<td><code>skipPostprocessing</code></td>
-<td><code>true</code></td>
-<td><code>true</code>, <code>false</code></td>
-</tr>
-<tr>
-<td><code>partSize</code></td>
-<td>Not set (unlimited)</td>
-<td>Human-readable size (e.g., <code>100m</code>). Minimum: 100 MB</td>
-</tr>
-<tr>
-<td><code>email</code></td>
-<td>Requesting user</td>
-<td>Comma-separated email addresses</td>
-</tr>
-</tbody></table>
-<h3 id="export-response-structure">Export response structure</h3>
-<p>Every export request returns the same JSON structure:</p>
-<pre><code class="language-json hljs"><span class="hljs-punctuation">{</span>
-  <span class="hljs-attr">&quot;exportType&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;ENTITIES&quot;</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">&quot;status&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;scheduled&quot;</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">&quot;details&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Export job has been scheduled. Result will be sent to your email: user@example.com&quot;</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">&quot;taskIds&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">&quot;task-id-here&quot;</span><span class="hljs-punctuation">]</span>
-<span class="hljs-punctuation">}</span></code></pre>
-<h3 id="file-naming-convention">File naming convention</h3>
-<p>Output files follow this default pattern:</p>
-<pre><code class="hljs">part_00000<span class="hljs-selector-class">.csv</span><span class="hljs-selector-class">.gz</span>
-part_00001<span class="hljs-selector-class">.csv</span><span class="hljs-selector-class">.gz</span>
-part_00002<span class="hljs-selector-class">.csv</span>.gz</code></pre>
-<p>The numbering starts from zero. Each output file name is unique.</p>
-<hr>
-<h2 id="further-reading">Further reading</h2>
-<ul>
-<li><a href="https://docs.reltio.com/en/developer-resources/load-and-export-apis/load-and-export-apis-at-a-glance/export-service-apis">Export Service APIs</a> — API reference</li>
-<li><a href="https://docs.reltio.com/en/objectives/load-and-export-data/data-exporting-at-a-glance/data-exporting-operation/export-data-using-reltio-export-service/export-entities">Export entities</a> — Full parameter reference</li>
-<li><a href="https://docs.reltio.com/en/objectives/load-and-export-data/data-exporting-at-a-glance/data-exporting-operation/export-data-using-reltio-export-service/export-relations">Export relations</a> — Full parameter reference</li>
-<li><a href="https://docs.reltio.com/en/objectives/load-and-export-data/data-exporting-at-a-glance/data-exporting-operation/export-data-using-reltio-export-service/exporting-activity-log-data">Exporting Activity Log Data</a> — Activity log export details</li>
-<li><a href="https://docs.reltio.com/en/objectives/load-and-export-data/data-exporting-at-a-glance/data-exporting-operation/export-data-using-reltio-export-service">Export data using Reltio export service</a> — Overview of the export service</li>
-<li><a href="https://docs.reltio.com/en/developer-resources/load-and-export-apis/load-and-export-apis-at-a-glance/export-service-apis/export-data-into-multiple-files">Export data into multiple files</a> — <code>partSize</code> parameter details</li>
-<li><a href="https://docs.reltio.com/en/developer-resources/load-and-export-apis/load-and-export-apis-at-a-glance/export-service-apis/store-export-results">Storing export results</a> — Custom S3/GCS/Azure destinations</li>
-<li><a href="https://docs.reltio.com/en/objectives/load-and-export-data/data-exporting-at-a-glance/data-exporting-operation/export-data-using-reltio-export-service/create-and-run-an-export-job">Create and run an export job</a> — Console UI export walkthrough</li>
-</ul>
+<blockquote>
+<p><strong>Learn more:</strong> <a href="https://docs.reltio.com/en/applications/console/tenant-management-applications/data-export-at-a-glance/export-entities-and-relationships">Export entities and relationships</a></p>
+</blockquote>
+<h2 id="8-glossary">8. Glossary</h2>
+<p id="glossary-activity-log"><strong>Activity log:</strong> An audit trail of all changes made to data in a Reltio tenant, including creates, updates, merges, and deletes. Exportable via the <code>/activities</code> endpoint; defaults to the last 4 months.</p>
+<p id="glossary-crosswalk"><strong>Crosswalk:</strong> A pointer that links a Reltio entity back to its original record in a source system, storing the source system URI and the record&#39;s ID in that system.</p>
+<p id="glossary-entity"><strong>Entity:</strong> A master data record in Reltio — for example, an Individual, Organization, or Product. Entities are the primary data type exported via the Export Service.</p>
+<p id="glossary-export-job"><strong>Export job:</strong> A background task created by the Export Service that extracts data, uploads it to cloud storage (AWS S3, GCS, or Azure Blob Storage), and sends an email notification with download links when complete.</p>
+<p id="glossary-export-service"><strong>Export Service:</strong> The Reltio service responsible for extracting and packaging data from a tenant for external use. Accessed at <code>{environment}/jobs</code> and distinct from the Entities API used for individual record operations.</p>
+<p id="glossary-merge-tree"><strong>Merge tree:</strong> The history of how entities were merged over time, including which source records contributed to the current golden record. Exportable via the <code>/_crosswalksTree</code> endpoint.</p>
+<p id="glossary-tenant"><strong>Tenant:</strong> An isolated Reltio environment associated with a specific organization or project. Each tenant has its own data, configuration, and users, identified by a unique tenant ID.</p>
 <hr>
 <blockquote class="disclaimer">
-<p><strong>Disclaimer:</strong> This guide was generated with AI assistance using official Reltio documentation as source material. While every effort has been made to ensure accuracy, Reltio product behavior may change between releases. Always verify critical steps against your own Reltio environment and the <a href="https://docs.reltio.com">official documentation</a>. Last validated against documentation dated March 31, 2026.</p>
+<p id="glossary-disclaimer"><strong>Disclaimer:</strong> AI-generated from the Reltio documentation snapshot 2026-05-06 02:14 UTC (3,240 topics). AI output can contain subtle inaccuracies, and the knowledge base syncs twice a week — so the content here may lag <a href="https://docs.reltio.com">docs.reltio.com</a>. Verify anything critical against the official docs and your own tenant. Full disclaimer: <a href="DISCLAIMER.html">DISCLAIMER.md</a>.</p>
 </blockquote>
-<p><em>Guide based on Reltio documentation (March 2026).</em></p>
 
 <script>
   // Click-to-zoom for workflow diagrams — toggle zoomed class on click,

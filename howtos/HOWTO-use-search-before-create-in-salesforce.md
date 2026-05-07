@@ -1,379 +1,200 @@
-# HOWTO: Use Search Before Create in the Reltio Integration for Salesforce
+# HOWTO: Use Search Before Create in Salesforce
 
-A guide to understanding, setting up, and using Search Before Create (SBC) in the Reltio Integration for Salesforce with RIH — so your team searches for existing records before creating new ones, avoiding duplicates across both systems.
+Set up and use Search Before Create (SBC) in the Reltio Integration for Salesforce with RIH to prevent duplicate records by searching Reltio and Salesforce before creating anything new.
 
----
+## Overview
 
-## Table of contents
+This guide covers the end-to-end setup of Search Before Create in the Reltio Integration for Salesforce: installing the managed package, activating the API collection in RIH, creating an API client, and using the SBC search and import workflow day-to-day. It also covers the SBC recipes and the end-user search flow.
 
-1. [What is Search Before Create?](#1-what-is-search-before-create)
-2. [How it works](#2-how-it-works)
-3. [Prerequisites](#3-prerequisites)
-4. [Install the managed package](#4-install-the-managed-package)
-5. [Activate the SBC API collection in RIH](#5-activate-the-sbc-api-collection-in-rih)
-6. [Create an API client and generate a security code](#6-create-an-api-client-and-generate-a-security-code)
-7. [Configure SBC in Salesforce](#7-configure-sbc-in-salesforce)
-8. [Override the New button](#8-override-the-new-button)
-9. [Using SBC day-to-day](#9-using-sbc-day-to-day)
-10. [SBC recipes in RIH](#10-sbc-recipes-in-rih)
-11. [Add a custom field to SBC search](#11-add-a-custom-field-to-sbc-search)
-12. [Import with relations](#12-import-with-relations)
-13. [SBC API reference](#13-sbc-api-reference)
-14. [Troubleshooting](#14-troubleshooting)
-15. [Known limitations](#15-known-limitations)
+**Audience:** Developer, System Administrator
 
----
+## Contents
 
-## Prerequisites
+1. [Getting started](#1-getting-started)
+2. [Install the managed package](#2-install-the-managed-package)
+3. [Activate the SBC API collection in RIH](#3-activate-the-sbc-api-collection-in-rih)
+4. [Create an API client and generate a security code](#4-create-an-api-client-and-generate-a-security-code)
+5. [Search for existing records before creating](#5-search-for-existing-records-before-creating)
+6. [SBC recipes reference](#6-sbc-recipes-reference)
+7. [Glossary](#7-glossary)
 
-| What | Details |
-|------|---------|
-| **Reltio product** | Reltio Entity Resolution, Multidomain MDM, or 360 Data Products |
-| **Integration Hub** | RIH access with `ROLE_INTEGRATION_SPECIALIST` or `ROLE_INTEGRATION_CUSTOMER_ADMIN` |
-| **Salesforce** | Admin access to install managed packages |
-| **Reltio role** | `ROLE_API` (required for SBC) |
-| **Connections** | Active connections to both Salesforce and your Reltio tenant in RIH |
-| **Recipe groups** | Common Functions, Search Before Create, To SFDC Sync/RT Event-Driven, and To Reltio Sync/RT Event-Driven groups must be started |
+## 1. Getting started
 
----
+Search Before Create ([SBC](#glossary)) is a feature in the Reltio Integration for Salesforce that performs a real-time search across both Reltio and Salesforce before a user creates a new Account or Contact. It searches for existing entries in Salesforce, the Reltio Customer Tenant, and the Reltio Data Tenant. The goal is to eliminate duplicate records.
 
-## 1. What is Search Before Create?
-
-Search Before Create (SBC) is a feature in the Reltio Integration for Salesforce that performs a **real-time search across both Reltio and Salesforce** before creating a new record. It searches for existing entries in Salesforce, the Reltio Customer Tenant, and the Reltio Data Tenant.
-
-The goal: **eliminate duplicate records** when users create Accounts or Contacts in Salesforce.
-
-SBC uses RIH recipes to search for records in Salesforce and Reltio, and imports the missing records into Salesforce — so instead of blindly creating a new record, the system first checks whether it already exists somewhere.
-
----
-
-## 2. How it works
-
-When a user clicks **New** on an Account or Contact in Salesforce (with SBC enabled), three things can happen:
+When a user clicks **New** on an Account or Contact in Salesforce with SBC enabled, three outcomes are possible:
 
 | Scenario | What happens |
 |----------|-------------|
-| **Record exists in Salesforce** | SBC finds it in the search results. The user navigates directly to the existing record — no duplicate created. |
-| **Record exists in Reltio but not Salesforce** | SBC finds it in Reltio. The user imports it into Salesforce. The connector adds a Salesforce crosswalk to the Reltio entity. |
-| **Record doesn't exist anywhere** | No results found. The user creates a new record in Salesforce. The connector creates the entity in Reltio and adds a crosswalk. |
+| Record exists in Salesforce | SBC finds it in search results — the user navigates to the existing record, no duplicate created |
+| Record exists in Reltio but not Salesforce | SBC finds it in Reltio — the user can import it into Salesforce; the connector adds a Salesforce [crosswalk](#glossary) to the Reltio entity |
+| Record does not exist anywhere | No results found — the user creates a new record in Salesforce; the connector creates the entity in Reltio and adds a crosswalk |
 
-The search happens in three stages:
+Before you begin setup, confirm you have:
 
-1. **Salesforce records** — searches existing Salesforce data
-2. **Reltio Customer Tenant (CT)** — searches the master data
-3. **Reltio Data Tenant (DT)** — searches data tenant records
-
-Results are displayed with actions: **Preview/Import** for Reltio-sourced records, and **Preview** for Salesforce-sourced records.
-
----
-
-## 3. Prerequisites
-
-Before setting up SBC, make sure you have:
-
-- The Reltio Integration for Salesforce (with RIH) set up with **bidirectional sync** working
-- Active connections to Salesforce and your Reltio tenant in RIH
-- The following recipe groups started:
-  - Common Functions
-  - Search Before Create
-  - To SFDC Sync/RT Event-Driven
-  - To Reltio Sync/RT Event-Driven
-- A Salesforce admin account (to install the managed package)
+- Reltio Integration for Salesforce (with [RIH](#glossary)) already set up with bidirectional sync working
+- Active connections to both Salesforce and your Reltio tenant in RIH
+- The following [recipe](#glossary) groups started in RIH: Common Functions, Search Before Create, To SFDC Sync/RT Event-Driven, and To Reltio Sync/RT Event-Driven
+- Admin access to Salesforce (to install [managed packages](#glossary))
 - A Trailblazer account (for Salesforce AppExchange access)
+- The Reltio role `ROLE_API` (required for SBC)
 
----
+> **Learn more:** [Search Before Create (SBC)](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/reltio-integration-for-salesforce-with-rih-at-a-glance/reltio-integration-for-salesforce-with-rih-set-up/search-before-create-sbc)
 
-## 4. Install the managed package
+## 2. Install the managed package
 
-The SBC feature requires the **Reltio Integration for Salesforce managed package** installed in your Salesforce org.
+The SBC feature requires the Reltio Integration for Salesforce [managed package](#glossary) installed in your Salesforce org.
 
-1. Log in to your **Trailblazer** account.
-2. Go to Salesforce **AppExchange** and search for the Reltio Integration for Salesforce package.
-3. Select **Install for Admins Only**.
-4. Complete the installation.
+**Prerequisites:**
 
-> **Important:** After installation, configure **remote site settings** to allow Salesforce to communicate with the RIH API. Add the Workato URI (`https://apim.workato.com`) to your Salesforce remote site settings.
+- Trailblazer account
+- Salesforce login credentials
+- Admin access to Salesforce AppExchange
+
+**Steps:**
+
+1. In Salesforce Setup, search for AppExchange or use App Launcher, then select **Visit AppExchange**.
+2. In the AppExchange Marketplace, select **Go to AppExchange**.
+3. Log in to your Trailblazer account and select **Continue with Salesforce**.
+4. Search for **Reltio Integration for Salesforce**.
+5. Select it, then click **Get It Now**.
+6. Allow AppExchange to access your Salesforce URL.
+7. In the **Where do you want to install** dialog, select your environment. Reltio recommends installing in a sandbox environment first.
+8. Confirm and select **Install**. Enter your Salesforce credentials when prompted.
+9. Select **Install for Admins Only**.
+10. Complete the installation.
+11. Configure remote site settings to allow Salesforce to communicate with the RIH API. Add the Workato URI (`https://apim.workato.com`) to your Salesforce remote site settings.
+12. Launch **Reltio Integration for Salesforce** and proceed to **Configure Search before Create**.
 
 > **Note:** Non-admin users need the **RIH SBC Other Users** permission set assignment to use SBC.
 
----
+> **Learn more:** [Install the Reltio Integration for Salesforce managed package to enable SBC](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/reltio-integration-for-salesforce-with-rih-at-a-glance/reltio-integration-for-salesforce-with-rih-set-up/search-before-create-sbc/install-the-reltio-integration-for-salesforce-managed-package-to-enable-sbc)
 
-## 5. Activate the SBC API collection in RIH
+## 3. Activate the SBC API collection in RIH
 
-The SBC recipes use an API collection called **SFDC-SBC** that exposes search and import endpoints.
+The SBC [recipes](#glossary) use an [API collection](#glossary) called **SFDC-SBC** that exposes the search and import endpoints. You must activate all endpoints in this collection before configuring SBC in Salesforce.
 
-1. In RIH, go to **API Platform** > **API Collection**.
-2. Find the **SFDC-SBC** collection.
-3. Select **Activate endpoint**.
-4. Copy the generated URL — you'll need it when configuring SBC in Salesforce.
+**Prerequisites:** SBC recipe groups must be started in [RIH](#glossary).
 
-The SFDC-SBC collection includes these endpoints:
+**Steps:**
 
-| Endpoint | Purpose |
-|----------|---------|
-| `SBC-Account-Search` | Search for Account records |
-| `SBC-Account-Import` | Import Account records |
-| `SBC-Contact-Search` | Search for Contact records |
-| `SBC-Contact-Import` | Import Contact records |
+1. In RIH, select **API Platform**.
+2. Select **API Collection** and find **SFDC-SBC**.
+3. For all endpoints in the collection, select **Activate endpoint** from the more options menu.
+4. Select an endpoint to view its details.
+5. In the right pane, select **Copy URL** — you will use this URL when configuring SBC in the Salesforce managed package (SFDC MP).
 
----
+The SFDC-SBC collection includes endpoints for searching and importing both Account and Contact records.
 
-## 6. Create an API client and generate a security code
+> **Learn more:** [Enable Search Before Create](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/reltio-integration-for-salesforce-with-rih-at-a-glance/reltio-integration-for-salesforce-with-rih-set-up/search-before-create-sbc/enable-search-before-create)
 
-SBC needs an API client to authenticate requests between Salesforce and RIH.
+## 4. Create an API client and generate a security code
 
-1. In RIH, go to **API Platform**.
-2. Select **Create API client**.
-3. Set the name to `SBC MP Client`.
-4. Set the profile to `SBC MP Client Profile`.
-5. Set the API collection to **SFDC-SBC**.
-6. **Generate a security code** — copy it. You'll enter this in the Salesforce Control Panel.
+SBC needs an API client in RIH to authenticate requests between Salesforce and RIH. The security code (Auth Token) generated here is entered into the Salesforce Control Panel.
 
----
+**Steps:**
 
-## 7. Configure SBC in Salesforce
+1. In RIH, select **API Platform**, then select **Clients**, then select **Add new client**.
+2. Enter the name: **SBC MP Client**.
+3. Select **Create New Access Profile** and enter the name: **SBC MP Client Profile**.
+4. Under **API Collections to Include**, select **SFDC-SBC**.
+5. Set **Authentication Mode** to **Auth Token**.
+6. Leave the **Policy** field empty.
 
-With the managed package installed, the API collection activated, and the security code generated:
+> **Caution:** If the Policy field is configured, it restricts API access. Leave it empty for standard SBC use.
 
-1. In Salesforce, open the **App Launcher**.
-2. Select **Control Panel** (the Reltio Control Panel).
-3. Select **+NEW** to create a new SBC configuration.
-4. Select the **object** (Account or Contact).
-5. Enter the **Import endpoint URL** (from the SFDC-SBC collection).
-6. Enter the **Search endpoint URL** (from the SFDC-SBC collection).
-7. Enter the **Security code** (generated in the previous step).
-8. Select the **Input fields** — these are the fields users will search by.
-9. Select **Test** to verify the connection.
-10. **Save** the configuration.
+7. Select **Next**. The API client is created.
+8. Select the **API keys** tab, then select **Create API key**, and enter a name.
+9. Leave **Allowed IPs** and **Blocked IPs** empty.
 
-> **Tip:** The search section in the SBC page is generated dynamically from the input mapping. Choose input fields that your users will naturally search by — name, email, phone, etc.
+> **Caution:** If Allowed IPs or Blocked IPs are configured, they limit who can call the API. Leave them empty unless your security requirements specify otherwise.
 
----
+10. Copy the **Auth Token** (Security Code). You will enter this value into the SBC configuration in Salesforce.
 
-## 8. Override the New button
+> **Learn more:** [Enable Search Before Create](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/reltio-integration-for-salesforce-with-rih-at-a-glance/reltio-integration-for-salesforce-with-rih-set-up/search-before-create-sbc/enable-search-before-create)
 
-To make SBC the default experience when users create new records, override the standard **New** button with the SBC component.
+## 5. Search for existing records before creating
 
-1. In Salesforce, go to **Setup** > **Object Manager**.
-2. Select the object (e.g., Account).
-3. Go to **Buttons, Links, and Actions**.
-4. Find the **New** button.
-5. Select **Override** and set it to the SBC component: `rihsbc:SbcObjectFormComponent`.
+Once the [managed package](#glossary) is installed and SBC is configured, this is the end-user workflow for searching before creating a new Account or Contact in Salesforce.
 
-After this, clicking **New** on an Account or Contact opens the SBC search page instead of the standard create form.
+**Steps:**
 
-> **Note:** If the user's search returns no results, a **Create New Account** (or Contact) button appears. The search fields the user already populated carry forward into the creation form — no need to re-enter them.
-
----
-
-## 9. Using SBC day-to-day
-
-Once configured, this is the user experience:
-
-1. In Salesforce, click **New** on an Account or Contact.
-2. The SBC search page opens instead of the standard form.
-3. Enter search criteria (name, email, phone, etc.).
-4. Select **Search**.
-5. Review results from three sources: Salesforce, Reltio CT, and Reltio DT.
-6. Choose an action:
+1. Open the **App Launcher** in Salesforce.
+2. Select **Reltio Integration for Salesforce**.
+3. Select the **Control Panel** tab.
+4. From the **Search objects** tab, select the Salesforce object you want to search (Account or Contact).
+5. Open the list view of the selected object.
+6. Select **New**.
+7. On the **Search Account** (or Search Contact) page, enter your search criteria.
+8. Optionally, select **Configure Search** to choose which fields are displayed in the search form:
+   - Add fields to or remove them from the **Selected fields** column.
+   - Select **Save**.
+9. Enter details in the search fields and select **Search**.
+10. Review the search results from three sources: Salesforce, Reltio CT, and Reltio DT.
+11. Take an action based on the results:
 
 | Result source | Available actions |
 |---------------|-------------------|
-| **Salesforce** | **Preview** — view the existing record and navigate to it |
-| **Reltio CT or DT** | **Preview** — view the record details. **Import** — import it into Salesforce |
-| **No results** | **Create New** — opens the standard creation form with search fields pre-populated |
+| Salesforce | **Preview** — view the existing record and navigate to it |
+| Reltio CT or Reltio DT | **Preview** — view the record details. **Import** — import the record into Salesforce. |
+| Record already exists in Salesforce | **Use This Record** — link to the existing Salesforce record instead of importing. |
+| No results found | **Create New** — opens the standard creation form with the search fields pre-populated. |
 
-When you import a Reltio record into Salesforce, the connector automatically adds a Salesforce crosswalk to the Reltio entity — linking the two records for future sync.
+When you import a Reltio record into Salesforce, the connector automatically adds a Salesforce [crosswalk](#glossary) to the Reltio entity, linking the two records for future sync.
 
----
+> **Learn more:** [Search Before Create (SBC)](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/reltio-integration-for-salesforce-with-rih-at-a-glance/reltio-integration-for-salesforce-with-rih-set-up/search-before-create-sbc)
 
-## 10. SBC recipes in RIH
+## 6. SBC recipes reference
 
-SBC uses a set of prebuilt RIH recipes. Understanding them helps with troubleshooting and customization.
+[SBC](#glossary) uses a set of prebuilt [RIH](#glossary) [recipes](#glossary) to handle search and import operations. Understanding them helps with troubleshooting and customization.
 
-### Trigger recipes
+### Search recipe
 
-| Recipe | Purpose |
-|--------|---------|
-| `SFDC \| API \| SBC - Search Account` | Triggers an Account search via the SBC API |
-| `SFDC \| API \| SBC - Search Contact` | Triggers a Contact search via the SBC API |
-| `SFDC \| API \| SBC - Import Account` | Triggers an Account import via the SBC API |
-| `SFDC \| API \| SBC - Import Contact` | Triggers a Contact import via the SBC API |
+**SFDC | API | SBC - Search Account/Contact**
 
-### Process recipes
+An API endpoint [recipe](#glossary) that searches for accounts or contacts in both Salesforce and Reltio (Organization details).
 
-| Recipe | Purpose |
-|--------|---------|
-| `SFDC \| PROC \| SBC - Search Process for Account` | Converts SBC search parameters into SOQL (for Salesforce) and Reltio search format, searches both systems |
-| `SFDC \| PROC \| SBC - Search Process for Contact` | Same as above, for Contacts |
-| `SFDC \| PROC \| SBC - Import Process for Account - Reltio` | Converts Reltio entity objects to Salesforce Account object model for import |
-| `SFDC \| PROC \| SBC - Import Process for Contact - Reltio` | Same as above, for Contacts |
-
-### Search parameters
-
-The search API trigger recipes accept these parameters:
-
-| Parameter | Description |
-|-----------|-------------|
-| `filter` | Search criteria (e.g., `FirstName:John`) |
-| `recordTypeId` | Salesforce Record Type ID for the object |
+| Input parameter | Description |
+|----------------|-------------|
+| `filter` | SBC search filter criteria |
+| `recordTypeId` | Salesforce Account or Contact record type ID |
 | `test` | Set to `true` to test without creating records |
-| `options` | Comma-separated: `searchByOv`, `useContains`, `useFuzzy`, `useOr`, `useSOSL` |
-| `max` | Maximum results per source (up to 100) |
+| `options` | Comma-separated options: `searchByOv`, `useContains`, `useFuzzy`, `useOr` |
+| `max` | Maximum records per source (up to 100) |
 
-### Import parameters
+Returns: a list of matching records, or an error code.
 
-| Parameter | Description |
-|-----------|-------------|
-| `sourceSystem` | The source system for the import (`ct` or `dt`) |
-| `recordTypeId` | Salesforce Record Type ID |
+### Import recipe
+
+**SFDC | API | SBC - Import Account/Contact**
+
+An API endpoint [recipe](#glossary) that triggers the import of an account or contact object (and its parent objects) from Reltio into Salesforce.
+
+| Input parameter | Description |
+|----------------|-------------|
+| `sourceSystem` | The source system for the import (`ct` for Customer Tenant or `dt` for Data Tenant) |
+| `recordTypeId` | Salesforce Account or Contact record type ID |
 | `test` | Set to `true` for test mode |
-| `sourceSystemEntityID` | The Reltio entity URI to import |
+| `sourceSystemEntityID` | The Reltio entity URI to import (for example, `entities/04rIXee`) |
+
+Returns: information about the imported record and related records, or an error.
+
+> **Learn more:** [Recipes for Search Before Create](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/reltio-integration-for-salesforce-with-rih-at-a-glance/reltio-integration-for-salesforce-with-rih-set-up/search-before-create-sbc/recipes-for-search-before-create)
+
+## 7. Glossary
+
+**API collection:** A named group of related API endpoints in RIH that are managed together for access control and activation. The SFDC-SBC collection contains the Search and Import endpoints for SBC.
+
+**Crosswalk:** A pointer that links a Reltio entity back to its original record in a source system, storing the source system URI and the record's unique ID in that system. When SBC imports a Salesforce record, the connector adds a Salesforce crosswalk to the Reltio entity.
+
+**Managed package:** A Salesforce AppExchange package that bundles components (Apex classes, Lightning components, custom objects) and is installed into a Salesforce org. The Reltio Integration for Salesforce managed package adds the SBC UI and configuration components.
+
+**Recipe:** A prebuilt automation workflow in the Reltio Integration Hub (RIH) that connects Reltio and Salesforce. SBC uses API endpoint recipes to handle search and import requests between the two systems.
+
+**RIH (Reltio Integration Hub):** The Reltio integration platform (built on Workato) that hosts prebuilt recipes for connecting Reltio to external systems such as Salesforce. RIH manages the API collections and clients used by SBC.
+
+**SBC (Search Before Create):** A feature in the Reltio Integration for Salesforce that searches both Reltio and Salesforce for an existing record before a user creates a new one. Prevents duplicate records across both systems. Supported for Account and Contact objects only, with a maximum of 100 results per source.
 
 ---
 
-## 11. Add a custom field to SBC search
-
-To add a field that isn't in the default SBC mapping:
-
-1. In RIH, navigate to **SFDC** > **Search Before Create** > **2-Process**.
-2. Open the **SBC - Search Process** recipe for the relevant object (Account or Contact).
-3. Add the new field to the search mapping.
-4. Save and restart the recipe.
-
-The new field will appear in the SBC search page the next time a user opens it.
-
----
-
-## 12. Import with relations
-
-SBC can import records **with their related objects** — for example, importing a Contact and automatically creating its parent Account if it doesn't exist in Salesforce.
-
-### Enable import with relations
-
-This feature requires managed package version **1.10019 or later**.
-
-1. In the Reltio Control Panel, go to **SBC Basic Settings**.
-2. Enable the **Import with relations** flag.
-
-### How it works
-
-When importing a Reltio record:
-
-1. SBC checks if the related object (e.g., parent Account) already exists in Salesforce by checking crosswalks.
-2. If the related object exists, it links the imported record to it.
-3. If the related object doesn't exist, SBC creates it first, then links the imported record.
-
-This avoids orphaned records and maintains relationship integrity across both systems.
-
----
-
-## 13. SBC API reference
-
-SBC exposes three APIs through the managed package.
-
-### Perform Search
-
-Searches for records in both Salesforce and Reltio.
-
-```
-GET {SbcApiUrl}/{tenant}/{profile}/search
-```
-
-| Parameter | Description |
-|-----------|-------------|
-| `sObject` | Salesforce object type (e.g., `Account`) |
-| `recordTypeId` | Salesforce Record Type ID |
-| `filter` | Search criteria (e.g., `FirstName:John`) |
-| `searchIn` | Where to search: `ct` (Customer Tenant), `dt` (Data Tenant), or both |
-| `select` | Fields to return |
-| `options` | `searchByOv`, `useContains`, `useFuzzy`, `useOr`, `useSOSL` |
-| `max` | Maximum results per source (up to 100) |
-| `sort` | Field to sort by |
-| `order` | Sort order (`asc` or `desc`) |
-
-**Search methods:** The API uses **SOSL** first (if enabled via `useSOSL`), then falls back to **SOQL**.
-
-**Response** contains three arrays:
-
-| Array | Source |
-|-------|--------|
-| `sf` | Salesforce records |
-| `ct` | Reltio Customer Tenant records |
-| `dt` | Reltio Data Tenant records |
-
-### Fuzzy search
-
-Add `useFuzzy` to the options to return results even with typos:
-
-```
-GET {SbcApiUrl}/{tenant}/{profile}/search?searchIn=ct&sObject=Account&recordTypeId={recordTypeId}&filter=FirstName:Ttayana&options=useFuzzy
-```
-
-### Get Input Mapping
-
-Returns the Salesforce fields available for SBC search, including related objects.
-
-```
-GET {SbcApiUrl}/{tenant}/{profile}/inputMappings
-```
-
-Returns fields with their relationship, type, and RecordTypeId.
-
-### Import Entity
-
-Imports a record from Reltio (Customer Tenant or Data Tenant) into Salesforce.
-
-```
-GET {SbcApiUrl}/{tenant}/{profile}/{source}/import
-```
-
-| Parameter | Description |
-|-----------|-------------|
-| `sObject` | Salesforce object type |
-| `recordTypeId` | Salesforce Record Type ID |
-| `uri` | Reltio entity URI to import |
-| `ownerId` | Salesforce owner ID for the imported record |
-
----
-
-## 14. Troubleshooting
-
-| Error | Cause | Fix |
-|-------|-------|-----|
-| **Invalid Cross Reference ID** | An ID field references a record from a different Salesforce org | Check your mapping — make sure IDs match the current Salesforce org |
-| **Salesforce validation error** | A Salesforce Validation Rule is blocking the import | Review the Validation Rules on the object and adjust your mapping or the rule |
-| **Country must be set before setting State** | State/Country picklists require the country first | Use `CountryCode` mapping with ISO 3166 country codes instead of country names |
-| **Field is not writable** | The mapping includes a non-editable Salesforce field | Remove the non-editable field from the `to_salesforce` mapping |
-| **Picklists not appearing for State/Country** | State/Country picklists not configured | Use `CountryCode` and `StateCode` fields with ISO 3166 codes |
-
-### SBC Mappings when sync is to_reltio only
-
-If your sync mapping only has a `to_reltio` section (no `to_salesforce`), SBC mappings still need the `to_salesforce` section because SBC searches by Salesforce fields. Add the `to_salesforce` section with the `sbcOnly` property to support SBC without enabling full outbound sync.
-
----
-
-## 15. Known limitations
-
-- SBC is supported for **Account** and **Contact** objects only.
-- Maximum **100 results per source** (Salesforce, CT, DT) per search.
-- The **Import with relations** feature requires managed package version 1.10019 or later.
-- SBC requires the `ROLE_API` Reltio role.
-- When a Salesforce record creation fails due to detected duplicates, Reltio automatically links the existing Salesforce record to the corresponding Reltio entity by adding the Salesforce crosswalk and retries as an update.
-
----
-
-## Further reading
-
-- [Reltio Integration for Salesforce (with RIH) overview](https://docs.reltio.com/en/applications/integration-hub/reltio-integration-for-salesforce-with-rih/reltio-integration-for-salesforce-with-rih-at-a-glance) — Setup and architecture
-- [Enable Search Before Create](https://docs.reltio.com/en/applications/integration-hub/reltio-integration-for-salesforce-with-rih/enable-search-before-create) — Prerequisites and activation steps
-- [SBC recipes](https://docs.reltio.com/en/applications/integration-hub/reltio-integration-for-salesforce-with-rih/recipes-for-search-before-create) — Prebuilt recipe reference
-- [Install the managed package](https://docs.reltio.com/en/applications/integration-hub/reltio-integration-for-salesforce-with-rih/install-the-reltio-integration-for-salesforce-managed-package-to-enable-sbc) — AppExchange installation steps
-- [Configure SBC](https://docs.reltio.com/en/applications/integration-hub/reltio-integration-for-salesforce-with-rih/configure-search-before-create-rih) — Salesforce-side configuration
-- [SBC API reference](https://docs.reltio.com/en/developer-resources/reltio-managed-package-apis/search-before-create-api) — Perform Search, Get Input Mapping, Import Entity
-
----
-
-> **Disclaimer:** This guide was generated with AI assistance using official Reltio documentation as source material. While every effort has been made to ensure accuracy, Reltio product behavior may change between releases. Always verify critical steps against your own Reltio environment and the [official documentation](https://docs.reltio.com). Last validated against documentation dated March 31, 2026.
-
-*Guide based on Reltio documentation (March 2026).*
+> **Disclaimer:** AI-generated from the Reltio documentation snapshot 2026-05-06 02:14 UTC (3,240 topics). AI output can contain subtle inaccuracies, and the knowledge base syncs twice a week — so the content here may lag [docs.reltio.com](https://docs.reltio.com). Verify anything critical against the official docs and your own tenant. Full disclaimer: [DISCLAIMER.md](../DISCLAIMER.md).
