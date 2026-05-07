@@ -17,6 +17,15 @@ reltio-docs/index.md       ← structured topic index
    howtos/HOWTO-*.md       ← guides you generate (your fork, your content)
    howtos-html/            ← rendered HTML, auto-generated on every commit
 ```
+## Pre-generated guides
+
+This repo ships with a set of pre-generated HOWTOs you can use as reference examples:
+
+- [`howtos/`](howtos/) — Markdown source files
+- [`howtos-html/`](howtos-html/) — Pre-rendered, self-contained HTML
+
+These guides were AI-generated against the official Reltio docs corpus. Regenerate any of them at any time to pick up the latest docs snapshot.
+
 This repo is a **generator kit**. You fork it, open it in Claude Code, and generate HOWTOs tailored to your use cases. The guides your team generates go into your own copy.
 
 > **This repo does not accept pull requests.** Fork it and keep your guides in your own fork.
