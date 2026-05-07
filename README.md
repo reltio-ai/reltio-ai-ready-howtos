@@ -20,6 +20,7 @@ reltio-docs/index.md       ← structured topic index
 This repo is a **generator kit**. You fork it, open it in Claude Code, and generate HOWTOs tailored to your use cases. The guides your team generates go into your own copy.
 
 > **This repo does not accept pull requests.** Fork it and keep your guides in your own fork.
+
 Every guide is generated against the official Reltio docs corpus. If a topic isn't covered in the docs, the generator refuses rather than fabricating content.
 
 ## Quickstart
