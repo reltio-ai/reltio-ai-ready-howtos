@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Load Data into Reltio</title>
+  <style>
+/* Reltio HOWTO — HTML styles
+ * Brand colors:
+ *   Midnight     #000033
+ *   Blue         #000066
+ *   Bright Blue  #0000CC
+ *   Gold         #FFCC00
+ */
+
+:root {
+  --reltio-midnight: #000033;
+  --reltio-blue: #000066;
+  --reltio-bright-blue: #0000CC;
+  --reltio-gold: #FFCC00;
+  --text-primary: #1a1a1a;
+  --text-muted: #555;
+  --border-light: #e1e4e8;
+  --bg-code: #f6f8fa;
+  --bg-callout: #f0f4ff;
+  --bg-disclaimer: #fff8e1;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text-primary);
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 4rem;
+  background: #ffffff;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--reltio-midnight);
+  font-weight: 600;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.25;
+}
+
+h1 {
+  font-size: 2.25rem;
+  border-bottom: 3px solid var(--reltio-gold);
+  padding-bottom: 0.5rem;
+  margin-top: 0;
+}
+
+h2 {
+  font-size: 1.6rem;
+  border-bottom: 1px solid var(--border-light);
+  padding-bottom: 0.3rem;
+  margin-top: 2.5rem;
+}
+
+h3 { font-size: 1.25rem; color: var(--reltio-blue); }
+h4 { font-size: 1.1rem; color: var(--reltio-blue); }
+
+/* Paragraphs and links */
+p { margin: 0.75rem 0; }
+
+a {
+  color: var(--reltio-bright-blue);
+  text-decoration: none;
+}
+a:hover { text-decoration: underline; }
+
+/* Lists */
+ul, ol { padding-left: 1.75rem; margin: 0.75rem 0; }
+li { margin: 0.25rem 0; }
+
+/* Code */
+code {
+  font-family: "SF Mono", Monaco, Consolas, "Liberation Mono", monospace;
+  font-size: 0.9em;
+  background: var(--bg-code);
+  padding: 0.15em 0.4em;
+  border-radius: 3px;
+  color: #d63384;
+}
+
+pre {
+  background: var(--bg-code);
+  border: 1px solid var(--border-light);
+  border-radius: 6px;
+  padding: 1rem;
+  overflow-x: auto;
+  line-height: 1.5;
+  position: relative;
+}
+
+pre .copy-btn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: #ffffff;
+  color: var(--reltio-blue);
+  border: 1px solid var(--border-light);
+  border-radius: 4px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s ease, background 0.15s ease, color 0.15s ease;
+  user-select: none;
+}
+
+pre:hover .copy-btn { opacity: 1; }
+
+pre .copy-btn:hover {
+  background: var(--reltio-blue);
+  color: #ffffff;
+  border-color: var(--reltio-blue);
+}
+
+pre .copy-btn.copied {
+  background: #22863a;
+  color: #ffffff;
+  border-color: #22863a;
+  opacity: 1;
+}
+
+pre code {
+  background: transparent;
+  padding: 0;
+  color: inherit;
+  font-size: 0.875em;
+}
+
+/* Tables */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1rem 0;
+  font-size: 0.95em;
+}
+
+th, td {
+  border: 1px solid var(--border-light);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+th {
+  background: var(--reltio-midnight);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+tr:nth-child(even) td {
+  background: #fafbfc;
+}
+
+/* Blockquotes / callouts */
+blockquote {
+  border-left: 4px solid var(--reltio-bright-blue);
+  background: var(--bg-callout);
+  margin: 1rem 0;
+  padding: 0.75rem 1rem;
+  border-radius: 0 4px 4px 0;
+}
+
+blockquote p { margin: 0.25rem 0; }
+
+/* Disclaimer callout (last blockquote in the doc) */
+blockquote.disclaimer {
+  border-left-color: var(--reltio-gold);
+  background: var(--bg-disclaimer);
+}
+
+/* Horizontal rule */
+hr {
+  border: none;
+  border-top: 1px solid var(--border-light);
+  margin: 2.5rem 0 1.5rem;
+}
+
+/* Mermaid SVG — keep diagrams readable and centered */
+.diagram {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 1.5rem auto;
+  cursor: zoom-in;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.3s ease;
+  transform-origin: center center;
+  border-radius: 4px;
+}
+
+/* Click to enlarge — toggle class via JS; hover does nothing */
+.diagram.zoomed {
+  transform: scale(1.8);
+  box-shadow: 0 20px 60px rgba(0, 0, 51, 0.35);
+  position: relative;
+  z-index: 100;
+  background: #ffffff;
+  cursor: zoom-out;
+}
+
+/* highlight.js — GitHub-like theme, compact */
+.hljs { color: #24292e; background: var(--bg-code); }
+.hljs-comment, .hljs-quote { color: #6a737d; font-style: italic; }
+.hljs-keyword, .hljs-selector-tag { color: #d73a49; }
+.hljs-string, .hljs-attr { color: #032f62; }
+.hljs-number, .hljs-literal { color: #005cc5; }
+.hljs-title, .hljs-name { color: #6f42c1; }
+.hljs-section, .hljs-type { color: #22863a; }
+.hljs-tag { color: #22863a; }
+.hljs-built_in, .hljs-builtin-name { color: #e36209; }
+
+/* Footer banner (appears on index.html only) */
+.site-header {
+  border-bottom: 3px solid var(--reltio-gold);
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.site-header .subtitle {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-top: 0.25rem;
+}
+
+/* Glossary term — inline hover tooltip */
+.glossary-term {
+  border-bottom: 1px dashed var(--reltio-blue);
+  cursor: help;
+  position: relative;
+  white-space: nowrap;
+}
+
+.glossary-term::after {
+  content: attr(data-def);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  padding: 0.6rem 0.85rem;
+  background: var(--bg-callout);
+  color: var(--text-primary);
+  border: 1px dashed var(--reltio-bright-blue);
+  font-size: 0.82rem;
+  font-weight: 400;
+  line-height: 1.45;
+  border-radius: 5px;
+  box-shadow: 0 4px 14px rgba(0, 0, 204, 0.12);
+  white-space: normal;
+  text-align: left;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  z-index: 200;
+}
+
+.glossary-term:hover::after { opacity: 1; }
+
+/* Print */
+@media print {
+  body { max-width: none; padding: 1rem; }
+  a { color: var(--text-primary); text-decoration: none; }
+  pre, blockquote { page-break-inside: avoid; }
+}
+
+  </style>
+</head>
+<body>
+<h1 id="howto-load-data-into-reltio">HOWTO: Load Data into Reltio</h1>
+<p>A practical, step-by-step guide to loading your first data into a Reltio tenant — from preparing your file to verifying the results.</p>
+<hr>
+<h2 id="table-of-contents">Table of Contents</h2>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>What You&#39;ll Do</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="#step-1-understand-what-the-data-loader-does">1</a></td>
+<td>Understand what the Data Loader does</td>
+</tr>
+<tr>
+<td><a href="#step-2-prepare-your-data-file">2</a></td>
+<td>Prepare your data file</td>
+</tr>
+<tr>
+<td><a href="#step-3-set-up-crosswalks">3</a></td>
+<td>Set up crosswalks so Reltio can track your records</td>
+</tr>
+<tr>
+<td><a href="#step-4-load-entities-via-the-api">4</a></td>
+<td>Load entities via the API</td>
+</tr>
+<tr>
+<td><a href="#step-5-load-entities-via-the-console-ui">5</a></td>
+<td>Load entities via the Console UI</td>
+</tr>
+<tr>
+<td><a href="#step-6-map-your-columns-to-attributes">6</a></td>
+<td>Map your file columns to Reltio attributes</td>
+</tr>
+<tr>
+<td><a href="#step-7-consolidate-multiple-records-into-one-entity">7</a></td>
+<td>Consolidate multiple records into one entity</td>
+</tr>
+<tr>
+<td><a href="#step-8-load-relationships">8</a></td>
+<td>Load relationships between entities</td>
+</tr>
+<tr>
+<td><a href="#step-9-monitor-your-job-and-handle-errors">9</a></td>
+<td>Monitor your job and handle errors</td>
+</tr>
+<tr>
+<td><a href="#step-10-verify-the-loaded-data">10</a></td>
+<td>Verify the loaded data</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="prerequisites">Prerequisites</h2>
+<h3 id="1-a-configured-tenant">1. A configured tenant</h3>
+<p>You need a Reltio tenant with entity types already defined. If you followed the <a href="HOWTO-SETUP-for-top-10-reltio-apis.html">Top 10 APIs setup</a>, you already have <code>Individual</code> and <code>Organization</code> entity types.</p>
+<h3 id="2-an-access-token">2. An access token</h3>
+<p>All API calls need a Bearer token. See <a href="HOWTO-authenticate-and-use-reltio-apis.html">HOWTO: Authenticate</a> to get one.</p>
+<pre><code class="language-bash hljs"><span class="hljs-built_in">export</span> TOKEN=<span class="hljs-string">&quot;your_access_token&quot;</span>
+<span class="hljs-built_in">export</span> TENANT=<span class="hljs-string">&quot;https://na07-prod.reltio.com/reltio/api/YOUR_TENANT_ID&quot;</span></code></pre>
+<h3 id="3-tools">3. Tools</h3>
+<ul>
+<li><code>curl</code> for API calls</li>
+<li><code>jq</code> for readable JSON output (<code>brew install jq</code> / <code>apt install jq</code>)</li>
+<li>Access to the Reltio Console UI (for Steps 5-6)</li>
+</ul>
+<hr>
+<h2 id="step-1-understand-what-the-data-loader-does">Step 1: Understand What the Data Loader Does</h2>
+<p>The Data Loader takes records from a file (CSV, Excel, or JSON), maps them to your tenant&#39;s entity types and attributes, and creates entities in Reltio. Each record gets a <strong>crosswalk</strong> — a pointer back to its source system — so Reltio always knows where the data came from.</p>
+<p>You can load:</p>
+<ul>
+<li><strong>Entities</strong> (e.g., customers, organizations)</li>
+<li><strong>Relationships</strong> (e.g., &quot;Jane works at Acme Corp&quot;)</li>
+<li><strong>Interactions</strong> (e.g., transactions, events — requires Reltio Intelligent 360)</li>
+</ul>
+<p>There are two ways to load data:</p>
+<ol>
+<li><strong>API</strong> — POST entities directly (best for automation and pipelines)</li>
+<li><strong>Console UI</strong> — upload a file through the Data Loader interface (best for one-off loads and business users)</li>
+</ol>
+<hr>
+<h2 id="step-2-prepare-your-data-file">Step 2: Prepare Your Data File</h2>
+<h3 id="supported-file-formats">Supported file formats</h3>
+<table>
+<thead>
+<tr>
+<th>Format</th>
+<th>Max Size (Local Upload)</th>
+<th>Max Size (Remote/Cloud)</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>CSV</strong></td>
+<td>50 MB</td>
+<td>No limit (10 GB with consolidation)</td>
+<td>Must follow RFC 4180 standard</td>
+</tr>
+<tr>
+<td><strong>MS Excel</strong></td>
+<td>50 MB</td>
+<td>No limit (10 GB with consolidation)</td>
+<td><code>.xlsx</code> format</td>
+</tr>
+<tr>
+<td><strong>JSON</strong></td>
+<td>No limit</td>
+<td>No limit (10 GB with consolidation)</td>
+<td>Standard Reltio JSON structure</td>
+</tr>
+<tr>
+<td><strong>RELTIO_JSON</strong></td>
+<td>No limit</td>
+<td>No limit</td>
+<td>Skips transformation — raw Reltio format</td>
+</tr>
+</tbody></table>
+<h3 id="supported-remote-sources">Supported remote sources</h3>
+<p>If your file is larger than 50 MB, upload it to one of these cloud locations first:</p>
+<ul>
+<li>Amazon S3</li>
+<li>Google Cloud Storage (GCP)</li>
+<li>Microsoft Azure Blob Storage</li>
+<li>SFTP</li>
+</ul>
+<h3 id="example-csv-file">Example CSV file</h3>
+<p>Here&#39;s a simple CSV for loading Individual entities:</p>
+<pre><code class="language-csv hljs">SourceID,FirstName,LastName,Email
+CRM<span class="hljs-number">-001</span>,Jane,Smith,jane.<span class="hljs-symbol">smith@</span>example.com
+CRM<span class="hljs-number">-002</span>,John,Doe,john.<span class="hljs-symbol">doe@</span>example.com
+CRM<span class="hljs-number">-003</span>,Maria,Garcia,maria.<span class="hljs-symbol">garcia@</span>example.com</code></pre>
+<blockquote>
+<p><strong>Important:</strong> Reltio automatically trims leading/trailing spaces, tabs, and newlines from values (except for RELTIO_JSON format). You don&#39;t need to clean whitespace yourself.</p>
+</blockquote>
+<hr>
+<h2 id="step-3-set-up-crosswalks">Step 3: Set Up Crosswalks</h2>
+<p>Every record you load must have a <strong>crosswalk</strong> — this is how Reltio tracks which source system a record came from and what its ID is in that system.</p>
+<p>A crosswalk has two required fields:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>What It Is</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Type</strong></td>
+<td>The source system URI from your tenant config</td>
+<td><code>configuration/sources/CRM</code></td>
+</tr>
+<tr>
+<td><strong>Value</strong></td>
+<td>The unique record ID in that source system</td>
+<td><code>CRM-001</code></td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><strong>Rule of thumb:</strong> If you&#39;re loading 10,000+ records, crosswalks are <strong>mandatory</strong>. For smaller loads, Reltio generates a default crosswalk, but you should always provide your own for traceability.</p>
+</blockquote>
+<h3 id="why-crosswalks-matter">Why crosswalks matter</h3>
+<ul>
+<li>They let you look up entities by source system ID later (<code>GET /entities?filter=equals(crosswalks.value,&#39;CRM-001&#39;)</code>)</li>
+<li>They prevent duplicates — if you load the same crosswalk twice, Reltio updates the existing entity instead of creating a new one</li>
+<li>They enable the <strong>upsert pattern</strong>: load once to create, load again to update</li>
+</ul>
+<hr>
+<h2 id="step-4-load-entities-via-the-api">Step 4: Load Entities via the API</h2>
+<p><strong>API:</strong> <code>POST {TenantURL}/entities</code></p>
+<p>This is the programmatic way to load data — ideal for integrations and automated pipelines.</p>
+<h3 id="load-a-single-entity">Load a single entity</h3>
+<pre><code class="language-bash hljs">curl -s -X POST <span class="hljs-string">&quot;<span class="hljs-variable">${TENANT}</span>/entities&quot;</span> \
+  -H <span class="hljs-string">&quot;Authorization: Bearer <span class="hljs-variable">${TOKEN}</span>&quot;</span> \
+  -H <span class="hljs-string">&quot;Content-Type: application/json&quot;</span> \
+  -d <span class="hljs-string">&#x27;[
+    {
+      &quot;type&quot;: &quot;configuration/entityTypes/Individual&quot;,
+      &quot;attributes&quot;: {
+        &quot;FirstName&quot;: [{ &quot;value&quot;: &quot;Jane&quot; }],
+        &quot;LastName&quot;: [{ &quot;value&quot;: &quot;Smith&quot; }],
+        &quot;Email&quot;: [{ &quot;value&quot;: &quot;jane.smith@example.com&quot; }]
+      },
+      &quot;crosswalks&quot;: [
+        {
+          &quot;type&quot;: &quot;configuration/sources/CRM&quot;,
+          &quot;value&quot;: &quot;CRM-001&quot;
+        }
+      ]
+    }
+  ]&#x27;</span> | jq .</code></pre>
+<h3 id="response">Response</h3>
+<pre><code class="language-json hljs"><span class="hljs-punctuation">[</span>
+  <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">&quot;uri&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;entities/abc123&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;configuration/entityTypes/Individual&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;crosswalks&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
+      <span class="hljs-punctuation">{</span>
+        <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;configuration/sources/CRM&quot;</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;value&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;CRM-001&quot;</span>
+      <span class="hljs-punctuation">}</span>
+    <span class="hljs-punctuation">]</span>
+  <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">]</span></code></pre>
+<h3 id="load-a-batch-of-entities">Load a batch of entities</h3>
+<p>The body is always a JSON array — you can include up to <strong>1,000 entities per request</strong>:</p>
+<pre><code class="language-bash hljs">curl -s -X POST <span class="hljs-string">&quot;<span class="hljs-variable">${TENANT}</span>/entities&quot;</span> \
+  -H <span class="hljs-string">&quot;Authorization: Bearer <span class="hljs-variable">${TOKEN}</span>&quot;</span> \
+  -H <span class="hljs-string">&quot;Content-Type: application/json&quot;</span> \
+  -d <span class="hljs-string">&#x27;[
+    {
+      &quot;type&quot;: &quot;configuration/entityTypes/Individual&quot;,
+      &quot;attributes&quot;: {
+        &quot;FirstName&quot;: [{ &quot;value&quot;: &quot;Jane&quot; }],
+        &quot;LastName&quot;: [{ &quot;value&quot;: &quot;Smith&quot; }],
+        &quot;Email&quot;: [{ &quot;value&quot;: &quot;jane.smith@example.com&quot; }]
+      },
+      &quot;crosswalks&quot;: [{ &quot;type&quot;: &quot;configuration/sources/CRM&quot;, &quot;value&quot;: &quot;CRM-001&quot; }]
+    },
+    {
+      &quot;type&quot;: &quot;configuration/entityTypes/Individual&quot;,
+      &quot;attributes&quot;: {
+        &quot;FirstName&quot;: [{ &quot;value&quot;: &quot;John&quot; }],
+        &quot;LastName&quot;: [{ &quot;value&quot;: &quot;Doe&quot; }],
+        &quot;Email&quot;: [{ &quot;value&quot;: &quot;john.doe@example.com&quot; }]
+      },
+      &quot;crosswalks&quot;: [{ &quot;type&quot;: &quot;configuration/sources/CRM&quot;, &quot;value&quot;: &quot;CRM-002&quot; }]
+    },
+    {
+      &quot;type&quot;: &quot;configuration/entityTypes/Individual&quot;,
+      &quot;attributes&quot;: {
+        &quot;FirstName&quot;: [{ &quot;value&quot;: &quot;Maria&quot; }],
+        &quot;LastName&quot;: [{ &quot;value&quot;: &quot;Garcia&quot; }],
+        &quot;Email&quot;: [{ &quot;value&quot;: &quot;maria.garcia@example.com&quot; }]
+      },
+      &quot;crosswalks&quot;: [{ &quot;type&quot;: &quot;configuration/sources/CRM&quot;, &quot;value&quot;: &quot;CRM-003&quot; }]
+    }
+  ]&#x27;</span> | jq .</code></pre>
+<h3 id="key-rules">Key rules</h3>
+<ul>
+<li><strong>The body is always an array</strong> — even for a single entity, wrap it in <code>[ ]</code></li>
+<li><strong>Max 1,000 entities per POST</strong> — for larger loads, split into batches</li>
+<li><strong>Max 50 MB per request body</strong> — exceeding this returns a <code>413 Payload Too Large</code> error</li>
+<li><strong>Attributes are always arrays of objects</strong> — <code>&quot;FirstName&quot;: [{ &quot;value&quot;: &quot;Jane&quot; }]</code>, not <code>&quot;FirstName&quot;: &quot;Jane&quot;</code></li>
+</ul>
+<h3 id="what-can-go-wrong">What can go wrong</h3>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Cause</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>401</code></td>
+<td>Token expired</td>
+<td>Get a fresh token</td>
+</tr>
+<tr>
+<td><code>400</code></td>
+<td>Invalid entity type or attribute</td>
+<td>Check your type path matches the tenant configuration</td>
+</tr>
+<tr>
+<td><code>413</code></td>
+<td>Request body too large</td>
+<td>Split into smaller batches (&lt; 50 MB)</td>
+</tr>
+<tr>
+<td><code>429</code></td>
+<td>Rate limit exceeded</td>
+<td>Add a delay between requests; implement exponential backoff</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="step-5-load-entities-via-the-console-ui">Step 5: Load Entities via the Console UI</h2>
+<p>If you prefer a visual workflow or you&#39;re doing a one-off data load, the Console Data Loader is the way to go.</p>
+<h3 id="the-workflow">The workflow</h3>
+<ol>
+<li><strong>Log in</strong> to the Reltio Console</li>
+<li>Navigate to <strong>Data Loader</strong> in the left sidebar</li>
+<li><strong>Create a new job</strong> (or duplicate an existing one)</li>
+<li><strong>Select your input file</strong> — upload from your computer (&lt; 50 MB) or connect to S3/GCS/Azure/SFTP</li>
+<li><strong>Select the source system</strong> — this determines the crosswalk type (e.g., CRM, ERP)</li>
+<li><strong>Define your mapping</strong> — map file columns to entity attributes (see Step 6)</li>
+<li><strong>Choose your update preference</strong> — create new entities, update existing, or upsert</li>
+<li><strong>Analyze</strong> (optional) — preview key metrics from your file before loading</li>
+<li><strong>Start the load</strong></li>
+<li><strong>Review results</strong> — check completion metrics and any errors</li>
+</ol>
+<blockquote>
+<p><strong>Tip:</strong> You can only load one data type per job (entities, relationships, or interactions). Create separate jobs for each type.</p>
+</blockquote>
+<hr>
+<h2 id="step-6-map-your-columns-to-attributes">Step 6: Map Your Columns to Attributes</h2>
+<p>When using the Console Data Loader, you need to tell Reltio which columns in your file correspond to which entity attributes.</p>
+<h3 id="manual-mapping">Manual mapping</h3>
+<p>For each column in your file, select the corresponding Reltio attribute:</p>
+<table>
+<thead>
+<tr>
+<th>File Column</th>
+<th>Maps To</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>SourceID</code></td>
+<td>Crosswalk &gt; Value</td>
+</tr>
+<tr>
+<td><code>FirstName</code></td>
+<td><code>configuration/entityTypes/Individual/attributes/FirstName</code></td>
+</tr>
+<tr>
+<td><code>LastName</code></td>
+<td><code>configuration/entityTypes/Individual/attributes/LastName</code></td>
+</tr>
+<tr>
+<td><code>Email</code></td>
+<td><code>configuration/entityTypes/Individual/attributes/Email</code></td>
+</tr>
+</tbody></table>
+<h3 id="ai-automapping-if-enabled">AI automapping (if enabled)</h3>
+<p>If your tenant has <code>agentsConfig.aiEnabled: true</code>, you can use the <strong>AI Automapping API</strong> to get mapping suggestions automatically:</p>
+<pre><code class="language-bash hljs">curl -s -X POST <span class="hljs-string">&quot;<span class="hljs-variable">${DL_HOST}</span>/api/ai/<span class="hljs-variable">${TENANT_ID}</span>/map&quot;</span> \
+  -H <span class="hljs-string">&quot;Authorization: Bearer <span class="hljs-variable">${TOKEN}</span>&quot;</span> \
+  -H <span class="hljs-string">&quot;Content-Type: application/json&quot;</span> \
+  -d <span class="hljs-string">&#x27;{
+    &quot;entityTypeUri&quot;: &quot;configuration/entityTypes/Individual&quot;,
+    &quot;headers&quot;: [&quot;SourceID&quot;, &quot;FirstName&quot;, &quot;LastName&quot;, &quot;Email&quot;],
+    &quot;sampleData&quot;: [
+      [&quot;CRM-001&quot;, &quot;Jane&quot;, &quot;Smith&quot;, &quot;jane.smith@example.com&quot;],
+      [&quot;CRM-002&quot;, &quot;John&quot;, &quot;Doe&quot;, &quot;john.doe@example.com&quot;]
+    ]
+  }&#x27;</span> | jq .</code></pre>
+<p>The API returns suggestions with confidence levels (high or medium). Review them before accepting.</p>
+<h3 id="advanced-crosswalk-settings">Advanced crosswalk settings</h3>
+<p>When mapping crosswalks, you can also configure:</p>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Source table</strong></td>
+<td>Sub-categorize records within a source</td>
+</tr>
+<tr>
+<td><strong>External info</strong></td>
+<td>Attach metadata to the crosswalk</td>
+</tr>
+<tr>
+<td><strong>Create date</strong></td>
+<td>Override the entity creation timestamp</td>
+</tr>
+<tr>
+<td><strong>Update date</strong></td>
+<td>Override the entity update timestamp</td>
+</tr>
+<tr>
+<td><strong>Delete date</strong></td>
+<td>Mark the crosswalk as deleted</td>
+</tr>
+<tr>
+<td><strong>Data Provider</strong></td>
+<td>Mark source as authoritative (selected by default)</td>
+</tr>
+<tr>
+<td><strong>Contributor Provider</strong></td>
+<td>Mark source as supplementary</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="step-7-consolidate-multiple-records-into-one-entity">Step 7: Consolidate Multiple Records into One Entity</h2>
+<p>By default, the Data Loader creates one entity per row. But what if your file has multiple rows for the same person — say, two addresses for the same customer?</p>
+<h3 id="how-consolidation-works">How consolidation works</h3>
+<p>If two rows share the same <strong>crosswalk value</strong>, Reltio merges them into a single entity with multi-value attributes:</p>
+<p><strong>Input file:</strong></p>
+<table>
+<thead>
+<tr>
+<th>SourceID</th>
+<th>FirstName</th>
+<th>LastName</th>
+<th>Email</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CRM-001</td>
+<td>Jane</td>
+<td>Smith</td>
+<td><a href="mailto:jane.smith@work.com">jane.smith@work.com</a></td>
+</tr>
+<tr>
+<td>CRM-001</td>
+<td>Jane</td>
+<td>Smith</td>
+<td><a href="mailto:jane.smith@personal.com">jane.smith@personal.com</a></td>
+</tr>
+</tbody></table>
+<p><strong>Result:</strong> One entity with crosswalk <code>CRM-001</code> and two Email values.</p>
+<h3 id="enable-consolidation">Enable consolidation</h3>
+<p><strong>Via API:</strong> Add <code>groupingEnabled: true</code> to your data load job configuration.</p>
+<p><strong>Via Console UI:</strong> Toggle &quot;Consolidate records with same crosswalk value&quot; when creating the job.</p>
+<h3 id="limitations">Limitations</h3>
+<ul>
+<li>Works with <strong>CSV and Excel only</strong> (not RELTIO_JSON)</li>
+<li>Max file size: <strong>10 GB</strong></li>
+<li>If a single entity accumulates more than <strong>10,000 attribute values</strong> during consolidation, the job fails with an ERROR status</li>
+</ul>
+<hr>
+<h2 id="step-8-load-relationships">Step 8: Load Relationships</h2>
+<p><strong>API:</strong> <code>POST {TenantURL}/relations</code></p>
+<p>Once you&#39;ve loaded entities, you can create relationships between them. You need the entity URIs from Step 4.</p>
+<h3 id="example-create-an-employment-relationship">Example: Create an Employment relationship</h3>
+<pre><code class="language-bash hljs">curl -s -X POST <span class="hljs-string">&quot;<span class="hljs-variable">${TENANT}</span>/relations&quot;</span> \
+  -H <span class="hljs-string">&quot;Authorization: Bearer <span class="hljs-variable">${TOKEN}</span>&quot;</span> \
+  -H <span class="hljs-string">&quot;Content-Type: application/json&quot;</span> \
+  -d <span class="hljs-string">&#x27;[
+    {
+      &quot;type&quot;: &quot;configuration/relationTypes/Employment&quot;,
+      &quot;startObject&quot;: {
+        &quot;objectURI&quot;: &quot;entities/abc123&quot;
+      },
+      &quot;endObject&quot;: {
+        &quot;objectURI&quot;: &quot;entities/def456&quot;
+      },
+      &quot;attributes&quot;: {
+        &quot;Title&quot;: [{ &quot;value&quot;: &quot;Software Engineer&quot; }]
+      },
+      &quot;crosswalks&quot;: [
+        {
+          &quot;type&quot;: &quot;configuration/sources/CRM&quot;,
+          &quot;value&quot;: &quot;REL-001&quot;
+        }
+      ]
+    }
+  ]&#x27;</span> | jq .</code></pre>
+<h3 id="via-the-console-ui">Via the Console UI</h3>
+<p>Loading relationships through the Data Loader requires a file with columns for:</p>
+<ul>
+<li><strong>Start entity crosswalk</strong> (the &quot;from&quot; entity)</li>
+<li><strong>End entity crosswalk</strong> (the &quot;to&quot; entity)</li>
+<li><strong>Relationship attributes</strong> (e.g., Title, StartDate)</li>
+</ul>
+<blockquote class="disclaimer">
+<p><strong>Important:</strong> Load your entities first, then your relationships. The entities must exist before you can link them.</p>
+</blockquote>
+<hr>
+<h2 id="step-9-monitor-your-job-and-handle-errors">Step 9: Monitor Your Job and Handle Errors</h2>
+<h3 id="job-statuses">Job statuses</h3>
+<table>
+<thead>
+<tr>
+<th>Status</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>SCHEDULED</code></td>
+<td>Job is queued, waiting to run</td>
+</tr>
+<tr>
+<td><code>RUNNING</code></td>
+<td>Job is actively processing</td>
+</tr>
+<tr>
+<td><code>COMPLETED</code></td>
+<td>All records loaded successfully</td>
+</tr>
+<tr>
+<td><code>COMPLETED_WITH_ERRORS</code></td>
+<td>Some records failed — check the error file</td>
+</tr>
+<tr>
+<td><code>STOPPED</code></td>
+<td>Job was stopped due to error threshold or manual intervention</td>
+</tr>
+<tr>
+<td><code>ERROR</code></td>
+<td>Job failed entirely</td>
+</tr>
+</tbody></table>
+<h3 id="error-threshold">Error threshold</h3>
+<p>By default, if more than <strong>15%</strong> of records fail (for loads of 10,000+ records), the job is stopped. This prevents bad data from flooding your tenant.</p>
+<h3 id="download-error-files">Download error files</h3>
+<p>Error files are available as a ZIP download containing CSV files. Each file includes:</p>
+<ul>
+<li>All the original input attributes</li>
+<li>An error message column explaining what went wrong</li>
+</ul>
+<p>Each error file contains a maximum of 1,000 records.</p>
+<h3 id="job-priority">Job priority</h3>
+<p>If you have multiple loads queued, you can control the order:</p>
+<table>
+<thead>
+<tr>
+<th>Priority</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>High</strong></td>
+<td>Runs before Normal and Low jobs</td>
+</tr>
+<tr>
+<td><strong>Normal</strong> (default)</td>
+<td>Standard processing order</td>
+</tr>
+<tr>
+<td><strong>Low</strong></td>
+<td>Runs after all High and Normal jobs</td>
+</tr>
+</tbody></table>
+<p>Jobs with the same priority are processed in creation order (FIFO).</p>
+<p>You can also <strong>pause and resume</strong> active jobs — useful if you need to reprioritize.</p>
+<hr>
+<h2 id="step-10-verify-the-loaded-data">Step 10: Verify the Loaded Data</h2>
+<p>After your load completes, confirm the data landed correctly.</p>
+<h3 id="search-for-your-entities">Search for your entities</h3>
+<pre><code class="language-bash hljs">curl -s -X GET <span class="hljs-string">&quot;<span class="hljs-variable">${TENANT}</span>/entities?filter=equals(type,&#x27;configuration/entityTypes/Individual&#x27;)&amp;max=5&quot;</span> \
+  -H <span class="hljs-string">&quot;Authorization: Bearer <span class="hljs-variable">${TOKEN}</span>&quot;</span> | jq <span class="hljs-string">&#x27;.[] | {uri, type, FirstName: .attributes.FirstName[0].value, LastName: .attributes.LastName[0].value}&#x27;</span></code></pre>
+<h3 id="look-up-a-specific-entity-by-crosswalk">Look up a specific entity by crosswalk</h3>
+<pre><code class="language-bash hljs">curl -s -X GET <span class="hljs-string">&quot;<span class="hljs-variable">${TENANT}</span>/entities?filter=equals(crosswalks.value,&#x27;CRM-001&#x27;)&quot;</span> \
+  -H <span class="hljs-string">&quot;Authorization: Bearer <span class="hljs-variable">${TOKEN}</span>&quot;</span> | jq .</code></pre>
+<h3 id="check-entity-count">Check entity count</h3>
+<pre><code class="language-bash hljs">curl -s -X GET <span class="hljs-string">&quot;<span class="hljs-variable">${TENANT}</span>/entities?filter=equals(type,&#x27;configuration/entityTypes/Individual&#x27;)&amp;count=true&amp;max=0&quot;</span> \
+  -H <span class="hljs-string">&quot;Authorization: Bearer <span class="hljs-variable">${TOKEN}</span>&quot;</span> | jq .</code></pre>
+<h3 id="what-to-check">What to check</h3>
+<ul>
+<li><strong>Entity count</strong> matches your expected number of records</li>
+<li><strong>Attribute values</strong> are correct (not truncated, correctly typed)</li>
+<li><strong>Crosswalks</strong> are present and point to the right source</li>
+<li><strong>Relationships</strong> link the correct entities (if applicable)</li>
+</ul>
+<hr>
+<h2 id="quick-reference">Quick Reference</h2>
+<h3 id="api-endpoints">API Endpoints</h3>
+<table>
+<thead>
+<tr>
+<th>Operation</th>
+<th>Method</th>
+<th>Endpoint</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Load entities</td>
+<td><code>POST</code></td>
+<td><code>{TenantURL}/entities</code></td>
+</tr>
+<tr>
+<td>Load relationships</td>
+<td><code>POST</code></td>
+<td><code>{TenantURL}/relations</code></td>
+</tr>
+<tr>
+<td>Search entities</td>
+<td><code>GET</code></td>
+<td><code>{TenantURL}/entities?filter=...</code></td>
+</tr>
+<tr>
+<td>Crosswalk lookup</td>
+<td><code>GET</code></td>
+<td><code>{TenantURL}/entities?filter=equals(crosswalks.value,&#39;...&#39;)</code></td>
+</tr>
+</tbody></table>
+<h3 id="limits">Limits</h3>
+<table>
+<thead>
+<tr>
+<th>What</th>
+<th>Limit</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Entities per POST</td>
+<td>1,000</td>
+</tr>
+<tr>
+<td>POST body size</td>
+<td>50 MB</td>
+</tr>
+<tr>
+<td>Local file upload</td>
+<td>50 MB</td>
+</tr>
+<tr>
+<td>Consolidation file size</td>
+<td>10 GB</td>
+</tr>
+<tr>
+<td>Error threshold (default)</td>
+<td>15%</td>
+</tr>
+<tr>
+<td>Max values per entity during consolidation</td>
+<td>10,000</td>
+</tr>
+<tr>
+<td>Large dataset auto-optimization</td>
+<td>10M+ rows</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="further-reading">Further Reading</h2>
+<ul>
+<li><a href="HOWTO-authenticate-and-use-reltio-apis.html">HOWTO: Authenticate with Reltio</a> — Get your access token</li>
+<li><a href="HOWTO-top-10-reltio-apis.html">HOWTO: Top 10 Reltio APIs</a> — Work with entities after loading</li>
+<li><a href="https://docs.reltio.com">Reltio Official Documentation</a> — Full Data Loader reference</li>
+</ul>
+<p><em>Guide based on Reltio documentation (March 2026).</em></p>
+
+<script>
+  // Click-to-zoom for workflow diagrams — toggle zoomed class on click,
+  // dismiss on second click or by clicking anywhere outside the diagram.
+  document.querySelectorAll('.diagram').forEach(function (img) {
+    img.addEventListener('click', function (e) {
+      e.stopPropagation();
+      img.classList.toggle('zoomed');
+    });
+  });
+  document.addEventListener('click', function () {
+    document.querySelectorAll('.diagram.zoomed').forEach(function (img) {
+      img.classList.remove('zoomed');
+    });
+  });
+
+  // Copy button — top-right of every code block.
+  var ICON_COPY = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+  var ICON_CHECK = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>';
+  document.querySelectorAll('pre').forEach(function (pre) {
+    var btn = document.createElement('button');
+    btn.className = 'copy-btn';
+    btn.setAttribute('aria-label', 'Copy code');
+    btn.innerHTML = ICON_COPY;
+    pre.appendChild(btn);
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var code = pre.querySelector('code');
+      var text = code ? code.innerText : pre.innerText;
+      navigator.clipboard.writeText(text).then(function () {
+        btn.innerHTML = ICON_CHECK;
+        btn.classList.add('copied');
+        setTimeout(function () {
+          btn.innerHTML = ICON_COPY;
+          btn.classList.remove('copied');
+        }, 1500);
+      });
+    });
+  });
+</script>
+</body>
+</html>

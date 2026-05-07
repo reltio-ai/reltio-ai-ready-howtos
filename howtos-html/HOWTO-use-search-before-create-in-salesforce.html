@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Use Search Before Create in the Reltio Integration for Salesforce</title>
+  <style>
+/* Reltio HOWTO — HTML styles
+ * Brand colors:
+ *   Midnight     #000033
+ *   Blue         #000066
+ *   Bright Blue  #0000CC
+ *   Gold         #FFCC00
+ */
+
+:root {
+  --reltio-midnight: #000033;
+  --reltio-blue: #000066;
+  --reltio-bright-blue: #0000CC;
+  --reltio-gold: #FFCC00;
+  --text-primary: #1a1a1a;
+  --text-muted: #555;
+  --border-light: #e1e4e8;
+  --bg-code: #f6f8fa;
+  --bg-callout: #f0f4ff;
+  --bg-disclaimer: #fff8e1;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text-primary);
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 4rem;
+  background: #ffffff;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--reltio-midnight);
+  font-weight: 600;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.25;
+}
+
+h1 {
+  font-size: 2.25rem;
+  border-bottom: 3px solid var(--reltio-gold);
+  padding-bottom: 0.5rem;
+  margin-top: 0;
+}
+
+h2 {
+  font-size: 1.6rem;
+  border-bottom: 1px solid var(--border-light);
+  padding-bottom: 0.3rem;
+  margin-top: 2.5rem;
+}
+
+h3 { font-size: 1.25rem; color: var(--reltio-blue); }
+h4 { font-size: 1.1rem; color: var(--reltio-blue); }
+
+/* Paragraphs and links */
+p { margin: 0.75rem 0; }
+
+a {
+  color: var(--reltio-bright-blue);
+  text-decoration: none;
+}
+a:hover { text-decoration: underline; }
+
+/* Lists */
+ul, ol { padding-left: 1.75rem; margin: 0.75rem 0; }
+li { margin: 0.25rem 0; }
+
+/* Code */
+code {
+  font-family: "SF Mono", Monaco, Consolas, "Liberation Mono", monospace;
+  font-size: 0.9em;
+  background: var(--bg-code);
+  padding: 0.15em 0.4em;
+  border-radius: 3px;
+  color: #d63384;
+}
+
+pre {
+  background: var(--bg-code);
+  border: 1px solid var(--border-light);
+  border-radius: 6px;
+  padding: 1rem;
+  overflow-x: auto;
+  line-height: 1.5;
+  position: relative;
+}
+
+pre .copy-btn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: #ffffff;
+  color: var(--reltio-blue);
+  border: 1px solid var(--border-light);
+  border-radius: 4px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s ease, background 0.15s ease, color 0.15s ease;
+  user-select: none;
+}
+
+pre:hover .copy-btn { opacity: 1; }
+
+pre .copy-btn:hover {
+  background: var(--reltio-blue);
+  color: #ffffff;
+  border-color: var(--reltio-blue);
+}
+
+pre .copy-btn.copied {
+  background: #22863a;
+  color: #ffffff;
+  border-color: #22863a;
+  opacity: 1;
+}
+
+pre code {
+  background: transparent;
+  padding: 0;
+  color: inherit;
+  font-size: 0.875em;
+}
+
+/* Tables */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1rem 0;
+  font-size: 0.95em;
+}
+
+th, td {
+  border: 1px solid var(--border-light);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+th {
+  background: var(--reltio-midnight);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+tr:nth-child(even) td {
+  background: #fafbfc;
+}
+
+/* Blockquotes / callouts */
+blockquote {
+  border-left: 4px solid var(--reltio-bright-blue);
+  background: var(--bg-callout);
+  margin: 1rem 0;
+  padding: 0.75rem 1rem;
+  border-radius: 0 4px 4px 0;
+}
+
+blockquote p { margin: 0.25rem 0; }
+
+/* Disclaimer callout (last blockquote in the doc) */
+blockquote.disclaimer {
+  border-left-color: var(--reltio-gold);
+  background: var(--bg-disclaimer);
+}
+
+/* Horizontal rule */
+hr {
+  border: none;
+  border-top: 1px solid var(--border-light);
+  margin: 2.5rem 0 1.5rem;
+}
+
+/* Mermaid SVG — keep diagrams readable and centered */
+.diagram {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 1.5rem auto;
+  cursor: zoom-in;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.3s ease;
+  transform-origin: center center;
+  border-radius: 4px;
+}
+
+/* Click to enlarge — toggle class via JS; hover does nothing */
+.diagram.zoomed {
+  transform: scale(1.8);
+  box-shadow: 0 20px 60px rgba(0, 0, 51, 0.35);
+  position: relative;
+  z-index: 100;
+  background: #ffffff;
+  cursor: zoom-out;
+}
+
+/* highlight.js — GitHub-like theme, compact */
+.hljs { color: #24292e; background: var(--bg-code); }
+.hljs-comment, .hljs-quote { color: #6a737d; font-style: italic; }
+.hljs-keyword, .hljs-selector-tag { color: #d73a49; }
+.hljs-string, .hljs-attr { color: #032f62; }
+.hljs-number, .hljs-literal { color: #005cc5; }
+.hljs-title, .hljs-name { color: #6f42c1; }
+.hljs-section, .hljs-type { color: #22863a; }
+.hljs-tag { color: #22863a; }
+.hljs-built_in, .hljs-builtin-name { color: #e36209; }
+
+/* Footer banner (appears on index.html only) */
+.site-header {
+  border-bottom: 3px solid var(--reltio-gold);
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.site-header .subtitle {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-top: 0.25rem;
+}
+
+/* Glossary term — inline hover tooltip */
+.glossary-term {
+  border-bottom: 1px dashed var(--reltio-blue);
+  cursor: help;
+  position: relative;
+  white-space: nowrap;
+}
+
+.glossary-term::after {
+  content: attr(data-def);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  padding: 0.6rem 0.85rem;
+  background: var(--bg-callout);
+  color: var(--text-primary);
+  border: 1px dashed var(--reltio-bright-blue);
+  font-size: 0.82rem;
+  font-weight: 400;
+  line-height: 1.45;
+  border-radius: 5px;
+  box-shadow: 0 4px 14px rgba(0, 0, 204, 0.12);
+  white-space: normal;
+  text-align: left;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  z-index: 200;
+}
+
+.glossary-term:hover::after { opacity: 1; }
+
+/* Print */
+@media print {
+  body { max-width: none; padding: 1rem; }
+  a { color: var(--text-primary); text-decoration: none; }
+  pre, blockquote { page-break-inside: avoid; }
+}
+
+  </style>
+</head>
+<body>
+<h1 id="howto-use-search-before-create-in-the-reltio-integration-for-salesforce">HOWTO: Use Search Before Create in the Reltio Integration for Salesforce</h1>
+<p>A guide to understanding, setting up, and using Search Before Create (SBC) in the Reltio Integration for Salesforce with RIH — so your team searches for existing records before creating new ones, avoiding duplicates across both systems.</p>
+<hr>
+<h2 id="table-of-contents">Table of contents</h2>
+<ol>
+<li><a href="#1-what-is-search-before-create">What is Search Before Create?</a></li>
+<li><a href="#2-how-it-works">How it works</a></li>
+<li><a href="#3-prerequisites">Prerequisites</a></li>
+<li><a href="#4-install-the-managed-package">Install the managed package</a></li>
+<li><a href="#5-activate-the-sbc-api-collection-in-rih">Activate the SBC API collection in RIH</a></li>
+<li><a href="#6-create-an-api-client-and-generate-a-security-code">Create an API client and generate a security code</a></li>
+<li><a href="#7-configure-sbc-in-salesforce">Configure SBC in Salesforce</a></li>
+<li><a href="#8-override-the-new-button">Override the New button</a></li>
+<li><a href="#9-using-sbc-day-to-day">Using SBC day-to-day</a></li>
+<li><a href="#10-sbc-recipes-in-rih">SBC recipes in RIH</a></li>
+<li><a href="#11-add-a-custom-field-to-sbc-search">Add a custom field to SBC search</a></li>
+<li><a href="#12-import-with-relations">Import with relations</a></li>
+<li><a href="#13-sbc-api-reference">SBC API reference</a></li>
+<li><a href="#14-troubleshooting">Troubleshooting</a></li>
+<li><a href="#15-known-limitations">Known limitations</a></li>
+</ol>
+<hr>
+<h2 id="prerequisites">Prerequisites</h2>
+<table>
+<thead>
+<tr>
+<th>What</th>
+<th>Details</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Reltio product</strong></td>
+<td>Reltio Entity Resolution, Multidomain MDM, or 360 Data Products</td>
+</tr>
+<tr>
+<td><strong>Integration Hub</strong></td>
+<td>RIH access with <code>ROLE_INTEGRATION_SPECIALIST</code> or <code>ROLE_INTEGRATION_CUSTOMER_ADMIN</code></td>
+</tr>
+<tr>
+<td><strong>Salesforce</strong></td>
+<td>Admin access to install managed packages</td>
+</tr>
+<tr>
+<td><strong>Reltio role</strong></td>
+<td><code>ROLE_API</code> (required for SBC)</td>
+</tr>
+<tr>
+<td><strong>Connections</strong></td>
+<td>Active connections to both Salesforce and your Reltio tenant in RIH</td>
+</tr>
+<tr>
+<td><strong>Recipe groups</strong></td>
+<td>Common Functions, Search Before Create, To SFDC Sync/RT Event-Driven, and To Reltio Sync/RT Event-Driven groups must be started</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="1-what-is-search-before-create">1. What is Search Before Create?</h2>
+<p>Search Before Create (SBC) is a feature in the Reltio Integration for Salesforce that performs a <strong>real-time search across both Reltio and Salesforce</strong> before creating a new record. It searches for existing entries in Salesforce, the Reltio Customer Tenant, and the Reltio Data Tenant.</p>
+<p>The goal: <strong>eliminate duplicate records</strong> when users create Accounts or Contacts in Salesforce.</p>
+<p>SBC uses RIH recipes to search for records in Salesforce and Reltio, and imports the missing records into Salesforce — so instead of blindly creating a new record, the system first checks whether it already exists somewhere.</p>
+<hr>
+<h2 id="2-how-it-works">2. How it works</h2>
+<p>When a user clicks <strong>New</strong> on an Account or Contact in Salesforce (with SBC enabled), three things can happen:</p>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>What happens</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Record exists in Salesforce</strong></td>
+<td>SBC finds it in the search results. The user navigates directly to the existing record — no duplicate created.</td>
+</tr>
+<tr>
+<td><strong>Record exists in Reltio but not Salesforce</strong></td>
+<td>SBC finds it in Reltio. The user imports it into Salesforce. The connector adds a Salesforce crosswalk to the Reltio entity.</td>
+</tr>
+<tr>
+<td><strong>Record doesn&#39;t exist anywhere</strong></td>
+<td>No results found. The user creates a new record in Salesforce. The connector creates the entity in Reltio and adds a crosswalk.</td>
+</tr>
+</tbody></table>
+<p>The search happens in three stages:</p>
+<ol>
+<li><strong>Salesforce records</strong> — searches existing Salesforce data</li>
+<li><strong>Reltio Customer Tenant (CT)</strong> — searches the master data</li>
+<li><strong>Reltio Data Tenant (DT)</strong> — searches data tenant records</li>
+</ol>
+<p>Results are displayed with actions: <strong>Preview/Import</strong> for Reltio-sourced records, and <strong>Preview</strong> for Salesforce-sourced records.</p>
+<hr>
+<h2 id="3-prerequisites">3. Prerequisites</h2>
+<p>Before setting up SBC, make sure you have:</p>
+<ul>
+<li>The Reltio Integration for Salesforce (with RIH) set up with <strong>bidirectional sync</strong> working</li>
+<li>Active connections to Salesforce and your Reltio tenant in RIH</li>
+<li>The following recipe groups started:<ul>
+<li>Common Functions</li>
+<li>Search Before Create</li>
+<li>To SFDC Sync/RT Event-Driven</li>
+<li>To Reltio Sync/RT Event-Driven</li>
+</ul>
+</li>
+<li>A Salesforce admin account (to install the managed package)</li>
+<li>A Trailblazer account (for Salesforce AppExchange access)</li>
+</ul>
+<hr>
+<h2 id="4-install-the-managed-package">4. Install the managed package</h2>
+<p>The SBC feature requires the <strong>Reltio Integration for Salesforce managed package</strong> installed in your Salesforce org.</p>
+<ol>
+<li>Log in to your <strong>Trailblazer</strong> account.</li>
+<li>Go to Salesforce <strong>AppExchange</strong> and search for the Reltio Integration for Salesforce package.</li>
+<li>Select <strong>Install for Admins Only</strong>.</li>
+<li>Complete the installation.</li>
+</ol>
+<blockquote>
+<p><strong>Important:</strong> After installation, configure <strong>remote site settings</strong> to allow Salesforce to communicate with the RIH API. Add the Workato URI (<code>https://apim.workato.com</code>) to your Salesforce remote site settings.</p>
+</blockquote>
+<blockquote>
+<p><strong>Note:</strong> Non-admin users need the <strong>RIH SBC Other Users</strong> permission set assignment to use SBC.</p>
+</blockquote>
+<hr>
+<h2 id="5-activate-the-sbc-api-collection-in-rih">5. Activate the SBC API collection in RIH</h2>
+<p>The SBC recipes use an API collection called <strong>SFDC-SBC</strong> that exposes search and import endpoints.</p>
+<ol>
+<li>In RIH, go to <strong>API Platform</strong> &gt; <strong>API Collection</strong>.</li>
+<li>Find the <strong>SFDC-SBC</strong> collection.</li>
+<li>Select <strong>Activate endpoint</strong>.</li>
+<li>Copy the generated URL — you&#39;ll need it when configuring SBC in Salesforce.</li>
+</ol>
+<p>The SFDC-SBC collection includes these endpoints:</p>
+<table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>SBC-Account-Search</code></td>
+<td>Search for Account records</td>
+</tr>
+<tr>
+<td><code>SBC-Account-Import</code></td>
+<td>Import Account records</td>
+</tr>
+<tr>
+<td><code>SBC-Contact-Search</code></td>
+<td>Search for Contact records</td>
+</tr>
+<tr>
+<td><code>SBC-Contact-Import</code></td>
+<td>Import Contact records</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="6-create-an-api-client-and-generate-a-security-code">6. Create an API client and generate a security code</h2>
+<p>SBC needs an API client to authenticate requests between Salesforce and RIH.</p>
+<ol>
+<li>In RIH, go to <strong>API Platform</strong>.</li>
+<li>Select <strong>Create API client</strong>.</li>
+<li>Set the name to <code>SBC MP Client</code>.</li>
+<li>Set the profile to <code>SBC MP Client Profile</code>.</li>
+<li>Set the API collection to <strong>SFDC-SBC</strong>.</li>
+<li><strong>Generate a security code</strong> — copy it. You&#39;ll enter this in the Salesforce Control Panel.</li>
+</ol>
+<hr>
+<h2 id="7-configure-sbc-in-salesforce">7. Configure SBC in Salesforce</h2>
+<p>With the managed package installed, the API collection activated, and the security code generated:</p>
+<ol>
+<li>In Salesforce, open the <strong>App Launcher</strong>.</li>
+<li>Select <strong>Control Panel</strong> (the Reltio Control Panel).</li>
+<li>Select <strong>+NEW</strong> to create a new SBC configuration.</li>
+<li>Select the <strong>object</strong> (Account or Contact).</li>
+<li>Enter the <strong>Import endpoint URL</strong> (from the SFDC-SBC collection).</li>
+<li>Enter the <strong>Search endpoint URL</strong> (from the SFDC-SBC collection).</li>
+<li>Enter the <strong>Security code</strong> (generated in the previous step).</li>
+<li>Select the <strong>Input fields</strong> — these are the fields users will search by.</li>
+<li>Select <strong>Test</strong> to verify the connection.</li>
+<li><strong>Save</strong> the configuration.</li>
+</ol>
+<blockquote>
+<p><strong>Tip:</strong> The search section in the SBC page is generated dynamically from the input mapping. Choose input fields that your users will naturally search by — name, email, phone, etc.</p>
+</blockquote>
+<hr>
+<h2 id="8-override-the-new-button">8. Override the New button</h2>
+<p>To make SBC the default experience when users create new records, override the standard <strong>New</strong> button with the SBC component.</p>
+<ol>
+<li>In Salesforce, go to <strong>Setup</strong> &gt; <strong>Object Manager</strong>.</li>
+<li>Select the object (e.g., Account).</li>
+<li>Go to <strong>Buttons, Links, and Actions</strong>.</li>
+<li>Find the <strong>New</strong> button.</li>
+<li>Select <strong>Override</strong> and set it to the SBC component: <code>rihsbc:SbcObjectFormComponent</code>.</li>
+</ol>
+<p>After this, clicking <strong>New</strong> on an Account or Contact opens the SBC search page instead of the standard create form.</p>
+<blockquote>
+<p><strong>Note:</strong> If the user&#39;s search returns no results, a <strong>Create New Account</strong> (or Contact) button appears. The search fields the user already populated carry forward into the creation form — no need to re-enter them.</p>
+</blockquote>
+<hr>
+<h2 id="9-using-sbc-day-to-day">9. Using SBC day-to-day</h2>
+<p>Once configured, this is the user experience:</p>
+<ol>
+<li>In Salesforce, click <strong>New</strong> on an Account or Contact.</li>
+<li>The SBC search page opens instead of the standard form.</li>
+<li>Enter search criteria (name, email, phone, etc.).</li>
+<li>Select <strong>Search</strong>.</li>
+<li>Review results from three sources: Salesforce, Reltio CT, and Reltio DT.</li>
+<li>Choose an action:</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Result source</th>
+<th>Available actions</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Salesforce</strong></td>
+<td><strong>Preview</strong> — view the existing record and navigate to it</td>
+</tr>
+<tr>
+<td><strong>Reltio CT or DT</strong></td>
+<td><strong>Preview</strong> — view the record details. <strong>Import</strong> — import it into Salesforce</td>
+</tr>
+<tr>
+<td><strong>No results</strong></td>
+<td><strong>Create New</strong> — opens the standard creation form with search fields pre-populated</td>
+</tr>
+</tbody></table>
+<p>When you import a Reltio record into Salesforce, the connector automatically adds a Salesforce crosswalk to the Reltio entity — linking the two records for future sync.</p>
+<hr>
+<h2 id="10-sbc-recipes-in-rih">10. SBC recipes in RIH</h2>
+<p>SBC uses a set of prebuilt RIH recipes. Understanding them helps with troubleshooting and customization.</p>
+<h3 id="trigger-recipes">Trigger recipes</h3>
+<table>
+<thead>
+<tr>
+<th>Recipe</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>SFDC | API | SBC - Search Account</code></td>
+<td>Triggers an Account search via the SBC API</td>
+</tr>
+<tr>
+<td><code>SFDC | API | SBC - Search Contact</code></td>
+<td>Triggers a Contact search via the SBC API</td>
+</tr>
+<tr>
+<td><code>SFDC | API | SBC - Import Account</code></td>
+<td>Triggers an Account import via the SBC API</td>
+</tr>
+<tr>
+<td><code>SFDC | API | SBC - Import Contact</code></td>
+<td>Triggers a Contact import via the SBC API</td>
+</tr>
+</tbody></table>
+<h3 id="process-recipes">Process recipes</h3>
+<table>
+<thead>
+<tr>
+<th>Recipe</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>SFDC | PROC | SBC - Search Process for Account</code></td>
+<td>Converts SBC search parameters into SOQL (for Salesforce) and Reltio search format, searches both systems</td>
+</tr>
+<tr>
+<td><code>SFDC | PROC | SBC - Search Process for Contact</code></td>
+<td>Same as above, for Contacts</td>
+</tr>
+<tr>
+<td><code>SFDC | PROC | SBC - Import Process for Account - Reltio</code></td>
+<td>Converts Reltio entity objects to Salesforce Account object model for import</td>
+</tr>
+<tr>
+<td><code>SFDC | PROC | SBC - Import Process for Contact - Reltio</code></td>
+<td>Same as above, for Contacts</td>
+</tr>
+</tbody></table>
+<h3 id="search-parameters">Search parameters</h3>
+<p>The search API trigger recipes accept these parameters:</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>filter</code></td>
+<td>Search criteria (e.g., <code>FirstName:John</code>)</td>
+</tr>
+<tr>
+<td><code>recordTypeId</code></td>
+<td>Salesforce Record Type ID for the object</td>
+</tr>
+<tr>
+<td><code>test</code></td>
+<td>Set to <code>true</code> to test without creating records</td>
+</tr>
+<tr>
+<td><code>options</code></td>
+<td>Comma-separated: <code>searchByOv</code>, <code>useContains</code>, <code>useFuzzy</code>, <code>useOr</code>, <code>useSOSL</code></td>
+</tr>
+<tr>
+<td><code>max</code></td>
+<td>Maximum results per source (up to 100)</td>
+</tr>
+</tbody></table>
+<h3 id="import-parameters">Import parameters</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>sourceSystem</code></td>
+<td>The source system for the import (<code>ct</code> or <code>dt</code>)</td>
+</tr>
+<tr>
+<td><code>recordTypeId</code></td>
+<td>Salesforce Record Type ID</td>
+</tr>
+<tr>
+<td><code>test</code></td>
+<td>Set to <code>true</code> for test mode</td>
+</tr>
+<tr>
+<td><code>sourceSystemEntityID</code></td>
+<td>The Reltio entity URI to import</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="11-add-a-custom-field-to-sbc-search">11. Add a custom field to SBC search</h2>
+<p>To add a field that isn&#39;t in the default SBC mapping:</p>
+<ol>
+<li>In RIH, navigate to <strong>SFDC</strong> &gt; <strong>Search Before Create</strong> &gt; <strong>2-Process</strong>.</li>
+<li>Open the <strong>SBC - Search Process</strong> recipe for the relevant object (Account or Contact).</li>
+<li>Add the new field to the search mapping.</li>
+<li>Save and restart the recipe.</li>
+</ol>
+<p>The new field will appear in the SBC search page the next time a user opens it.</p>
+<hr>
+<h2 id="12-import-with-relations">12. Import with relations</h2>
+<p>SBC can import records <strong>with their related objects</strong> — for example, importing a Contact and automatically creating its parent Account if it doesn&#39;t exist in Salesforce.</p>
+<h3 id="enable-import-with-relations">Enable import with relations</h3>
+<p>This feature requires managed package version <strong>1.10019 or later</strong>.</p>
+<ol>
+<li>In the Reltio Control Panel, go to <strong>SBC Basic Settings</strong>.</li>
+<li>Enable the <strong>Import with relations</strong> flag.</li>
+</ol>
+<h3 id="how-it-works">How it works</h3>
+<p>When importing a Reltio record:</p>
+<ol>
+<li>SBC checks if the related object (e.g., parent Account) already exists in Salesforce by checking crosswalks.</li>
+<li>If the related object exists, it links the imported record to it.</li>
+<li>If the related object doesn&#39;t exist, SBC creates it first, then links the imported record.</li>
+</ol>
+<p>This avoids orphaned records and maintains relationship integrity across both systems.</p>
+<hr>
+<h2 id="13-sbc-api-reference">13. SBC API reference</h2>
+<p>SBC exposes three APIs through the managed package.</p>
+<h3 id="perform-search">Perform Search</h3>
+<p>Searches for records in both Salesforce and Reltio.</p>
+<pre><code class="hljs"><span class="language-xml">GET </span><span class="hljs-template-variable">{SbcApiUrl}</span><span class="language-xml">/</span><span class="hljs-template-variable">{tenant}</span><span class="language-xml">/</span><span class="hljs-template-variable">{profile}</span><span class="language-xml">/search</span></code></pre>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>sObject</code></td>
+<td>Salesforce object type (e.g., <code>Account</code>)</td>
+</tr>
+<tr>
+<td><code>recordTypeId</code></td>
+<td>Salesforce Record Type ID</td>
+</tr>
+<tr>
+<td><code>filter</code></td>
+<td>Search criteria (e.g., <code>FirstName:John</code>)</td>
+</tr>
+<tr>
+<td><code>searchIn</code></td>
+<td>Where to search: <code>ct</code> (Customer Tenant), <code>dt</code> (Data Tenant), or both</td>
+</tr>
+<tr>
+<td><code>select</code></td>
+<td>Fields to return</td>
+</tr>
+<tr>
+<td><code>options</code></td>
+<td><code>searchByOv</code>, <code>useContains</code>, <code>useFuzzy</code>, <code>useOr</code>, <code>useSOSL</code></td>
+</tr>
+<tr>
+<td><code>max</code></td>
+<td>Maximum results per source (up to 100)</td>
+</tr>
+<tr>
+<td><code>sort</code></td>
+<td>Field to sort by</td>
+</tr>
+<tr>
+<td><code>order</code></td>
+<td>Sort order (<code>asc</code> or <code>desc</code>)</td>
+</tr>
+</tbody></table>
+<p><strong>Search methods:</strong> The API uses <strong>SOSL</strong> first (if enabled via <code>useSOSL</code>), then falls back to <strong>SOQL</strong>.</p>
+<p><strong>Response</strong> contains three arrays:</p>
+<table>
+<thead>
+<tr>
+<th>Array</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>sf</code></td>
+<td>Salesforce records</td>
+</tr>
+<tr>
+<td><code>ct</code></td>
+<td>Reltio Customer Tenant records</td>
+</tr>
+<tr>
+<td><code>dt</code></td>
+<td>Reltio Data Tenant records</td>
+</tr>
+</tbody></table>
+<h3 id="fuzzy-search">Fuzzy search</h3>
+<p>Add <code>useFuzzy</code> to the options to return results even with typos:</p>
+<pre><code class="hljs"><span class="hljs-built_in">GET</span> {SbcApiUrl}/{tenant}/{profile}/search?<span class="hljs-attribute">searchIn</span>=ct&amp;sObject=Account&amp;recordTypeId={recordTypeId}&amp;<span class="hljs-attribute">filter</span>=FirstName:Ttayana&amp;options=useFuzzy</code></pre>
+<h3 id="get-input-mapping">Get Input Mapping</h3>
+<p>Returns the Salesforce fields available for SBC search, including related objects.</p>
+<pre><code class="hljs"><span class="language-xml">GET </span><span class="hljs-template-variable">{SbcApiUrl}</span><span class="language-xml">/</span><span class="hljs-template-variable">{tenant}</span><span class="language-xml">/</span><span class="hljs-template-variable">{profile}</span><span class="language-xml">/inputMappings</span></code></pre>
+<p>Returns fields with their relationship, type, and RecordTypeId.</p>
+<h3 id="import-entity">Import Entity</h3>
+<p>Imports a record from Reltio (Customer Tenant or Data Tenant) into Salesforce.</p>
+<pre><code class="hljs"><span class="language-xml">GET </span><span class="hljs-template-variable">{SbcApiUrl}</span><span class="language-xml">/</span><span class="hljs-template-variable">{tenant}</span><span class="language-xml">/</span><span class="hljs-template-variable">{profile}</span><span class="language-xml">/</span><span class="hljs-template-variable">{source}</span><span class="language-xml">/import</span></code></pre>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>sObject</code></td>
+<td>Salesforce object type</td>
+</tr>
+<tr>
+<td><code>recordTypeId</code></td>
+<td>Salesforce Record Type ID</td>
+</tr>
+<tr>
+<td><code>uri</code></td>
+<td>Reltio entity URI to import</td>
+</tr>
+<tr>
+<td><code>ownerId</code></td>
+<td>Salesforce owner ID for the imported record</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="14-troubleshooting">14. Troubleshooting</h2>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Cause</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Invalid Cross Reference ID</strong></td>
+<td>An ID field references a record from a different Salesforce org</td>
+<td>Check your mapping — make sure IDs match the current Salesforce org</td>
+</tr>
+<tr>
+<td><strong>Salesforce validation error</strong></td>
+<td>A Salesforce Validation Rule is blocking the import</td>
+<td>Review the Validation Rules on the object and adjust your mapping or the rule</td>
+</tr>
+<tr>
+<td><strong>Country must be set before setting State</strong></td>
+<td>State/Country picklists require the country first</td>
+<td>Use <code>CountryCode</code> mapping with ISO 3166 country codes instead of country names</td>
+</tr>
+<tr>
+<td><strong>Field is not writable</strong></td>
+<td>The mapping includes a non-editable Salesforce field</td>
+<td>Remove the non-editable field from the <code>to_salesforce</code> mapping</td>
+</tr>
+<tr>
+<td><strong>Picklists not appearing for State/Country</strong></td>
+<td>State/Country picklists not configured</td>
+<td>Use <code>CountryCode</code> and <code>StateCode</code> fields with ISO 3166 codes</td>
+</tr>
+</tbody></table>
+<h3 id="sbc-mappings-when-sync-is-to_reltio-only">SBC Mappings when sync is to_reltio only</h3>
+<p>If your sync mapping only has a <code>to_reltio</code> section (no <code>to_salesforce</code>), SBC mappings still need the <code>to_salesforce</code> section because SBC searches by Salesforce fields. Add the <code>to_salesforce</code> section with the <code>sbcOnly</code> property to support SBC without enabling full outbound sync.</p>
+<hr>
+<h2 id="15-known-limitations">15. Known limitations</h2>
+<ul>
+<li>SBC is supported for <strong>Account</strong> and <strong>Contact</strong> objects only.</li>
+<li>Maximum <strong>100 results per source</strong> (Salesforce, CT, DT) per search.</li>
+<li>The <strong>Import with relations</strong> feature requires managed package version 1.10019 or later.</li>
+<li>SBC requires the <code>ROLE_API</code> Reltio role.</li>
+<li>When a Salesforce record creation fails due to detected duplicates, Reltio automatically links the existing Salesforce record to the corresponding Reltio entity by adding the Salesforce crosswalk and retries as an update.</li>
+</ul>
+<hr>
+<h2 id="further-reading">Further reading</h2>
+<ul>
+<li><a href="https://docs.reltio.com/en/applications/integration-hub/reltio-integration-for-salesforce-with-rih/reltio-integration-for-salesforce-with-rih-at-a-glance">Reltio Integration for Salesforce (with RIH) overview</a> — Setup and architecture</li>
+<li><a href="https://docs.reltio.com/en/applications/integration-hub/reltio-integration-for-salesforce-with-rih/enable-search-before-create">Enable Search Before Create</a> — Prerequisites and activation steps</li>
+<li><a href="https://docs.reltio.com/en/applications/integration-hub/reltio-integration-for-salesforce-with-rih/recipes-for-search-before-create">SBC recipes</a> — Prebuilt recipe reference</li>
+<li><a href="https://docs.reltio.com/en/applications/integration-hub/reltio-integration-for-salesforce-with-rih/install-the-reltio-integration-for-salesforce-managed-package-to-enable-sbc">Install the managed package</a> — AppExchange installation steps</li>
+<li><a href="https://docs.reltio.com/en/applications/integration-hub/reltio-integration-for-salesforce-with-rih/configure-search-before-create-rih">Configure SBC</a> — Salesforce-side configuration</li>
+<li><a href="https://docs.reltio.com/en/developer-resources/reltio-managed-package-apis/search-before-create-api">SBC API reference</a> — Perform Search, Get Input Mapping, Import Entity</li>
+</ul>
+<hr>
+<blockquote class="disclaimer">
+<p><strong>Disclaimer:</strong> This guide was generated with AI assistance using official Reltio documentation as source material. While every effort has been made to ensure accuracy, Reltio product behavior may change between releases. Always verify critical steps against your own Reltio environment and the <a href="https://docs.reltio.com">official documentation</a>. Last validated against documentation dated March 31, 2026.</p>
+</blockquote>
+<p><em>Guide based on Reltio documentation (March 2026).</em></p>
+
+<script>
+  // Click-to-zoom for workflow diagrams — toggle zoomed class on click,
+  // dismiss on second click or by clicking anywhere outside the diagram.
+  document.querySelectorAll('.diagram').forEach(function (img) {
+    img.addEventListener('click', function (e) {
+      e.stopPropagation();
+      img.classList.toggle('zoomed');
+    });
+  });
+  document.addEventListener('click', function () {
+    document.querySelectorAll('.diagram.zoomed').forEach(function (img) {
+      img.classList.remove('zoomed');
+    });
+  });
+
+  // Copy button — top-right of every code block.
+  var ICON_COPY = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+  var ICON_CHECK = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>';
+  document.querySelectorAll('pre').forEach(function (pre) {
+    var btn = document.createElement('button');
+    btn.className = 'copy-btn';
+    btn.setAttribute('aria-label', 'Copy code');
+    btn.innerHTML = ICON_COPY;
+    pre.appendChild(btn);
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var code = pre.querySelector('code');
+      var text = code ? code.innerText : pre.innerText;
+      navigator.clipboard.writeText(text).then(function () {
+        btn.innerHTML = ICON_CHECK;
+        btn.classList.add('copied');
+        setTimeout(function () {
+          btn.innerHTML = ICON_COPY;
+          btn.classList.remove('copied');
+        }, 1500);
+      });
+    });
+  });
+</script>
+</body>
+</html>

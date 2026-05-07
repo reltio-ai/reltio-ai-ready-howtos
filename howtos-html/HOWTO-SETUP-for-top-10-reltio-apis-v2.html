@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Configure a Reltio tenant for the Top 10 APIs tutorial</title>
+  <style>
+/* Reltio HOWTO — HTML styles
+ * Brand colors:
+ *   Midnight     #000033
+ *   Blue         #000066
+ *   Bright Blue  #0000CC
+ *   Gold         #FFCC00
+ */
+
+:root {
+  --reltio-midnight: #000033;
+  --reltio-blue: #000066;
+  --reltio-bright-blue: #0000CC;
+  --reltio-gold: #FFCC00;
+  --text-primary: #1a1a1a;
+  --text-muted: #555;
+  --border-light: #e1e4e8;
+  --bg-code: #f6f8fa;
+  --bg-callout: #f0f4ff;
+  --bg-disclaimer: #fff8e1;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text-primary);
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 4rem;
+  background: #ffffff;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--reltio-midnight);
+  font-weight: 600;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.25;
+}
+
+h1 {
+  font-size: 2.25rem;
+  border-bottom: 3px solid var(--reltio-gold);
+  padding-bottom: 0.5rem;
+  margin-top: 0;
+}
+
+h2 {
+  font-size: 1.6rem;
+  border-bottom: 1px solid var(--border-light);
+  padding-bottom: 0.3rem;
+  margin-top: 2.5rem;
+}
+
+h3 { font-size: 1.25rem; color: var(--reltio-blue); }
+h4 { font-size: 1.1rem; color: var(--reltio-blue); }
+
+/* Paragraphs and links */
+p { margin: 0.75rem 0; }
+
+a {
+  color: var(--reltio-bright-blue);
+  text-decoration: none;
+}
+a:hover { text-decoration: underline; }
+
+/* Lists */
+ul, ol { padding-left: 1.75rem; margin: 0.75rem 0; }
+li { margin: 0.25rem 0; }
+
+/* Code */
+code {
+  font-family: "SF Mono", Monaco, Consolas, "Liberation Mono", monospace;
+  font-size: 0.9em;
+  background: var(--bg-code);
+  padding: 0.15em 0.4em;
+  border-radius: 3px;
+  color: #d63384;
+}
+
+pre {
+  background: var(--bg-code);
+  border: 1px solid var(--border-light);
+  border-radius: 6px;
+  padding: 1rem;
+  overflow-x: auto;
+  line-height: 1.5;
+  position: relative;
+}
+
+pre .copy-btn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: #ffffff;
+  color: var(--reltio-blue);
+  border: 1px solid var(--border-light);
+  border-radius: 4px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s ease, background 0.15s ease, color 0.15s ease;
+  user-select: none;
+}
+
+pre:hover .copy-btn { opacity: 1; }
+
+pre .copy-btn:hover {
+  background: var(--reltio-blue);
+  color: #ffffff;
+  border-color: var(--reltio-blue);
+}
+
+pre .copy-btn.copied {
+  background: #22863a;
+  color: #ffffff;
+  border-color: #22863a;
+  opacity: 1;
+}
+
+pre code {
+  background: transparent;
+  padding: 0;
+  color: inherit;
+  font-size: 0.875em;
+}
+
+/* Tables */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1rem 0;
+  font-size: 0.95em;
+}
+
+th, td {
+  border: 1px solid var(--border-light);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+th {
+  background: var(--reltio-midnight);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+tr:nth-child(even) td {
+  background: #fafbfc;
+}
+
+/* Blockquotes / callouts */
+blockquote {
+  border-left: 4px solid var(--reltio-bright-blue);
+  background: var(--bg-callout);
+  margin: 1rem 0;
+  padding: 0.75rem 1rem;
+  border-radius: 0 4px 4px 0;
+}
+
+blockquote p { margin: 0.25rem 0; }
+
+/* Disclaimer callout (last blockquote in the doc) */
+blockquote.disclaimer {
+  border-left-color: var(--reltio-gold);
+  background: var(--bg-disclaimer);
+}
+
+/* Horizontal rule */
+hr {
+  border: none;
+  border-top: 1px solid var(--border-light);
+  margin: 2.5rem 0 1.5rem;
+}
+
+/* Mermaid SVG — keep diagrams readable and centered */
+.diagram {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 1.5rem auto;
+  cursor: zoom-in;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.3s ease;
+  transform-origin: center center;
+  border-radius: 4px;
+}
+
+/* Click to enlarge — toggle class via JS; hover does nothing */
+.diagram.zoomed {
+  transform: scale(1.8);
+  box-shadow: 0 20px 60px rgba(0, 0, 51, 0.35);
+  position: relative;
+  z-index: 100;
+  background: #ffffff;
+  cursor: zoom-out;
+}
+
+/* highlight.js — GitHub-like theme, compact */
+.hljs { color: #24292e; background: var(--bg-code); }
+.hljs-comment, .hljs-quote { color: #6a737d; font-style: italic; }
+.hljs-keyword, .hljs-selector-tag { color: #d73a49; }
+.hljs-string, .hljs-attr { color: #032f62; }
+.hljs-number, .hljs-literal { color: #005cc5; }
+.hljs-title, .hljs-name { color: #6f42c1; }
+.hljs-section, .hljs-type { color: #22863a; }
+.hljs-tag { color: #22863a; }
+.hljs-built_in, .hljs-builtin-name { color: #e36209; }
+
+/* Footer banner (appears on index.html only) */
+.site-header {
+  border-bottom: 3px solid var(--reltio-gold);
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.site-header .subtitle {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-top: 0.25rem;
+}
+
+/* Glossary term — inline hover tooltip */
+.glossary-term {
+  border-bottom: 1px dashed var(--reltio-blue);
+  cursor: help;
+  position: relative;
+  white-space: nowrap;
+}
+
+.glossary-term::after {
+  content: attr(data-def);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  padding: 0.6rem 0.85rem;
+  background: var(--bg-callout);
+  color: var(--text-primary);
+  border: 1px dashed var(--reltio-bright-blue);
+  font-size: 0.82rem;
+  font-weight: 400;
+  line-height: 1.45;
+  border-radius: 5px;
+  box-shadow: 0 4px 14px rgba(0, 0, 204, 0.12);
+  white-space: normal;
+  text-align: left;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  z-index: 200;
+}
+
+.glossary-term:hover::after { opacity: 1; }
+
+/* Print */
+@media print {
+  body { max-width: none; padding: 1rem; }
+  a { color: var(--text-primary); text-decoration: none; }
+  pre, blockquote { page-break-inside: avoid; }
+}
+
+  </style>
+</head>
+<body>
+<h1 id="howto-configure-a-reltio-tenant-for-the-top-10-apis-tutorial">HOWTO: Configure a Reltio tenant for the Top 10 APIs tutorial</h1>
+<p>Turn a blank sandbox tenant into the tutorial&#39;s data model — Individual and Organization entity types, CRM and ERP sources, and an Employment relation — using a single <code>PUT /configuration</code> call.</p>
+<img class="diagram" src="data:image/svg+xml;base64,PHN2ZyBpZD0ibXktc3ZnIiB3aWR0aD0iMTAwJSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgY2xhc3M9ImZsb3djaGFydCIgc3R5bGU9Im1heC13aWR0aDogMTU1Mi40NXB4OyBiYWNrZ3JvdW5kLWNvbG9yOiB0cmFuc3BhcmVudDsiIHZpZXdCb3g9IjAgMCAxNTUyLjQ1MzEyNSA2MSIgcm9sZT0iZ3JhcGhpY3MtZG9jdW1lbnQgZG9jdW1lbnQiIGFyaWEtcm9sZWRlc2NyaXB0aW9uPSJmbG93Y2hhcnQtdjIiPjxzdHlsZT4jbXktc3Zne2ZvbnQtZmFtaWx5OiJ0cmVidWNoZXQgbXMiLHZlcmRhbmEsYXJpYWwsc2Fucy1zZXJpZjtmb250LXNpemU6MTRweDtmaWxsOiMwMDAwMzM7fUBrZXlmcmFtZXMgZWRnZS1hbmltYXRpb24tZnJhbWV7ZnJvbXtzdHJva2UtZGFzaG9mZnNldDowO319QGtleWZyYW1lcyBkYXNoe3Rve3N0cm9rZS1kYXNob2Zmc2V0OjA7fX0jbXktc3ZnIC5lZGdlLWFuaW1hdGlvbi1zbG93e3N0cm9rZS1kYXNoYXJyYXk6OSw1IWltcG9ydGFudDtzdHJva2UtZGFzaG9mZnNldDo5MDA7YW5pbWF0aW9uOmRhc2ggNTBzIGxpbmVhciBpbmZpbml0ZTtzdHJva2UtbGluZWNhcDpyb3VuZDt9I215LXN2ZyAuZWRnZS1hbmltYXRpb24tZmFzdHtzdHJva2UtZGFzaGFycmF5OjksNSFpbXBvcnRhbnQ7c3Ryb2tlLWRhc2hvZmZzZXQ6OTAwO2FuaW1hdGlvbjpkYXNoIDIwcyBsaW5lYXIgaW5maW5pdGU7c3Ryb2tlLWxpbmVjYXA6cm91bmQ7fSNteS1zdmcgLmVycm9yLWljb257ZmlsbDojZjBmNGZmO30jbXktc3ZnIC5lcnJvci10ZXh0e2ZpbGw6IzBmMGIwMDtzdHJva2U6IzBmMGIwMDt9I215LXN2ZyAuZWRnZS10aGlja25lc3Mtbm9ybWFse3N0cm9rZS13aWR0aDoxcHg7fSNteS1zdmcgLmVkZ2UtdGhpY2tuZXNzLXRoaWNre3N0cm9rZS13aWR0aDozLjVweDt9I215LXN2ZyAuZWRnZS1wYXR0ZXJuLXNvbGlke3N0cm9rZS1kYXNoYXJyYXk6MDt9I215LXN2ZyAuZWRnZS10aGlja25lc3MtaW52aXNpYmxle3N0cm9rZS13aWR0aDowO2ZpbGw6bm9uZTt9I215LXN2ZyAuZWRnZS1wYXR0ZXJuLWRhc2hlZHtzdHJva2UtZGFzaGFycmF5OjM7fSNteS1zdmcgLmVkZ2UtcGF0dGVybi1kb3R0ZWR7c3Ryb2tlLWRhc2hhcnJheToyO30jbXktc3ZnIC5tYXJrZXJ7ZmlsbDojMDAwMDMzO3N0cm9rZTojMDAwMDMzO30jbXktc3ZnIC5tYXJrZXIuY3Jvc3N7c3Ryb2tlOiMwMDAwMzM7fSNteS1zdmcgc3Zne2ZvbnQtZmFtaWx5OiJ0cmVidWNoZXQgbXMiLHZlcmRhbmEsYXJpYWwsc2Fucy1zZXJpZjtmb250LXNpemU6MTRweDt9I215LXN2ZyBwe21hcmdpbjowO30jbXktc3ZnIC5sYWJlbHtmb250LWZhbWlseToidHJlYnVjaGV0IG1zIix2ZXJkYW5hLGFyaWFsLHNhbnMtc2VyaWY7Y29sb3I6I2ZmZmZmZjt9I215LXN2ZyAuY2x1c3Rlci1sYWJlbCB0ZXh0e2ZpbGw6IzBmMGIwMDt9I215LXN2ZyAuY2x1c3Rlci1sYWJlbCBzcGFue2NvbG9yOiMwZjBiMDA7fSNteS1zdmcgLmNsdXN0ZXItbGFiZWwgc3BhbiBwe2JhY2tncm91bmQtY29sb3I6dHJhbnNwYXJlbnQ7fSNteS1zdmcgLmxhYmVsIHRleHQsI215LXN2ZyBzcGFue2ZpbGw6I2ZmZmZmZjtjb2xvcjojZmZmZmZmO30jbXktc3ZnIC5ub2RlIHJlY3QsI215LXN2ZyAubm9kZSBjaXJjbGUsI215LXN2ZyAubm9kZSBlbGxpcHNlLCNteS1zdmcgLm5vZGUgcG9seWdvbiwjbXktc3ZnIC5ub2RlIHBhdGh7ZmlsbDojMDAwMDY2O3N0cm9rZTojMDAwMDMzO3N0cm9rZS13aWR0aDoxcHg7fSNteS1zdmcgLnJvdWdoLW5vZGUgLmxhYmVsIHRleHQsI215LXN2ZyAubm9kZSAubGFiZWwgdGV4dCwjbXktc3ZnIC5pbWFnZS1zaGFwZSAubGFiZWwsI215LXN2ZyAuaWNvbi1zaGFwZSAubGFiZWx7dGV4dC1hbmNob3I6bWlkZGxlO30jbXktc3ZnIC5ub2RlIC5rYXRleCBwYXRoe2ZpbGw6IzAwMDtzdHJva2U6IzAwMDtzdHJva2Utd2lkdGg6MXB4O30jbXktc3ZnIC5yb3VnaC1ub2RlIC5sYWJlbCwjbXktc3ZnIC5ub2RlIC5sYWJlbCwjbXktc3ZnIC5pbWFnZS1zaGFwZSAubGFiZWwsI215LXN2ZyAuaWNvbi1zaGFwZSAubGFiZWx7dGV4dC1hbGlnbjpjZW50ZXI7fSNteS1zdmcgLm5vZGUuY2xpY2thYmxle2N1cnNvcjpwb2ludGVyO30jbXktc3ZnIC5yb290IC5hbmNob3IgcGF0aHtmaWxsOiMwMDAwMzMhaW1wb3J0YW50O3N0cm9rZS13aWR0aDowO3N0cm9rZTojMDAwMDMzO30jbXktc3ZnIC5hcnJvd2hlYWRQYXRoe2ZpbGw6IzBiMGIwYjt9I215LXN2ZyAuZWRnZVBhdGggLnBhdGh7c3Ryb2tlOiMwMDAwMzM7c3Ryb2tlLXdpZHRoOjFweDt9I215LXN2ZyAuZmxvd2NoYXJ0LWxpbmt7c3Ryb2tlOiMwMDAwMzM7ZmlsbDpub25lO30jbXktc3ZnIC5lZGdlTGFiZWx7YmFja2dyb3VuZC1jb2xvcjojZjBmNGZmO3RleHQtYWxpZ246Y2VudGVyO30jbXktc3ZnIC5lZGdlTGFiZWwgcHtiYWNrZ3JvdW5kLWNvbG9yOiNmMGY0ZmY7fSNteS1zdmcgLmVkZ2VMYWJlbCByZWN0e29wYWNpdHk6MC41O2JhY2tncm91bmQtY29sb3I6I2YwZjRmZjtmaWxsOiNmMGY0ZmY7fSNteS1zdmcgLmxhYmVsQmtne2JhY2tncm91bmQtY29sb3I6cmdiYSgyNDAsIDI0NCwgMjU1LCAwLjUpO30jbXktc3ZnIC5jbHVzdGVyIHJlY3R7ZmlsbDojZjBmNGZmO3N0cm9rZTojMDAwMENDO3N0cm9rZS13aWR0aDoxcHg7fSNteS1zdmcgLmNsdXN0ZXIgdGV4dHtmaWxsOiMwZjBiMDA7fSNteS1zdmcgLmNsdXN0ZXIgc3Bhbntjb2xvcjojMGYwYjAwO30jbXktc3ZnIGRpdi5tZXJtYWlkVG9vbHRpcHtwb3NpdGlvbjphYnNvbHV0ZTt0ZXh0LWFsaWduOmNlbnRlcjttYXgtd2lkdGg6MjAwcHg7cGFkZGluZzoycHg7Zm9udC1mYW1pbHk6InRyZWJ1Y2hldCBtcyIsdmVyZGFuYSxhcmlhbCxzYW5zLXNlcmlmO2ZvbnQtc2l6ZToxMnB4O2JhY2tncm91bmQ6I2YwZjRmZjtib3JkZXI6MXB4IHNvbGlkIGhzbCgyMjQsIDYwJSwgODcuMDU4ODIzNTI5NCUpO2JvcmRlci1yYWRpdXM6MnB4O3BvaW50ZXItZXZlbnRzOm5vbmU7ei1pbmRleDoxMDA7fSNteS1zdmcgLmZsb3djaGFydFRpdGxlVGV4dHt0ZXh0LWFuY2hvcjptaWRkbGU7Zm9udC1zaXplOjE4cHg7ZmlsbDojMDAwMDMzO30jbXktc3ZnIHJlY3QudGV4dHtmaWxsOm5vbmU7c3Ryb2tlLXdpZHRoOjA7fSNteS1zdmcgLmljb24tc2hhcGUsI215LXN2ZyAuaW1hZ2Utc2hhcGV7YmFja2dyb3VuZC1jb2xvcjojZjBmNGZmO3RleHQtYWxpZ246Y2VudGVyO30jbXktc3ZnIC5pY29uLXNoYXBlIHAsI215LXN2ZyAuaW1hZ2Utc2hhcGUgcHtiYWNrZ3JvdW5kLWNvbG9yOiNmMGY0ZmY7cGFkZGluZzoycHg7fSNteS1zdmcgLmljb24tc2hhcGUgLmxhYmVsIHJlY3QsI215LXN2ZyAuaW1hZ2Utc2hhcGUgLmxhYmVsIHJlY3R7b3BhY2l0eTowLjU7YmFja2dyb3VuZC1jb2xvcjojZjBmNGZmO2ZpbGw6I2YwZjRmZjt9I215LXN2ZyAubGFiZWwtaWNvbntkaXNwbGF5OmlubGluZS1ibG9jaztoZWlnaHQ6MWVtO292ZXJmbG93OnZpc2libGU7dmVydGljYWwtYWxpZ246LTAuMTI1ZW07fSNteS1zdmcgLm5vZGUgLmxhYmVsLWljb24gcGF0aHtmaWxsOmN1cnJlbnRDb2xvcjtzdHJva2U6cmV2ZXJ0O3N0cm9rZS13aWR0aDpyZXZlcnQ7fSNteS1zdmcgLm5vZGUgLm5lby1ub2Rle3N0cm9rZTojMDAwMDMzO30jbXktc3ZnIFtkYXRhLWxvb2s9Im5lbyJdLm5vZGUgcmVjdCwjbXktc3ZnIFtkYXRhLWxvb2s9Im5lbyJdLmNsdXN0ZXIgcmVjdCwjbXktc3ZnIFtkYXRhLWxvb2s9Im5lbyJdLm5vZGUgcG9seWdvbntzdHJva2U6dXJsKCNteS1zdmctZ3JhZGllbnQpO2ZpbHRlcjpkcm9wLXNoYWRvdyggMXB4IDJweCAycHggcmdiYSgxODUsMTg1LDE4NSwxKSk7fSNteS1zdmcgW2RhdGEtbG9vaz0ibmVvIl0ubm9kZSBwYXRoe3N0cm9rZTp1cmwoI215LXN2Zy1ncmFkaWVudCk7c3Ryb2tlLXdpZHRoOjFweDt9I215LXN2ZyBbZGF0YS1sb29rPSJuZW8iXS5ub2RlIC5vdXRlci1wYXRoe2ZpbHRlcjpkcm9wLXNoYWRvdyggMXB4IDJweCAycHggcmdiYSgxODUsMTg1LDE4NSwxKSk7fSNteS1zdmcgW2RhdGEtbG9vaz0ibmVvIl0ubm9kZSAubmVvLWxpbmUgcGF0aHtzdHJva2U6IzAwMDAzMztmaWx0ZXI6bm9uZTt9I215LXN2ZyBbZGF0YS1sb29rPSJuZW8iXS5ub2RlIGNpcmNsZXtzdHJva2U6dXJsKCNteS1zdmctZ3JhZGllbnQpO2ZpbHRlcjpkcm9wLXNoYWRvdyggMXB4IDJweCAycHggcmdiYSgxODUsMTg1LDE4NSwxKSk7fSNteS1zdmcgW2RhdGEtbG9vaz0ibmVvIl0ubm9kZSBjaXJjbGUgLnN0YXRlLXN0YXJ0e2ZpbGw6IzAwMDAwMDt9I215LXN2ZyBbZGF0YS1sb29rPSJuZW8iXS5pY29uLXNoYXBlIC5pY29ue2ZpbGw6dXJsKCNteS1zdmctZ3JhZGllbnQpO2ZpbHRlcjpkcm9wLXNoYWRvdyggMXB4IDJweCAycHggcmdiYSgxODUsMTg1LDE4NSwxKSk7fSNteS1zdmcgW2RhdGEtbG9vaz0ibmVvIl0uaWNvbi1zaGFwZSAuaWNvbi1uZW8gcGF0aHtzdHJva2U6dXJsKCNteS1zdmctZ3JhZGllbnQpO2ZpbHRlcjpkcm9wLXNoYWRvdyggMXB4IDJweCAycHggcmdiYSgxODUsMTg1LDE4NSwxKSk7fSNteS1zdmcgLmVkZ2VMYWJlbHtjb2xvcjojMDAwMDMzIWltcG9ydGFudDtiYWNrZ3JvdW5kLWNvbG9yOiNmMGY0ZmYhaW1wb3J0YW50O2ZvbnQtd2VpZ2h0OjUwMCFpbXBvcnRhbnQ7fSNteS1zdmcgLmVkZ2VMYWJlbCByZWN0LCNteS1zdmcgLmVkZ2VMYWJlbCBmb3JlaWduT2JqZWN0e2ZpbGw6I2YwZjRmZiFpbXBvcnRhbnQ7fSNteS1zdmcgOnJvb3R7LS1tZXJtYWlkLWZvbnQtZmFtaWx5OiJ0cmVidWNoZXQgbXMiLHZlcmRhbmEsYXJpYWwsc2Fucy1zZXJpZjt9PC9zdHlsZT48Zz48bWFya2VyIGlkPSJteS1zdmdfZmxvd2NoYXJ0LXYyLXBvaW50RW5kIiBjbGFzcz0ibWFya2VyIGZsb3djaGFydC12MiIgdmlld0JveD0iMCAwIDEwIDEwIiByZWZYPSI1IiByZWZZPSI1IiBtYXJrZXJVbml0cz0idXNlclNwYWNlT25Vc2UiIG1hcmtlcldpZHRoPSI4IiBtYXJrZXJIZWlnaHQ9IjgiIG9yaWVudD0iYXV0byI+PHBhdGggZD0iTSAwIDAgTCAxMCA1IEwgMCAxMCB6IiBjbGFzcz0iYXJyb3dNYXJrZXJQYXRoIiBzdHlsZT0ic3Ryb2tlLXdpZHRoOiAxOyBzdHJva2UtZGFzaGFycmF5OiAxLCAwOyIvPjwvbWFya2VyPjxtYXJrZXIgaWQ9Im15LXN2Z19mbG93Y2hhcnQtdjItcG9pbnRTdGFydCIgY2xhc3M9Im1hcmtlciBmbG93Y2hhcnQtdjIiIHZpZXdCb3g9IjAgMCAxMCAxMCIgcmVmWD0iNC41IiByZWZZPSI1IiBtYXJrZXJVbml0cz0idXNlclNwYWNlT25Vc2UiIG1hcmtlcldpZHRoPSI4IiBtYXJrZXJIZWlnaHQ9IjgiIG9yaWVudD0iYXV0byI+PHBhdGggZD0iTSAwIDUgTCAxMCAxMCBMIDEwIDAgeiIgY2xhc3M9ImFycm93TWFya2VyUGF0aCIgc3R5bGU9InN0cm9rZS13aWR0aDogMTsgc3Ryb2tlLWRhc2hhcnJheTogMSwgMDsiLz48L21hcmtlcj48bWFya2VyIGlkPSJteS1zdmdfZmxvd2NoYXJ0LXYyLXBvaW50RW5kLW1hcmdpbiIgY2xhc3M9Im1hcmtlciBmbG93Y2hhcnQtdjIiIHZpZXdCb3g9IjAgMCAxMS41IDE0IiByZWZYPSIxMS41IiByZWZZPSI3IiBtYXJrZXJVbml0cz0idXNlclNwYWNlT25Vc2UiIG1hcmtlcldpZHRoPSIxMC41IiBtYXJrZXJIZWlnaHQ9IjE0IiBvcmllbnQ9ImF1dG8iPjxwYXRoIGQ9Ik0gMCAwIEwgMTEuNSA3IEwgMCAxNCB6IiBjbGFzcz0iYXJyb3dNYXJrZXJQYXRoIiBzdHlsZT0ic3Ryb2tlLXdpZHRoOiAwOyBzdHJva2UtZGFzaGFycmF5OiAxLCAwOyIvPjwvbWFya2VyPjxtYXJrZXIgaWQ9Im15LXN2Z19mbG93Y2hhcnQtdjItcG9pbnRTdGFydC1tYXJnaW4iIGNsYXNzPSJtYXJrZXIgZmxvd2NoYXJ0LXYyIiB2aWV3Qm94PSIwIDAgMTEuNSAxNCIgcmVmWD0iMSIgcmVmWT0iNyIgbWFya2VyVW5pdHM9InVzZXJTcGFjZU9uVXNlIiBtYXJrZXJXaWR0aD0iMTEuNSIgbWFya2VySGVpZ2h0PSIxNCIgb3JpZW50PSJhdXRvIj48cG9seWdvbiBwb2ludHM9IjAsNyAxMS41LDE0IDExLjUsMCIgY2xhc3M9ImFycm93TWFya2VyUGF0aCIgc3R5bGU9InN0cm9rZS13aWR0aDogMDsgc3Ryb2tlLWRhc2hhcnJheTogMSwgMDsiLz48L21hcmtlcj48bWFya2VyIGlkPSJteS1zdmdfZmxvd2NoYXJ0LXYyLWNpcmNsZUVuZCIgY2xhc3M9Im1hcmtlciBmbG93Y2hhcnQtdjIiIHZpZXdCb3g9IjAgMCAxMCAxMCIgcmVmWD0iMTEiIHJlZlk9IjUiIG1hcmtlclVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgbWFya2VyV2lkdGg9IjExIiBtYXJrZXJIZWlnaHQ9IjExIiBvcmllbnQ9ImF1dG8iPjxjaXJjbGUgY3g9IjUiIGN5PSI1IiByPSI1IiBjbGFzcz0iYXJyb3dNYXJrZXJQYXRoIiBzdHlsZT0ic3Ryb2tlLXdpZHRoOiAxOyBzdHJva2UtZGFzaGFycmF5OiAxLCAwOyIvPjwvbWFya2VyPjxtYXJrZXIgaWQ9Im15LXN2Z19mbG93Y2hhcnQtdjItY2lyY2xlU3RhcnQiIGNsYXNzPSJtYXJrZXIgZmxvd2NoYXJ0LXYyIiB2aWV3Qm94PSIwIDAgMTAgMTAiIHJlZlg9Ii0xIiByZWZZPSI1IiBtYXJrZXJVbml0cz0idXNlclNwYWNlT25Vc2UiIG1hcmtlcldpZHRoPSIxMSIgbWFya2VySGVpZ2h0PSIxMSIgb3JpZW50PSJhdXRvIj48Y2lyY2xlIGN4PSI1IiBjeT0iNSIgcj0iNSIgY2xhc3M9ImFycm93TWFya2VyUGF0aCIgc3R5bGU9InN0cm9rZS13aWR0aDogMTsgc3Ryb2tlLWRhc2hhcnJheTogMSwgMDsiLz48L21hcmtlcj48bWFya2VyIGlkPSJteS1zdmdfZmxvd2NoYXJ0LXYyLWNpcmNsZUVuZC1tYXJnaW4iIGNsYXNzPSJtYXJrZXIgZmxvd2NoYXJ0LXYyIiB2aWV3Qm94PSIwIDAgMTAgMTAiIHJlZlk9IjUiIHJlZlg9IjEyLjI1IiBtYXJrZXJVbml0cz0idXNlclNwYWNlT25Vc2UiIG1hcmtlcldpZHRoPSIxNCIgbWFya2VySGVpZ2h0PSIxNCIgb3JpZW50PSJhdXRvIj48Y2lyY2xlIGN4PSI1IiBjeT0iNSIgcj0iNSIgY2xhc3M9ImFycm93TWFya2VyUGF0aCIgc3R5bGU9InN0cm9rZS13aWR0aDogMDsgc3Ryb2tlLWRhc2hhcnJheTogMSwgMDsiLz48L21hcmtlcj48bWFya2VyIGlkPSJteS1zdmdfZmxvd2NoYXJ0LXYyLWNpcmNsZVN0YXJ0LW1hcmdpbiIgY2xhc3M9Im1hcmtlciBmbG93Y2hhcnQtdjIiIHZpZXdCb3g9IjAgMCAxMCAxMCIgcmVmWD0iLTIiIHJlZlk9IjUiIG1hcmtlclVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgbWFya2VyV2lkdGg9IjE0IiBtYXJrZXJIZWlnaHQ9IjE0IiBvcmllbnQ9ImF1dG8iPjxjaXJjbGUgY3g9IjUiIGN5PSI1IiByPSI1IiBjbGFzcz0iYXJyb3dNYXJrZXJQYXRoIiBzdHlsZT0ic3Ryb2tlLXdpZHRoOiAwOyBzdHJva2UtZGFzaGFycmF5OiAxLCAwOyIvPjwvbWFya2VyPjxtYXJrZXIgaWQ9Im15LXN2Z19mbG93Y2hhcnQtdjItY3Jvc3NFbmQiIGNsYXNzPSJtYXJrZXIgY3Jvc3MgZmxvd2NoYXJ0LXYyIiB2aWV3Qm94PSIwIDAgMTEgMTEiIHJlZlg9IjEyIiByZWZZPSI1LjIiIG1hcmtlclVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgbWFya2VyV2lkdGg9IjExIiBtYXJrZXJIZWlnaHQ9IjExIiBvcmllbnQ9ImF1dG8iPjxwYXRoIGQ9Ik0gMSwxIGwgOSw5IE0gMTAsMSBsIC05LDkiIGNsYXNzPSJhcnJvd01hcmtlclBhdGgiIHN0eWxlPSJzdHJva2Utd2lkdGg6IDI7IHN0cm9rZS1kYXNoYXJyYXk6IDEsIDA7Ii8+PC9tYXJrZXI+PG1hcmtlciBpZD0ibXktc3ZnX2Zsb3djaGFydC12Mi1jcm9zc1N0YXJ0IiBjbGFzcz0ibWFya2VyIGNyb3NzIGZsb3djaGFydC12MiIgdmlld0JveD0iMCAwIDExIDExIiByZWZYPSItMSIgcmVmWT0iNS4yIiBtYXJrZXJVbml0cz0idXNlclNwYWNlT25Vc2UiIG1hcmtlcldpZHRoPSIxMSIgbWFya2VySGVpZ2h0PSIxMSIgb3JpZW50PSJhdXRvIj48cGF0aCBkPSJNIDEsMSBsIDksOSBNIDEwLDEgbCAtOSw5IiBjbGFzcz0iYXJyb3dNYXJrZXJQYXRoIiBzdHlsZT0ic3Ryb2tlLXdpZHRoOiAyOyBzdHJva2UtZGFzaGFycmF5OiAxLCAwOyIvPjwvbWFya2VyPjxtYXJrZXIgaWQ9Im15LXN2Z19mbG93Y2hhcnQtdjItY3Jvc3NFbmQtbWFyZ2luIiBjbGFzcz0ibWFya2VyIGNyb3NzIGZsb3djaGFydC12MiIgdmlld0JveD0iMCAwIDE1IDE1IiByZWZYPSIxNy43IiByZWZZPSI3LjUiIG1hcmtlclVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgbWFya2VyV2lkdGg9IjEyIiBtYXJrZXJIZWlnaHQ9IjEyIiBvcmllbnQ9ImF1dG8iPjxwYXRoIGQ9Ik0gMSwxIEwgMTQsMTQgTSAxLDE0IEwgMTQsMSIgY2xhc3M9ImFycm93TWFya2VyUGF0aCIgc3R5bGU9InN0cm9rZS13aWR0aDogMi41OyIvPjwvbWFya2VyPjxtYXJrZXIgaWQ9Im15LXN2Z19mbG93Y2hhcnQtdjItY3Jvc3NTdGFydC1tYXJnaW4iIGNsYXNzPSJtYXJrZXIgY3Jvc3MgZmxvd2NoYXJ0LXYyIiB2aWV3Qm94PSIwIDAgMTUgMTUiIHJlZlg9Ii0zLjUiIHJlZlk9IjcuNSIgbWFya2VyVW5pdHM9InVzZXJTcGFjZU9uVXNlIiBtYXJrZXJXaWR0aD0iMTIiIG1hcmtlckhlaWdodD0iMTIiIG9yaWVudD0iYXV0byI+PHBhdGggZD0iTSAxLDEgTCAxNCwxNCBNIDEsMTQgTCAxNCwxIiBjbGFzcz0iYXJyb3dNYXJrZXJQYXRoIiBzdHlsZT0ic3Ryb2tlLXdpZHRoOiAyLjU7IHN0cm9rZS1kYXNoYXJyYXk6IDEsIDA7Ii8+PC9tYXJrZXI+PGcgY2xhc3M9InJvb3QiPjxnIGNsYXNzPSJjbHVzdGVycyIvPjxnIGNsYXNzPSJlZGdlUGF0aHMiPjxwYXRoIGQ9Ik0xMTguMjk3LDMwLjVMMTIyLjg4LDMwLjVDMTI3LjQ2NCwzMC41LDEzNi42MywzMC41LDE0NS4xMywzMC41QzE1My42MywzMC41LDE2MS40NjQsMzAuNSwxNjUuMzgsMzAuNUwxNjkuMjk3LDMwLjUiIGlkPSJteS1zdmctTF9BX0JfMCIgY2xhc3M9ImVkZ2UtdGhpY2tuZXNzLW5vcm1hbCBlZGdlLXBhdHRlcm4tc29saWQgZWRnZS10aGlja25lc3Mtbm9ybWFsIGVkZ2UtcGF0dGVybi1zb2xpZCBmbG93Y2hhcnQtbGluayIgc3R5bGU9IjsiIGRhdGEtZWRnZT0idHJ1ZSIgZGF0YS1ldD0iZWRnZSIgZGF0YS1pZD0iTF9BX0JfMCIgZGF0YS1wb2ludHM9Ilczc2llQ0k2TVRFNExqSTVOamczTlN3aWVTSTZNekF1Tlgwc2V5SjRJam94TkRVdU56azJPRGMxTENKNUlqb3pNQzQxZlN4N0luZ2lPakUzTXk0eU9UWTROelVzSW5raU9qTXdMalY5WFE9PSIgZGF0YS1sb29rPSJjbGFzc2ljIiBtYXJrZXItZW5kPSJ1cmwoI215LXN2Z19mbG93Y2hhcnQtdjItcG9pbnRFbmQpIi8+PHBhdGggZD0iTTMyMC44NDQsMzAuNUwzMjUuNDI3LDMwLjVDMzMwLjAxLDMwLjUsMzM5LjE3NywzMC41LDM0Ny42NzcsMzAuNUMzNTYuMTc3LDMwLjUsMzY0LjAxLDMwLjUsMzY3LjkyNywzMC41TDM3MS44NDQsMzAuNSIgaWQ9Im15LXN2Zy1MX0JfQ18wIiBjbGFzcz0iZWRnZS10aGlja25lc3Mtbm9ybWFsIGVkZ2UtcGF0dGVybi1zb2xpZCBlZGdlLXRoaWNrbmVzcy1ub3JtYWwgZWRnZS1wYXR0ZXJuLXNvbGlkIGZsb3djaGFydC1saW5rIiBzdHlsZT0iOyIgZGF0YS1lZGdlPSJ0cnVlIiBkYXRhLWV0PSJlZGdlIiBkYXRhLWlkPSJMX0JfQ18wIiBkYXRhLXBvaW50cz0iVzNzaWVDSTZNekl3TGpnME16YzFMQ0o1SWpvek1DNDFmU3g3SW5naU9qTTBPQzR6TkRNM05Td2llU0k2TXpBdU5YMHNleUo0SWpvek56VXVPRFF6TnpVc0lua2lPak13TGpWOVhRPT0iIGRhdGEtbG9vaz0iY2xhc3NpYyIgbWFya2VyLWVuZD0idXJsKCNteS1zdmdfZmxvd2NoYXJ0LXYyLXBvaW50RW5kKSIvPjxwYXRoIGQ9Ik01MTUuMjUsMzAuNUw1MTkuODMzLDMwLjVDNTI0LjQxNywzMC41LDUzMy41ODMsMzAuNSw1NDIuMDgzLDMwLjVDNTUwLjU4MywzMC41LDU1OC40MTcsMzAuNSw1NjIuMzMzLDMwLjVMNTY2LjI1LDMwLjUiIGlkPSJteS1zdmctTF9DX0RfMCIgY2xhc3M9ImVkZ2UtdGhpY2tuZXNzLW5vcm1hbCBlZGdlLXBhdHRlcm4tc29saWQgZWRnZS10aGlja25lc3Mtbm9ybWFsIGVkZ2UtcGF0dGVybi1zb2xpZCBmbG93Y2hhcnQtbGluayIgc3R5bGU9IjsiIGRhdGEtZWRnZT0idHJ1ZSIgZGF0YS1ldD0iZWRnZSIgZGF0YS1pZD0iTF9DX0RfMCIgZGF0YS1wb2ludHM9Ilczc2llQ0k2TlRFMUxqSTFMQ0o1SWpvek1DNDFmU3g3SW5naU9qVTBNaTQzTlN3aWVTSTZNekF1Tlgwc2V5SjRJam8xTnpBdU1qVXNJbmtpT2pNd0xqVjlYUT09IiBkYXRhLWxvb2s9ImNsYXNzaWMiIG1hcmtlci1lbmQ9InVybCgjbXktc3ZnX2Zsb3djaGFydC12Mi1wb2ludEVuZCkiLz48cGF0aCBkPSJNNzM4LjIwMywzMC41TDc0Mi43ODYsMzAuNUM3NDcuMzcsMzAuNSw3NTYuNTM2LDMwLjUsNzY1LjAzNiwzMC41Qzc3My41MzYsMzAuNSw3ODEuMzcsMzAuNSw3ODUuMjg2LDMwLjVMNzg5LjIwMywzMC41IiBpZD0ibXktc3ZnLUxfRF9FXzAiIGNsYXNzPSJlZGdlLXRoaWNrbmVzcy1ub3JtYWwgZWRnZS1wYXR0ZXJuLXNvbGlkIGVkZ2UtdGhpY2tuZXNzLW5vcm1hbCBlZGdlLXBhdHRlcm4tc29saWQgZmxvd2NoYXJ0LWxpbmsiIHN0eWxlPSI7IiBkYXRhLWVkZ2U9InRydWUiIGRhdGEtZXQ9ImVkZ2UiIGRhdGEtaWQ9IkxfRF9FXzAiIGRhdGEtcG9pbnRzPSJXM3NpZUNJNk56TTRMakl3TXpFeU5Td2llU0k2TXpBdU5YMHNleUo0SWpvM05qVXVOekF6TVRJMUxDSjVJam96TUM0MWZTeDdJbmdpT2pjNU15NHlNRE14TWpVc0lua2lPak13TGpWOVhRPT0iIGRhdGEtbG9vaz0iY2xhc3NpYyIgbWFya2VyLWVuZD0idXJsKCNteS1zdmdfZmxvd2NoYXJ0LXYyLXBvaW50RW5kKSIvPjxwYXRoIGQ9Ik05MzEuNDg0LDMwLjVMOTM2LjA2OCwzMC41Qzk0MC42NTEsMzAuNSw5NDkuODE4LDMwLjUsOTU4LjMxOCwzMC41Qzk2Ni44MTgsMzAuNSw5NzQuNjUxLDMwLjUsOTc4LjU2OCwzMC41TDk4Mi40ODQsMzAuNSIgaWQ9Im15LXN2Zy1MX0VfRl8wIiBjbGFzcz0iZWRnZS10aGlja25lc3Mtbm9ybWFsIGVkZ2UtcGF0dGVybi1zb2xpZCBlZGdlLXRoaWNrbmVzcy1ub3JtYWwgZWRnZS1wYXR0ZXJuLXNvbGlkIGZsb3djaGFydC1saW5rIiBzdHlsZT0iOyIgZGF0YS1lZGdlPSJ0cnVlIiBkYXRhLWV0PSJlZGdlIiBkYXRhLWlkPSJMX0VfRl8wIiBkYXRhLXBvaW50cz0iVzNzaWVDSTZPVE14TGpRNE5ETTNOU3dpZVNJNk16QXVOWDBzZXlKNElqbzVOVGd1T1RnME16YzFMQ0o1SWpvek1DNDFmU3g3SW5naU9qazROaTQwT0RRek56VXNJbmtpT2pNd0xqVjlYUT09IiBkYXRhLWxvb2s9ImNsYXNzaWMiIG1hcmtlci1lbmQ9InVybCgjbXktc3ZnX2Zsb3djaGFydC12Mi1wb2ludEVuZCkiLz48cGF0aCBkPSJNMTE0My45MzgsMzAuNUwxMTQ4LjUyMSwzMC41QzExNTMuMTA0LDMwLjUsMTE2Mi4yNzEsMzAuNSwxMTcwLjc3MSwzMC41QzExNzkuMjcxLDMwLjUsMTE4Ny4xMDQsMzAuNSwxMTkxLjAyMSwzMC41TDExOTQuOTM4LDMwLjUiIGlkPSJteS1zdmctTF9GX0dfMCIgY2xhc3M9ImVkZ2UtdGhpY2tuZXNzLW5vcm1hbCBlZGdlLXBhdHRlcm4tc29saWQgZWRnZS10aGlja25lc3Mtbm9ybWFsIGVkZ2UtcGF0dGVybi1zb2xpZCBmbG93Y2hhcnQtbGluayIgc3R5bGU9IjsiIGRhdGEtZWRnZT0idHJ1ZSIgZGF0YS1ldD0iZWRnZSIgZGF0YS1pZD0iTF9GX0dfMCIgZGF0YS1wb2ludHM9Ilczc2llQ0k2TVRFME15NDVNemMxTENKNUlqb3pNQzQxZlN4N0luZ2lPakV4TnpFdU5ETTNOU3dpZVNJNk16QXVOWDBzZXlKNElqb3hNVGs0TGprek56VXNJbmtpT2pNd0xqVjlYUT09IiBkYXRhLWxvb2s9ImNsYXNzaWMiIG1hcmtlci1lbmQ9InVybCgjbXktc3ZnX2Zsb3djaGFydC12Mi1wb2ludEVuZCkiLz48cGF0aCBkPSJNMTM1OS4zNTksMzAuNUwxMzYzLjk0MywzMC41QzEzNjguNTI2LDMwLjUsMTM3Ny42OTMsMzAuNSwxMzg2LjE5MywzMC41QzEzOTQuNjkzLDMwLjUsMTQwMi41MjYsMzAuNSwxNDA2LjQ0MywzMC41TDE0MTAuMzU5LDMwLjUiIGlkPSJteS1zdmctTF9HX0hfMCIgY2xhc3M9ImVkZ2UtdGhpY2tuZXNzLW5vcm1hbCBlZGdlLXBhdHRlcm4tc29saWQgZWRnZS10aGlja25lc3Mtbm9ybWFsIGVkZ2UtcGF0dGVybi1zb2xpZCBmbG93Y2hhcnQtbGluayIgc3R5bGU9IjsiIGRhdGEtZWRnZT0idHJ1ZSIgZGF0YS1ldD0iZWRnZSIgZGF0YS1pZD0iTF9HX0hfMCIgZGF0YS1wb2ludHM9Ilczc2llQ0k2TVRNMU9TNHpOVGt6TnpVc0lua2lPak13TGpWOUxIc2llQ0k2TVRNNE5pNDROVGt6TnpVc0lua2lPak13TGpWOUxIc2llQ0k2TVRReE5DNHpOVGt6TnpVc0lua2lPak13TGpWOVhRPT0iIGRhdGEtbG9vaz0iY2xhc3NpYyIgbWFya2VyLWVuZD0idXJsKCNteS1zdmdfZmxvd2NoYXJ0LXYyLXBvaW50RW5kKSIvPjwvZz48ZyBjbGFzcz0iZWRnZUxhYmVscyI+PGcgY2xhc3M9ImVkZ2VMYWJlbCI+PGcgY2xhc3M9ImxhYmVsIiBkYXRhLWlkPSJMX0FfQl8wIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwLCAwKSI+PGZvcmVpZ25PYmplY3Qgd2lkdGg9IjAiIGhlaWdodD0iMCI+PGRpdiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94aHRtbCIgY2xhc3M9ImxhYmVsQmtnIiBzdHlsZT0iZGlzcGxheTogdGFibGUtY2VsbDsgd2hpdGUtc3BhY2U6IG5vd3JhcDsgbGluZS1oZWlnaHQ6IDEuNTsgbWF4LXdpZHRoOiAyMDBweDsgdGV4dC1hbGlnbjogY2VudGVyOyI+PHNwYW4gY2xhc3M9ImVkZ2VMYWJlbCI+PC9zcGFuPjwvZGl2PjwvZm9yZWlnbk9iamVjdD48L2c+PC9nPjxnIGNsYXNzPSJlZGdlTGFiZWwiPjxnIGNsYXNzPSJsYWJlbCIgZGF0YS1pZD0iTF9CX0NfMCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMCwgMCkiPjxmb3JlaWduT2JqZWN0IHdpZHRoPSIwIiBoZWlnaHQ9IjAiPjxkaXYgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGh0bWwiIGNsYXNzPSJsYWJlbEJrZyIgc3R5bGU9ImRpc3BsYXk6IHRhYmxlLWNlbGw7IHdoaXRlLXNwYWNlOiBub3dyYXA7IGxpbmUtaGVpZ2h0OiAxLjU7IG1heC13aWR0aDogMjAwcHg7IHRleHQtYWxpZ246IGNlbnRlcjsiPjxzcGFuIGNsYXNzPSJlZGdlTGFiZWwiPjwvc3Bhbj48L2Rpdj48L2ZvcmVpZ25PYmplY3Q+PC9nPjwvZz48ZyBjbGFzcz0iZWRnZUxhYmVsIj48ZyBjbGFzcz0ibGFiZWwiIGRhdGEtaWQ9IkxfQ19EXzAiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDAsIDApIj48Zm9yZWlnbk9iamVjdCB3aWR0aD0iMCIgaGVpZ2h0PSIwIj48ZGl2IHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hodG1sIiBjbGFzcz0ibGFiZWxCa2ciIHN0eWxlPSJkaXNwbGF5OiB0YWJsZS1jZWxsOyB3aGl0ZS1zcGFjZTogbm93cmFwOyBsaW5lLWhlaWdodDogMS41OyBtYXgtd2lkdGg6IDIwMHB4OyB0ZXh0LWFsaWduOiBjZW50ZXI7Ij48c3BhbiBjbGFzcz0iZWRnZUxhYmVsIj48L3NwYW4+PC9kaXY+PC9mb3JlaWduT2JqZWN0PjwvZz48L2c+PGcgY2xhc3M9ImVkZ2VMYWJlbCI+PGcgY2xhc3M9ImxhYmVsIiBkYXRhLWlkPSJMX0RfRV8wIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwLCAwKSI+PGZvcmVpZ25PYmplY3Qgd2lkdGg9IjAiIGhlaWdodD0iMCI+PGRpdiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94aHRtbCIgY2xhc3M9ImxhYmVsQmtnIiBzdHlsZT0iZGlzcGxheTogdGFibGUtY2VsbDsgd2hpdGUtc3BhY2U6IG5vd3JhcDsgbGluZS1oZWlnaHQ6IDEuNTsgbWF4LXdpZHRoOiAyMDBweDsgdGV4dC1hbGlnbjogY2VudGVyOyI+PHNwYW4gY2xhc3M9ImVkZ2VMYWJlbCI+PC9zcGFuPjwvZGl2PjwvZm9yZWlnbk9iamVjdD48L2c+PC9nPjxnIGNsYXNzPSJlZGdlTGFiZWwiPjxnIGNsYXNzPSJsYWJlbCIgZGF0YS1pZD0iTF9FX0ZfMCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMCwgMCkiPjxmb3JlaWduT2JqZWN0IHdpZHRoPSIwIiBoZWlnaHQ9IjAiPjxkaXYgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGh0bWwiIGNsYXNzPSJsYWJlbEJrZyIgc3R5bGU9ImRpc3BsYXk6IHRhYmxlLWNlbGw7IHdoaXRlLXNwYWNlOiBub3dyYXA7IGxpbmUtaGVpZ2h0OiAxLjU7IG1heC13aWR0aDogMjAwcHg7IHRleHQtYWxpZ246IGNlbnRlcjsiPjxzcGFuIGNsYXNzPSJlZGdlTGFiZWwiPjwvc3Bhbj48L2Rpdj48L2ZvcmVpZ25PYmplY3Q+PC9nPjwvZz48ZyBjbGFzcz0iZWRnZUxhYmVsIj48ZyBjbGFzcz0ibGFiZWwiIGRhdGEtaWQ9IkxfRl9HXzAiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDAsIDApIj48Zm9yZWlnbk9iamVjdCB3aWR0aD0iMCIgaGVpZ2h0PSIwIj48ZGl2IHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hodG1sIiBjbGFzcz0ibGFiZWxCa2ciIHN0eWxlPSJkaXNwbGF5OiB0YWJsZS1jZWxsOyB3aGl0ZS1zcGFjZTogbm93cmFwOyBsaW5lLWhlaWdodDogMS41OyBtYXgtd2lkdGg6IDIwMHB4OyB0ZXh0LWFsaWduOiBjZW50ZXI7Ij48c3BhbiBjbGFzcz0iZWRnZUxhYmVsIj48L3NwYW4+PC9kaXY+PC9mb3JlaWduT2JqZWN0PjwvZz48L2c+PGcgY2xhc3M9ImVkZ2VMYWJlbCI+PGcgY2xhc3M9ImxhYmVsIiBkYXRhLWlkPSJMX0dfSF8wIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwLCAwKSI+PGZvcmVpZ25PYmplY3Qgd2lkdGg9IjAiIGhlaWdodD0iMCI+PGRpdiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94aHRtbCIgY2xhc3M9ImxhYmVsQmtnIiBzdHlsZT0iZGlzcGxheTogdGFibGUtY2VsbDsgd2hpdGUtc3BhY2U6IG5vd3JhcDsgbGluZS1oZWlnaHQ6IDEuNTsgbWF4LXdpZHRoOiAyMDBweDsgdGV4dC1hbGlnbjogY2VudGVyOyI+PHNwYW4gY2xhc3M9ImVkZ2VMYWJlbCI+PC9zcGFuPjwvZGl2PjwvZm9yZWlnbk9iamVjdD48L2c+PC9nPjwvZz48ZyBjbGFzcz0ibm9kZXMiPjxnIGNsYXNzPSJub2RlIGRlZmF1bHQiIGlkPSJteS1zdmctZmxvd2NoYXJ0LUEtMCIgZGF0YS1sb29rPSJjbGFzc2ljIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSg2My4xNDg0Mzc1LCAzMC41KSI+PHJlY3QgY2xhc3M9ImJhc2ljIGxhYmVsLWNvbnRhaW5lciIgc3R5bGU9IiIgeD0iLTU1LjE0ODQzNzUiIHk9Ii0yMi41IiB3aWR0aD0iMTEwLjI5Njg3NSIgaGVpZ2h0PSI0NSIvPjxnIGNsYXNzPSJsYWJlbCIgc3R5bGU9IiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTMxLjE0ODQzNzUsIC0xMC41KSI+PHJlY3QvPjxmb3JlaWduT2JqZWN0IHdpZHRoPSI2Mi4yOTY4NzUiIGhlaWdodD0iMjEiPjxkaXYgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGh0bWwiIHN0eWxlPSJkaXNwbGF5OiB0YWJsZS1jZWxsOyB3aGl0ZS1zcGFjZTogbm93cmFwOyBsaW5lLWhlaWdodDogMS41OyBtYXgtd2lkdGg6IDIwMHB4OyB0ZXh0LWFsaWduOiBjZW50ZXI7Ij48c3BhbiBjbGFzcz0ibm9kZUxhYmVsIj48cD5HZXQgdG9rZW48L3A+PC9zcGFuPjwvZGl2PjwvZm9yZWlnbk9iamVjdD48L2c+PC9nPjxnIGNsYXNzPSJub2RlIGRlZmF1bHQiIGlkPSJteS1zdmctZmxvd2NoYXJ0LUItMSIgZGF0YS1sb29rPSJjbGFzc2ljIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgyNDcuMDcwMzEyNSwgMzAuNSkiPjxyZWN0IGNsYXNzPSJiYXNpYyBsYWJlbC1jb250YWluZXIiIHN0eWxlPSIiIHg9Ii03My43NzM0Mzc1IiB5PSItMjIuNSIgd2lkdGg9IjE0Ny41NDY4NzUiIGhlaWdodD0iNDUiLz48ZyBjbGFzcz0ibGFiZWwiIHN0eWxlPSIiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC00OS43NzM0Mzc1LCAtMTAuNSkiPjxyZWN0Lz48Zm9yZWlnbk9iamVjdCB3aWR0aD0iOTkuNTQ2ODc1IiBoZWlnaHQ9IjIxIj48ZGl2IHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hodG1sIiBzdHlsZT0iZGlzcGxheTogdGFibGUtY2VsbDsgd2hpdGUtc3BhY2U6IG5vd3JhcDsgbGluZS1oZWlnaHQ6IDEuNTsgbWF4LXdpZHRoOiAyMDBweDsgdGV4dC1hbGlnbjogY2VudGVyOyI+PHNwYW4gY2xhc3M9Im5vZGVMYWJlbCI+PHA+UmVhZCBjdXJyZW50IEwzPC9wPjwvc3Bhbj48L2Rpdj48L2ZvcmVpZ25PYmplY3Q+PC9nPjwvZz48ZyBjbGFzcz0ibm9kZSBkZWZhdWx0IiBpZD0ibXktc3ZnLWZsb3djaGFydC1DLTMiIGRhdGEtbG9vaz0iY2xhc3NpYyIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNDQ1LjU0Njg3NSwgMzAuNSkiPjxyZWN0IGNsYXNzPSJiYXNpYyBsYWJlbC1jb250YWluZXIiIHN0eWxlPSIiIHg9Ii02OS43MDMxMjUiIHk9Ii0yMi41IiB3aWR0aD0iMTM5LjQwNjI1IiBoZWlnaHQ9IjQ1Ii8+PGcgY2xhc3M9ImxhYmVsIiBzdHlsZT0iIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtNDUuNzAzMTI1LCAtMTAuNSkiPjxyZWN0Lz48Zm9yZWlnbk9iamVjdCB3aWR0aD0iOTEuNDA2MjUiIGhlaWdodD0iMjEiPjxkaXYgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGh0bWwiIHN0eWxlPSJkaXNwbGF5OiB0YWJsZS1jZWxsOyB3aGl0ZS1zcGFjZTogbm93cmFwOyBsaW5lLWhlaWdodDogMS41OyBtYXgtd2lkdGg6IDIwMHB4OyB0ZXh0LWFsaWduOiBjZW50ZXI7Ij48c3BhbiBjbGFzcz0ibm9kZUxhYmVsIj48cD5EZWZpbmUgc291cmNlczwvcD48L3NwYW4+PC9kaXY+PC9mb3JlaWduT2JqZWN0PjwvZz48L2c+PGcgY2xhc3M9Im5vZGUgZGVmYXVsdCIgaWQ9Im15LXN2Zy1mbG93Y2hhcnQtRC01IiBkYXRhLWxvb2s9ImNsYXNzaWMiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDY1NC4yMjY1NjI1LCAzMC41KSI+PHJlY3QgY2xhc3M9ImJhc2ljIGxhYmVsLWNvbnRhaW5lciIgc3R5bGU9IiIgeD0iLTgzLjk3NjU2MjUiIHk9Ii0yMi41IiB3aWR0aD0iMTY3Ljk1MzEyNSIgaGVpZ2h0PSI0NSIvPjxnIGNsYXNzPSJsYWJlbCIgc3R5bGU9IiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTU5Ljk3NjU2MjUsIC0xMC41KSI+PHJlY3QvPjxmb3JlaWduT2JqZWN0IHdpZHRoPSIxMTkuOTUzMTI1IiBoZWlnaHQ9IjIxIj48ZGl2IHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hodG1sIiBzdHlsZT0iZGlzcGxheTogdGFibGUtY2VsbDsgd2hpdGUtc3BhY2U6IG5vd3JhcDsgbGluZS1oZWlnaHQ6IDEuNTsgbWF4LXdpZHRoOiAyMDBweDsgdGV4dC1hbGlnbjogY2VudGVyOyI+PHNwYW4gY2xhc3M9Im5vZGVMYWJlbCI+PHA+RGVmaW5lIGVudGl0eSB0eXBlczwvcD48L3NwYW4+PC9kaXY+PC9mb3JlaWduT2JqZWN0PjwvZz48L2c+PGcgY2xhc3M9Im5vZGUgZGVmYXVsdCIgaWQ9Im15LXN2Zy1mbG93Y2hhcnQtRS03IiBkYXRhLWxvb2s9ImNsYXNzaWMiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDg2Mi4zNDM3NSwgMzAuNSkiPjxyZWN0IGNsYXNzPSJiYXNpYyBsYWJlbC1jb250YWluZXIiIHN0eWxlPSIiIHg9Ii02OS4xNDA2MjUiIHk9Ii0yMi41IiB3aWR0aD0iMTM4LjI4MTI1IiBoZWlnaHQ9IjQ1Ii8+PGcgY2xhc3M9ImxhYmVsIiBzdHlsZT0iIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtNDUuMTQwNjI1LCAtMTAuNSkiPjxyZWN0Lz48Zm9yZWlnbk9iamVjdCB3aWR0aD0iOTAuMjgxMjUiIGhlaWdodD0iMjEiPjxkaXYgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGh0bWwiIHN0eWxlPSJkaXNwbGF5OiB0YWJsZS1jZWxsOyB3aGl0ZS1zcGFjZTogbm93cmFwOyBsaW5lLWhlaWdodDogMS41OyBtYXgtd2lkdGg6IDIwMHB4OyB0ZXh0LWFsaWduOiBjZW50ZXI7Ij48c3BhbiBjbGFzcz0ibm9kZUxhYmVsIj48cD5BZGQgYXR0cmlidXRlczwvcD48L3NwYW4+PC9kaXY+PC9mb3JlaWduT2JqZWN0PjwvZz48L2c+PGcgY2xhc3M9Im5vZGUgZGVmYXVsdCIgaWQ9Im15LXN2Zy1mbG93Y2hhcnQtRi05IiBkYXRhLWxvb2s9ImNsYXNzaWMiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDEwNjUuMjEwOTM3NSwgMzAuNSkiPjxyZWN0IGNsYXNzPSJiYXNpYyBsYWJlbC1jb250YWluZXIiIHN0eWxlPSIiIHg9Ii03OC43MjY1NjI1IiB5PSItMjIuNSIgd2lkdGg9IjE1Ny40NTMxMjUiIGhlaWdodD0iNDUiLz48ZyBjbGFzcz0ibGFiZWwiIHN0eWxlPSIiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC01NC43MjY1NjI1LCAtMTAuNSkiPjxyZWN0Lz48Zm9yZWlnbk9iamVjdCB3aWR0aD0iMTA5LjQ1MzEyNSIgaGVpZ2h0PSIyMSI+PGRpdiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94aHRtbCIgc3R5bGU9ImRpc3BsYXk6IHRhYmxlLWNlbGw7IHdoaXRlLXNwYWNlOiBub3dyYXA7IGxpbmUtaGVpZ2h0OiAxLjU7IG1heC13aWR0aDogMjAwcHg7IHRleHQtYWxpZ246IGNlbnRlcjsiPjxzcGFuIGNsYXNzPSJub2RlTGFiZWwiPjxwPkFkZCByZWxhdGlvbiB0eXBlPC9wPjwvc3Bhbj48L2Rpdj48L2ZvcmVpZ25PYmplY3Q+PC9nPjwvZz48ZyBjbGFzcz0ibm9kZSBkZWZhdWx0IiBpZD0ibXktc3ZnLWZsb3djaGFydC1HLTExIiBkYXRhLWxvb2s9ImNsYXNzaWMiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDEyNzkuMTQ4NDM3NSwgMzAuNSkiPjxyZWN0IGNsYXNzPSJiYXNpYyBsYWJlbC1jb250YWluZXIiIHN0eWxlPSIiIHg9Ii04MC4yMTA5Mzc1IiB5PSItMjIuNSIgd2lkdGg9IjE2MC40MjE4NzUiIGhlaWdodD0iNDUiLz48ZyBjbGFzcz0ibGFiZWwiIHN0eWxlPSIiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC01Ni4yMTA5Mzc1LCAtMTAuNSkiPjxyZWN0Lz48Zm9yZWlnbk9iamVjdCB3aWR0aD0iMTEyLjQyMTg3NSIgaGVpZ2h0PSIyMSI+PGRpdiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94aHRtbCIgc3R5bGU9ImRpc3BsYXk6IHRhYmxlLWNlbGw7IHdoaXRlLXNwYWNlOiBub3dyYXA7IGxpbmUtaGVpZ2h0OiAxLjU7IG1heC13aWR0aDogMjAwcHg7IHRleHQtYWxpZ246IGNlbnRlcjsiPjxzcGFuIGNsYXNzPSJub2RlTGFiZWwiPjxwPlBVVCBjb25maWd1cmF0aW9uPC9wPjwvc3Bhbj48L2Rpdj48L2ZvcmVpZ25PYmplY3Q+PC9nPjwvZz48ZyBjbGFzcz0ibm9kZSBkZWZhdWx0IiBpZD0ibXktc3ZnLWZsb3djaGFydC1ILTEzIiBkYXRhLWxvb2s9ImNsYXNzaWMiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE0NzkuNDA2MjUsIDMwLjUpIj48cmVjdCBjbGFzcz0iYmFzaWMgbGFiZWwtY29udGFpbmVyIiBzdHlsZT0iIiB4PSItNjUuMDQ2ODc1IiB5PSItMjIuNSIgd2lkdGg9IjEzMC4wOTM3NSIgaGVpZ2h0PSI0NSIvPjxnIGNsYXNzPSJsYWJlbCIgc3R5bGU9IiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTQxLjA0Njg3NSwgLTEwLjUpIj48cmVjdC8+PGZvcmVpZ25PYmplY3Qgd2lkdGg9IjgyLjA5Mzc1IiBoZWlnaHQ9IjIxIj48ZGl2IHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hodG1sIiBzdHlsZT0iZGlzcGxheTogdGFibGUtY2VsbDsgd2hpdGUtc3BhY2U6IG5vd3JhcDsgbGluZS1oZWlnaHQ6IDEuNTsgbWF4LXdpZHRoOiAyMDBweDsgdGV4dC1hbGlnbjogY2VudGVyOyI+PHNwYW4gY2xhc3M9Im5vZGVMYWJlbCI+PHA+VmVyaWZ5IHRlbmFudDwvcD48L3NwYW4+PC9kaXY+PC9mb3JlaWduT2JqZWN0PjwvZz48L2c+PC9nPjwvZz48L2c+PGRlZnM+PGZpbHRlciBpZD0ibXktc3ZnLWRyb3Atc2hhZG93IiBoZWlnaHQ9IjEzMCUiIHdpZHRoPSIxMzAlIj48ZmVEcm9wU2hhZG93IGR4PSI0IiBkeT0iNCIgc3RkRGV2aWF0aW9uPSIwIiBmbG9vZC1vcGFjaXR5PSIwLjA2IiBmbG9vZC1jb2xvcj0iIzAwMDAwMCIvPjwvZmlsdGVyPjwvZGVmcz48ZGVmcz48ZmlsdGVyIGlkPSJteS1zdmctZHJvcC1zaGFkb3ctc21hbGwiIGhlaWdodD0iMTUwJSIgd2lkdGg9IjE1MCUiPjxmZURyb3BTaGFkb3cgZHg9IjIiIGR5PSIyIiBzdGREZXZpYXRpb249IjAiIGZsb29kLW9wYWNpdHk9IjAuMDYiIGZsb29kLWNvbG9yPSIjMDAwMDAwIi8+PC9maWx0ZXI+PC9kZWZzPjxsaW5lYXJHcmFkaWVudCBpZD0ibXktc3ZnLWdyYWRpZW50IiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiMwMDAwMzMiIHN0b3Atb3BhY2l0eT0iMSIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iaHNsKDAsIDAlLCA4Ni4wNzg0MzEzNzI1JSkiIHN0b3Atb3BhY2l0eT0iMSIvPjwvbGluZWFyR3JhZGllbnQ+PC9zdmc+" alt="Workflow diagram" /><h2 id="overview">Overview</h2>
+<p>This guide walks you through configuring an empty Reltio tenant so the Top 10 APIs tutorial works end to end. You&#39;ll apply a Layer 3 (L3) configuration that defines two entity types, two sources, and one relation type, then verify the tenant is ready. Everything runs against the Configuration API — no Console UI required.</p>
+<p>This guide is for this Reltio role: <strong>Developer</strong>. For more information on data unification roles in the Reltio Context Intelligence Platform, see <a href="https://docs.reltio.com/en/roles/about-roles">About roles</a>.</p>
+<h2 id="contents">Contents</h2>
+<ol>
+<li><a href="#1-getting-started">Getting started</a></li>
+<li><a href="#2-key-concepts">Key concepts</a></li>
+<li><a href="#3-read-the-current-l3-configuration">Read the current L3 configuration</a></li>
+<li><a href="#4-define-the-sources">Define the sources</a></li>
+<li><a href="#5-define-the-individual-entity-type">Define the Individual entity type</a></li>
+<li><a href="#6-define-the-organization-entity-type">Define the Organization entity type</a></li>
+<li><a href="#7-define-the-employment-relation-type">Define the Employment relation type</a></li>
+<li><a href="#8-apply-the-l3-with-set-configuration">Apply the L3 with Set Configuration</a></li>
+<li><a href="#9-verify-the-tenant">Verify the tenant</a></li>
+<li><a href="#10-reset-and-rollback">Reset and rollback</a></li>
+<li><a href="#11-troubleshooting">Troubleshooting</a></li>
+<li><a href="#12-further-reading">Further reading</a></li>
+<li><a href="#13-glossary">Glossary</a></li>
+</ol>
+<h2 id="1-getting-started">1. Getting started</h2>
+<p>Gather these before you begin:</p>
+<ul>
+<li>A sandbox Reltio tenant you don&#39;t mind overwriting</li>
+<li>Your <strong>Client ID</strong> and <strong>Client Secret</strong> — credentials with configuration-update privileges (see the <code>MDM.config.businessModel - Update</code> note in Managing Sources)</li>
+<li>Your <strong>Tenant URL</strong> in the format <code>https://{env}.reltio.com/reltio/api/{tenantId}</code> (for example, <code>https://na07-prod.reltio.com/reltio/api/YOUR_TENANT_ID</code>)</li>
+<li><code>curl</code> and <code>jq</code> available on your shell</li>
+<li>An access token obtained through the Reltio Authentication API — see <a href="HOWTO-authenticate-and-use-reltio-apis.html">HOWTO: Authenticate and use Reltio APIs</a></li>
+</ul>
+<p>Export the token and tenant URL once so later commands stay short:</p>
+<pre><code class="language-bash hljs"><span class="hljs-built_in">export</span> TOKEN=<span class="hljs-string">&quot;eyJhbGciOiJSUzI1NiIs...&quot;</span>
+<span class="hljs-built_in">export</span> TENANT=<span class="hljs-string">&quot;https://na07-prod.reltio.com/reltio/api/YOUR_TENANT_ID&quot;</span></code></pre>
+<blockquote>
+<p><strong>Important:</strong> The steps below issue a <code>PUT /configuration</code>, which <strong>replaces</strong> the tenant&#39;s existing L3. Only run this on an empty or sandbox tenant.</p>
+</blockquote>
+<blockquote>
+<p><strong>Learn more:</strong> <a href="https://docs.reltio.com/en/reltio/what-does-reltio-do/what-reltio-does-at-a-glance/data-unification-and-mdm-at-a-glance/data-unification-and-mdm-in-detail/reltio-information-model/data-model/tenant-configuration-inheritance-across-layers/reltio-l3-layer----customer-tenant/apply-an-l3-to-a-tenant">Apply an L3 to a tenant</a> in the Reltio documentation.</p>
+</blockquote>
+<h2 id="2-key-concepts">2. Key concepts</h2>
+<p>The tutorial&#39;s data model is small on purpose — three object types, three attributes, and two sources. Each piece maps to one or more tutorial steps.</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="#13-glossary">Entity type</a> <code>Individual</code></td>
+<td>Represents a person with <code>FirstName</code>, <code>LastName</code>, and <code>Email</code> simple attributes</td>
+</tr>
+<tr>
+<td>Entity type <code>Organization</code></td>
+<td>Represents a company with a <code>Name</code> simple attribute</td>
+</tr>
+<tr>
+<td><a href="#13-glossary">Source</a> <code>CRM</code></td>
+<td>Primary source for individuals and organizations created during the tutorial</td>
+</tr>
+<tr>
+<td>Source <code>ERP</code></td>
+<td>Second source used to create a near-duplicate record</td>
+</tr>
+<tr>
+<td><a href="#13-glossary">Relation type</a> <code>Employment</code></td>
+<td>Links an <code>Individual</code> (start) to an <code>Organization</code> (end), with a <code>Title</code> attribute</td>
+</tr>
+</tbody></table>
+<p>A few platform concepts to keep straight:</p>
+<ul>
+<li><strong><a href="#13-glossary">L3</a></strong> — the customer-owned configuration layer; the consolidated model a tenant actually runs on is L1 + L2 + L3 after inheritance.</li>
+<li><strong><a href="#13-glossary">Configuration API</a></strong> — the REST surface used to get and set L3. The two most-used calls are <code>GET /configuration</code> (with <code>_noInheritance</code> for just the L3 you own) and <code>PUT /configuration</code>.</li>
+<li><strong><a href="#13-glossary">Crosswalk</a></strong> — a pointer from a Reltio entity back to its source record; every record you load during the tutorial lands in the tenant with a crosswalk whose <code>type</code> points to <code>configuration/sources/CRM</code> or <code>configuration/sources/ERP</code>.</li>
+</ul>
+<p>The Top 10 APIs tutorial exercises CRUD, search, crosswalks, relations, match, and merge. The V1 tutorial you can follow today is <a href="HOWTO-top-10-reltio-apis.html">HOWTO: Top 10 Reltio APIs</a>. A V2 of that tutorial (<code>HOWTO-top-10-reltio-apis-v2.md</code>) will follow the same structure as this guide once published.</p>
+<blockquote>
+<p><strong>Learn more:</strong> <a href="https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/configuration-api">Configuration API overview</a> in the Reltio documentation.</p>
+</blockquote>
+<h2 id="3-read-the-current-l3-configuration">3. Read the current L3 configuration</h2>
+<p><code>GET /configuration/_noInheritance</code></p>
+<p>Pull just the L3 layer so you can see what (if anything) is already there before you overwrite it. <code>_noInheritance</code> returns only the customer-owned layer, not the consolidated L1 + L2 + L3.</p>
+<p><strong>Request</strong></p>
+<pre><code class="language-bash hljs">curl -s -X GET <span class="hljs-string">&quot;<span class="hljs-variable">${TENANT}</span>/configuration/_noInheritance&quot;</span> \
+  -H <span class="hljs-string">&quot;Authorization: Bearer <span class="hljs-variable">${TOKEN}</span>&quot;</span> | jq .</code></pre>
+<p><strong>Response</strong></p>
+<pre><code class="language-json hljs"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;label&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Test Business Model&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;description&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Test Business Model Configuration-used to describe Configuration API format&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;schemaVersion&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;1&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;entityTypes&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
+    <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">&quot;URI&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;configuration/entityTypes/Individual&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;label&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Individual&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Individual&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;id&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;1&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;attributes&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
+        <span class="hljs-punctuation">{</span>
+          <span class="hljs-attr">&quot;URI&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;configuration/entityTypes/Individual/attributes/FirstName&quot;</span><span class="hljs-punctuation">,</span>
+          <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;FirstName&quot;</span><span class="hljs-punctuation">,</span>
+          <span class="hljs-attr">&quot;label&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;First Name&quot;</span><span class="hljs-punctuation">,</span>
+          <span class="hljs-attr">&quot;id&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;2&quot;</span><span class="hljs-punctuation">,</span>
+          <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;String&quot;</span>
+        <span class="hljs-punctuation">}</span>
+      <span class="hljs-punctuation">]</span>
+    <span class="hljs-punctuation">}</span>
+  <span class="hljs-punctuation">]</span>
+<span class="hljs-punctuation">}</span></code></pre>
+<h3 id="why-this-matters">Why this matters</h3>
+<p><code>GET /configuration</code> (the default) returns the consolidated model — L1 + L2 + L3 merged. The official guidance is explicit: <strong>never apply a consolidated configuration to the tenant</strong>. Always <code>GET</code> with <code>_noInheritance</code>, edit that, and <code>PUT</code> it back.</p>
+<h3 id="key-rules">Key rules</h3>
+<ul>
+<li><strong>Use <code>_noInheritance</code> for edits</strong> — it returns only your L3 layer.</li>
+<li><strong>Keep a copy of the response</strong> — save it locally before you <code>PUT</code> so you can roll back.</li>
+<li><strong>An empty response is expected on a blank tenant</strong> — the <code>PUT</code> will write the first version.</li>
+</ul>
+<blockquote>
+<p><strong>Learn more:</strong> <a href="https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/configuration-api/get-configuration-no-inheritance">Get Configuration (No Inheritance)</a> in the Reltio documentation.</p>
+</blockquote>
+<h2 id="4-define-the-sources">4. Define the sources</h2>
+<p>Sources are registered in the tenant&#39;s configuration under <code>configuration/sources</code>. Every record loaded into a tenant is associated with a source; if you don&#39;t specify one, Reltio defaults to <code>Reltio</code>. The tutorial uses two custom sources so you can see cross-source behavior.</p>
+<p>Here&#39;s the fragment of the L3 payload that defines the two sources:</p>
+<pre><code class="language-json hljs"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;sources&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
+    <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">&quot;URI&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;configuration/sources/CRM&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;label&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;CRM&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;CRM&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;description&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Primary CRM source for the Top 10 APIs tutorial&quot;</span>
+    <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">&quot;URI&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;configuration/sources/ERP&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;label&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;ERP&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;ERP&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;description&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Secondary ERP source used for the duplicate record&quot;</span>
+    <span class="hljs-punctuation">}</span>
+  <span class="hljs-punctuation">]</span>
+<span class="hljs-punctuation">}</span></code></pre>
+<h3 id="key-rules">Key rules</h3>
+<ul>
+<li><strong>Source URIs follow the <code>configuration/sources/{name}</code> pattern</strong> — this is the path the platform uses to reach the source.</li>
+<li><strong>Names are used in the URI</strong> — as a best practice, avoid special characters and spaces when creating a source.</li>
+<li><strong>Each source needs a unique name</strong> — the <code>label</code> is the display name; the <code>name</code> is what appears in the URI.</li>
+</ul>
+<blockquote>
+<p><strong>Learn more:</strong> <a href="https://docs.reltio.com/en/objectives/model-data/data-modeling-at-a-glance/data-modeling-operation/define-relationships/configuring-relationship-types/managing-sources">Managing Sources</a> in the Reltio documentation.</p>
+</blockquote>
+<h2 id="5-define-the-individual-entity-type">5. Define the Individual entity type</h2>
+<p>Individuals are the protagonist of the tutorial — you&#39;ll create them, read them, update them, search for them, merge them. Three <strong>simple</strong> attributes keep the payloads compact: <code>FirstName</code>, <code>LastName</code>, and <code>Email</code>. Simple attributes hold a single characteristic and must be defined with a data type — here, <code>String</code>.</p>
+<p>Here&#39;s the <code>Individual</code> entity type as it appears in the L3 payload:</p>
+<pre><code class="language-json hljs"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;URI&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;configuration/entityTypes/Individual&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;label&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Individual&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Individual&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;description&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Represents people&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;attributes&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
+    <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">&quot;URI&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;configuration/entityTypes/Individual/attributes/FirstName&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;FirstName&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;label&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;First Name&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;String&quot;</span>
+    <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">&quot;URI&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;configuration/entityTypes/Individual/attributes/LastName&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;LastName&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;label&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Last Name&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;String&quot;</span>
+    <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">&quot;URI&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;configuration/entityTypes/Individual/attributes/Email&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Email&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;label&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Email&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;String&quot;</span>
+    <span class="hljs-punctuation">}</span>
+  <span class="hljs-punctuation">]</span>
+<span class="hljs-punctuation">}</span></code></pre>
+<h3 id="why-this-matters">Why this matters</h3>
+<p>The entity type <code>URI</code> follows the format <code>configuration/entityTypes/{EntityTypeName}</code> and is used everywhere else in the payload to reference this type — for example, when the Employment relation points to it as its <code>startObject</code>. The <code>label</code> is the readable name, which shows up in the Hub.</p>
+<h3 id="key-rules">Key rules</h3>
+<ul>
+<li><strong>Required metadata</strong> — <code>URI</code>, <code>label</code>, and <code>name</code> must be provided on every entity type. Other properties such as <code>typeColor</code>, <code>typeIcon</code>, and <code>dataLabelPattern</code> are optional.</li>
+<li><strong>Simple attributes declare a <code>type</code></strong> — <code>String</code> works for all three attributes in this tutorial. Other supported data types include <code>Int</code>, <code>Long</code>, <code>Boolean</code>, <code>Date</code>, <code>Timestamp</code>, and <code>URL</code>.</li>
+<li><strong>Attribute URIs follow the <code>configuration/entityTypes/{EntityType}/attributes/{AttributeName}</code> pattern</strong> — this is how cleanse rules, match rules, and survivorship rules reference them.</li>
+</ul>
+<blockquote>
+<p><strong>Learn more:</strong> <a href="https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/configuration-api/add-an-entity-type">Add an entity type</a> in the Reltio documentation.</p>
+</blockquote>
+<h2 id="6-define-the-organization-entity-type">6. Define the Organization entity type</h2>
+<p>Organizations are the other side of the Employment relation. One simple <code>String</code> attribute — <code>Name</code> — is enough to carry through the tutorial.</p>
+<pre><code class="language-json hljs"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;URI&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;configuration/entityTypes/Organization&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;label&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Organization&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Organization&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;description&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Represents companies&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;attributes&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
+    <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">&quot;URI&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;configuration/entityTypes/Organization/attributes/Name&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Name&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;label&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Name&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;String&quot;</span>
+    <span class="hljs-punctuation">}</span>
+  <span class="hljs-punctuation">]</span>
+<span class="hljs-punctuation">}</span></code></pre>
+<h3 id="key-rules">Key rules</h3>
+<ul>
+<li><strong>Keep the model minimal</strong> — the tutorial only needs one attribute on <code>Organization</code>. You can extend the type later through a follow-up <code>PUT /configuration</code> or via the Data Modeler.</li>
+<li><strong>The same attribute-URI convention applies</strong> — <code>configuration/entityTypes/Organization/attributes/Name</code>.</li>
+</ul>
+<blockquote>
+<p><strong>Learn more:</strong> <a href="https://docs.reltio.com/en/reltio/what-does-reltio-do/what-reltio-does-at-a-glance/data-unification-and-mdm-at-a-glance/data-unification-and-mdm-in-detail/reltio-information-model/data-model/reltio-object-types/reltio-entity-types">Reltio entity types</a> in the Reltio documentation.</p>
+</blockquote>
+<h2 id="7-define-the-employment-relation-type">7. Define the Employment relation type</h2>
+<p>Relation types link two entity types through a <code>startObject</code> and an <code>endObject</code>. For the tutorial, <code>Employment</code> points from an <code>Individual</code> to an <code>Organization</code>. The relation carries a <code>Title</code> attribute so you can store the employee&#39;s job title directly on the relation.</p>
+<pre><code class="language-json hljs"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;URI&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;configuration/relationTypes/Employment&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;label&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Employment&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Employment&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;description&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Links an Individual to their employing Organization&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;direction&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;directed&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;startObject&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">&quot;objectTypeURI&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;configuration/entityTypes/Individual&quot;</span>
+  <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;endObject&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">&quot;objectTypeURI&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;configuration/entityTypes/Organization&quot;</span>
+  <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;attributes&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
+    <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">&quot;URI&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;configuration/relationTypes/Employment/attributes/Title&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Title&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;label&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Title&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;String&quot;</span>
+    <span class="hljs-punctuation">}</span>
+  <span class="hljs-punctuation">]</span>
+<span class="hljs-punctuation">}</span></code></pre>
+<h3 id="how-it-works">How it works</h3>
+<p>Relation type metadata lets you describe <em>how</em> two entity types are linked. <code>direction</code> accepts <code>directed</code>, <code>undirected</code>, or <code>bidirectional</code>; the default is <code>directed</code>, which is what you want here since the Individual and the Organization play different roles. The <code>startObject</code> and <code>endObject</code> are required when inheritance is applied, and each carries the URI of the entity type it points at.</p>
+<h3 id="key-rules">Key rules</h3>
+<ul>
+<li><strong><code>startObject.objectTypeURI</code> and <code>endObject.objectTypeURI</code> must reference entity types defined in the same (or an inherited) configuration.</strong> The two entity types from steps 5 and 6 satisfy this.</li>
+<li><strong>Relation attributes follow the same URI pattern as entity attributes</strong> — <code>configuration/relationTypes/{TypeName}/attributes/{AttributeName}</code>.</li>
+<li><strong>Relation attributes are simple, atomic types.</strong> Complex (nested) attributes aren&#39;t supported on relations.</li>
+</ul>
+<blockquote>
+<p><strong>Learn more:</strong> <a href="https://docs.reltio.com/en/developer-resources/relation-management-apis/relation-management-apis-at-a-glance/relations-api/relation-types">Relation Types</a> in the Reltio documentation.</p>
+</blockquote>
+<h2 id="8-apply-the-l3-with-set-configuration">8. Apply the L3 with Set Configuration</h2>
+<p><code>PUT /configuration</code></p>
+<p>Assemble the pieces from steps 4–7 into a single L3 payload and <code>PUT</code> it. This call replaces the tenant&#39;s existing business model — no merge, no patch.</p>
+<p><strong>Request</strong></p>
+<pre><code class="language-bash hljs">curl -s -X PUT <span class="hljs-string">&quot;<span class="hljs-variable">${TENANT}</span>/configuration&quot;</span> \
+  -H <span class="hljs-string">&quot;Authorization: Bearer <span class="hljs-variable">${TOKEN}</span>&quot;</span> \
+  -H <span class="hljs-string">&quot;Content-Type: application/json&quot;</span> \
+  -d <span class="hljs-string">&#x27;{
+    &quot;label&quot;: &quot;Top 10 APIs Tutorial Model&quot;,
+    &quot;description&quot;: &quot;Minimal L3 for the Top 10 Reltio APIs tutorial&quot;,
+    &quot;schemaVersion&quot;: &quot;1&quot;,
+    &quot;sources&quot;: [
+      {
+        &quot;URI&quot;: &quot;configuration/sources/CRM&quot;,
+        &quot;label&quot;: &quot;CRM&quot;,
+        &quot;name&quot;: &quot;CRM&quot;,
+        &quot;description&quot;: &quot;Primary CRM source&quot;
+      },
+      {
+        &quot;URI&quot;: &quot;configuration/sources/ERP&quot;,
+        &quot;label&quot;: &quot;ERP&quot;,
+        &quot;name&quot;: &quot;ERP&quot;,
+        &quot;description&quot;: &quot;Secondary ERP source&quot;
+      }
+    ],
+    &quot;entityTypes&quot;: [
+      {
+        &quot;URI&quot;: &quot;configuration/entityTypes/Individual&quot;,
+        &quot;label&quot;: &quot;Individual&quot;,
+        &quot;name&quot;: &quot;Individual&quot;,
+        &quot;attributes&quot;: [
+          { &quot;URI&quot;: &quot;configuration/entityTypes/Individual/attributes/FirstName&quot;, &quot;name&quot;: &quot;FirstName&quot;, &quot;label&quot;: &quot;First Name&quot;, &quot;type&quot;: &quot;String&quot; },
+          { &quot;URI&quot;: &quot;configuration/entityTypes/Individual/attributes/LastName&quot;,  &quot;name&quot;: &quot;LastName&quot;,  &quot;label&quot;: &quot;Last Name&quot;,  &quot;type&quot;: &quot;String&quot; },
+          { &quot;URI&quot;: &quot;configuration/entityTypes/Individual/attributes/Email&quot;,     &quot;name&quot;: &quot;Email&quot;,     &quot;label&quot;: &quot;Email&quot;,      &quot;type&quot;: &quot;String&quot; }
+        ]
+      },
+      {
+        &quot;URI&quot;: &quot;configuration/entityTypes/Organization&quot;,
+        &quot;label&quot;: &quot;Organization&quot;,
+        &quot;name&quot;: &quot;Organization&quot;,
+        &quot;attributes&quot;: [
+          { &quot;URI&quot;: &quot;configuration/entityTypes/Organization/attributes/Name&quot;, &quot;name&quot;: &quot;Name&quot;, &quot;label&quot;: &quot;Name&quot;, &quot;type&quot;: &quot;String&quot; }
+        ]
+      }
+    ],
+    &quot;relationTypes&quot;: [
+      {
+        &quot;URI&quot;: &quot;configuration/relationTypes/Employment&quot;,
+        &quot;label&quot;: &quot;Employment&quot;,
+        &quot;name&quot;: &quot;Employment&quot;,
+        &quot;direction&quot;: &quot;directed&quot;,
+        &quot;startObject&quot;: { &quot;objectTypeURI&quot;: &quot;configuration/entityTypes/Individual&quot; },
+        &quot;endObject&quot;:   { &quot;objectTypeURI&quot;: &quot;configuration/entityTypes/Organization&quot; },
+        &quot;attributes&quot;: [
+          { &quot;URI&quot;: &quot;configuration/relationTypes/Employment/attributes/Title&quot;, &quot;name&quot;: &quot;Title&quot;, &quot;label&quot;: &quot;Title&quot;, &quot;type&quot;: &quot;String&quot; }
+        ]
+      }
+    ]
+  }&#x27;</span> | jq .</code></pre>
+<p><strong>Response</strong></p>
+<pre><code class="language-json hljs"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;label&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Top 10 APIs Tutorial Model&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;description&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Minimal L3 for the Top 10 Reltio APIs tutorial&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;schemaVersion&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;1&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;updatedTime&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">1700000005000</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;entityTypes&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
+    <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">&quot;URI&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;configuration/entityTypes/Individual&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;label&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Individual&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Individual&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;id&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;1&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;attributes&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
+        <span class="hljs-punctuation">{</span>
+          <span class="hljs-attr">&quot;URI&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;configuration/entityTypes/Individual/attributes/FirstName&quot;</span><span class="hljs-punctuation">,</span>
+          <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;FirstName&quot;</span><span class="hljs-punctuation">,</span>
+          <span class="hljs-attr">&quot;label&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;First Name&quot;</span><span class="hljs-punctuation">,</span>
+          <span class="hljs-attr">&quot;id&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;2&quot;</span><span class="hljs-punctuation">,</span>
+          <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;String&quot;</span>
+        <span class="hljs-punctuation">}</span>
+      <span class="hljs-punctuation">]</span>
+    <span class="hljs-punctuation">}</span>
+  <span class="hljs-punctuation">]</span>
+<span class="hljs-punctuation">}</span></code></pre>
+<h3 id="why-this-matters">Why this matters</h3>
+<p><code>PUT /configuration</code> is the write endpoint. If a configuration already exists, the operation <strong>overrides</strong> it. The response echoes back the saved model with system-generated <code>id</code> values for each entity type, attribute, and relation type. Those <code>id</code> values are used internally to diff configurations across versions.</p>
+<h3 id="how-it-works">How it works</h3>
+<p>Before writing the model, the system runs L3 validation on the payload. If validation passes, the new L3 is applied and overwrites the existing one. If it fails, an error is returned to the client and nothing is persisted.</p>
+<blockquote>
+<p><strong>Tip:</strong> Before you push a configuration to a production tenant, run the Validate Tenant Configuration API first: <code>GET {envUri}/reltio/tenants/{tenantId}/_validateTenantConfiguration</code>. It surfaces validation errors before they hit the <code>PUT</code>.</p>
+</blockquote>
+<h3 id="advanced-options">Advanced options</h3>
+<p>You can add the <code>checkParallelUpdate=true</code> query parameter to prevent overwriting concurrent updates. When enabled, include the <code>updatedTime</code> you read in step 3 so the system can compare it with the stored value:</p>
+<pre><code class="language-bash hljs">curl -s -X PUT <span class="hljs-string">&quot;<span class="hljs-variable">${TENANT}</span>/configuration?checkParallelUpdate=true&quot;</span> \
+  -H <span class="hljs-string">&quot;Authorization: Bearer <span class="hljs-variable">${TOKEN}</span>&quot;</span> \
+  -H <span class="hljs-string">&quot;Content-Type: application/json&quot;</span> \
+  -d @l3-payload.json</code></pre>
+<p>If <code>request.updatedTime</code> is less than the stored <code>updatedTime</code>, the API returns <code>409 Conflict</code>.</p>
+<h3 id="key-rules">Key rules</h3>
+<ul>
+<li><strong><code>label</code> and <code>schemaVersion</code> are required</strong> — omitting either fails validation.</li>
+<li><strong>Every <code>entityTypes[].URI</code>, <code>entityTypes[].name</code>, and <code>entityTypes[].label</code> is required</strong> — same for each attribute.</li>
+<li><strong>Don&#39;t <code>PUT</code> a consolidated configuration</strong> — use the L3 payload you built from <code>_noInheritance</code>, not the merged response from <code>GET /configuration</code>.</li>
+</ul>
+<h3 id="what-can-go-wrong">What can go wrong</h3>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Cause</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>303</code> Business model schema cannot be parsed as XSD</td>
+<td>Payload is malformed JSON or violates the schema</td>
+<td>Validate the JSON and re-check that required fields (<code>URI</code>, <code>name</code>, <code>label</code>, <code>type</code>) are present</td>
+</tr>
+<tr>
+<td><code>304</code> Failed to validate business model</td>
+<td>L3 validation rejected the model (for example, referenced attribute missing)</td>
+<td>Read the validation error message and fix the referenced URI</td>
+</tr>
+<tr>
+<td><code>306</code> Failed to process business model JSON in create configuration request</td>
+<td>Server couldn&#39;t parse the body</td>
+<td>Check <code>Content-Type: application/json</code> and that the outer JSON object is well-formed</td>
+</tr>
+<tr>
+<td><code>409 Conflict</code></td>
+<td><code>checkParallelUpdate=true</code> and your <code>updatedTime</code> is stale</td>
+<td>Re-read <code>_noInheritance</code>, merge your edits, retry</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><strong>Learn more:</strong> <a href="https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/configuration-api/set-configuration">Set Configuration</a> in the Reltio documentation.</p>
+</blockquote>
+<h2 id="9-verify-the-tenant">9. Verify the tenant</h2>
+<p><code>GET /configuration/_noInheritance</code></p>
+<p>Read the L3 back and confirm everything you sent is there — two entity types, two sources, and the Employment relation type.</p>
+<p><strong>Request</strong></p>
+<pre><code class="language-bash hljs">curl -s -X GET <span class="hljs-string">&quot;<span class="hljs-variable">${TENANT}</span>/configuration/_noInheritance&quot;</span> \
+  -H <span class="hljs-string">&quot;Authorization: Bearer <span class="hljs-variable">${TOKEN}</span>&quot;</span> \
+  | jq <span class="hljs-string">&#x27;{ entityTypes: [.entityTypes[].URI], sources: [.sources[].URI], relationTypes: [.relationTypes[].URI] }&#x27;</span></code></pre>
+<p><strong>Response</strong></p>
+<pre><code class="language-json hljs"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;entityTypes&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
+    <span class="hljs-string">&quot;configuration/entityTypes/Individual&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-string">&quot;configuration/entityTypes/Organization&quot;</span>
+  <span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;sources&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
+    <span class="hljs-string">&quot;configuration/sources/CRM&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-string">&quot;configuration/sources/ERP&quot;</span>
+  <span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;relationTypes&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
+    <span class="hljs-string">&quot;configuration/relationTypes/Employment&quot;</span>
+  <span class="hljs-punctuation">]</span>
+<span class="hljs-punctuation">}</span></code></pre>
+<h3 id="key-rules">Key rules</h3>
+<ul>
+<li><strong>If a URI is missing, the <code>PUT</code> silently ignored that section</strong> — re-check the payload for that object and re-run step 8.</li>
+<li><strong><code>GET /configuration</code> (no flag) returns the consolidated model</strong> — use <code>_noInheritance</code> here to confirm only what you wrote.</li>
+</ul>
+<blockquote>
+<p><strong>Learn more:</strong> <a href="https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/configuration-api/get-configuration">GET Configuration</a> in the Reltio documentation.</p>
+</blockquote>
+<h2 id="10-reset-and-rollback">10. Reset and rollback</h2>
+<p>Two ways to back out of the setup:</p>
+<ul>
+<li><strong>Re-apply a prior L3</strong> — if you saved the response from step 3, <code>PUT</code> it back. <code>PUT /configuration</code> overrides the current model with whatever you send.</li>
+<li><strong>Delete an individual source</strong> — if you only want to remove a source, <code>DELETE {TenantURL}/configuration/sources/{sourceName}</code> supports the <code>option=purgeAttributes</code> (default) and <code>option=purgeAllData</code> parameters. The first deletes the attribute values tied to that source but keeps crosswalks; the second deletes crosswalks too and kicks off a background purge task.</li>
+</ul>
+<p>Example — remove the ERP source and purge both attributes and crosswalks:</p>
+<pre><code class="language-bash hljs">curl -s -X DELETE <span class="hljs-string">&quot;<span class="hljs-variable">${TENANT}</span>/configuration/sources/ERP?option=purgeAllData&quot;</span> \
+  -H <span class="hljs-string">&quot;Authorization: Bearer <span class="hljs-variable">${TOKEN}</span>&quot;</span> | jq .</code></pre>
+<blockquote>
+<p><strong>Important:</strong> If the source appears in any other L3 section (for example, <code>sourcesUriOrder</code> or <code>immutableForSources</code>), remove it from those sections first or the <code>DELETE</code> will fail validation.</p>
+</blockquote>
+<blockquote>
+<p><strong>Learn more:</strong> <a href="https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/configuration-api/delete-a-source-system">Delete a Source System</a> in the Reltio documentation.</p>
+</blockquote>
+<h2 id="11-troubleshooting">11. Troubleshooting</h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Cause</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>401 Unauthorized</code> on <code>PUT /configuration</code></td>
+<td>Access token expired or the client lacks configuration-update privileges</td>
+<td>Re-authenticate; confirm the role has <code>MDM.config.businessModel - Update</code> privilege</td>
+</tr>
+<tr>
+<td><code>303</code> or <code>304</code> validation error</td>
+<td>Payload violates the L3 schema or references a missing URI</td>
+<td>Run the Validate Tenant Configuration API before the <code>PUT</code> and fix the reported error</td>
+</tr>
+<tr>
+<td><code>309</code> Tenant not defined in the system</td>
+<td>The <code>TenantURL</code> in your request is wrong</td>
+<td>Copy the tenant URL from the Asset Sheet or the Reltio Console</td>
+</tr>
+<tr>
+<td><code>310</code> Failed to process Reltio Business Model JSON</td>
+<td>Stored model is corrupt or unreadable</td>
+<td>Contact Reltio Support</td>
+</tr>
+<tr>
+<td><code>PUT</code> returns 2xx but <code>_noInheritance</code> doesn&#39;t show your types</td>
+<td>You <code>PUT</code> to a different tenant, or a proxy stripped the body</td>
+<td>Confirm the <code>TENANT</code> variable; re-run step 8 with the body loaded from a file (<code>-d @l3-payload.json</code>)</td>
+</tr>
+<tr>
+<td>Attribute referenced by a match or survivorship rule isn&#39;t found</td>
+<td>URI typo, or the attribute section is missing from the payload</td>
+<td>Fix the attribute URI; verify the attribute exists on the correct entity type</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><strong>Learn more:</strong> <a href="https://docs.reltio.com/en/reltio/what-does-reltio-do/what-reltio-does-at-a-glance/data-unification-and-mdm-at-a-glance/data-unification-and-mdm-in-detail/reltio-information-model/data-model/tenant-configuration-inheritance-across-layers/reltio-l3-layer----customer-tenant/l3-validation-errors">L3 validation errors</a> in the Reltio documentation.</p>
+</blockquote>
+<h2 id="12-further-reading">12. Further reading</h2>
+<ul>
+<li><a href="https://docs.reltio.com/en/reltio/what-does-reltio-do/what-reltio-does-at-a-glance/data-unification-and-mdm-at-a-glance/data-unification-and-mdm-in-detail/reltio-information-model/data-model/tenant-configuration-inheritance-across-layers/reltio-l3-layer----customer-tenant/apply-an-l3-to-a-tenant">Apply an L3 to a tenant</a></li>
+<li><a href="https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/configuration-api">Configuration API overview</a></li>
+<li><a href="https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/configuration-api/set-configuration">Set Configuration</a></li>
+<li><a href="https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/configuration-api/get-configuration">GET Configuration</a></li>
+<li><a href="https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/configuration-api/get-configuration-no-inheritance">Get Configuration (No Inheritance)</a></li>
+<li><a href="https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/configuration-api/add-an-entity-type">Add an entity type</a></li>
+<li><a href="https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/configuration-api/attributes-configuration">Attributes configuration</a></li>
+<li><a href="https://docs.reltio.com/en/reltio/what-does-reltio-do/what-reltio-does-at-a-glance/data-unification-and-mdm-at-a-glance/data-unification-and-mdm-in-detail/reltio-information-model/data-model/reltio-object-types/reltio-entity-types">Reltio entity types</a></li>
+<li><a href="https://docs.reltio.com/en/reltio/what-does-reltio-do/what-reltio-does-at-a-glance/data-unification-and-mdm-at-a-glance/data-unification-and-mdm-in-detail/reltio-information-model/data-model/reltio-object-types/reltio-attribute-types">Reltio attribute types</a></li>
+<li><a href="https://docs.reltio.com/en/developer-resources/relation-management-apis/relation-management-apis-at-a-glance/relations-api/relation-types">Relation Types</a></li>
+<li><a href="https://docs.reltio.com/en/objectives/model-data/data-modeling-at-a-glance/data-modeling-operation/define-relationships/configuring-relationship-types/managing-sources">Managing Sources</a></li>
+<li><a href="HOWTO-authenticate-and-use-reltio-apis.html">HOWTO: Authenticate and use Reltio APIs</a></li>
+<li><a href="HOWTO-top-10-reltio-apis.html">HOWTO: Top 10 Reltio APIs</a> — the tutorial this setup enables. A V2 pass (<code>HOWTO-top-10-reltio-apis-v2.md</code>) is planned.</li>
+</ul>
+<h2 id="13-glossary">13. Glossary</h2>
+<p id="glossary-configuration-api-strong-the-rest-api-for-retrieving-editing-and-validating-a-tenant-39-s-metadata-configuration-its-two-most-used-calls-are-code-get-configuration-code-and-code-put-configuration-code-p-p-strong-crosswalk-strong-a-reference-that-links-a-reltio-entity-back-to-its-record-in-a-source-system-every-record-loaded-into-a-tenant-carries-a-crosswalk-whose-code-type-code-points-to-a-code-configuration-sources-name-code-uri-p-p-strong-entity-type-strong-a-class-of-business-object-for-example-individual-or-organization-defined-by-metadata-including-a-uri-label-and-attributes-entity-types-are-the-building-blocks-of-a-reltio-data-model-p-p-strong-l3-strong-the-layer-3-customer-owned-configuration-that-overlays-reltio-39-s-l1-and-l2-layers-when-an-l3-is-applied-inheritance-produces-the-consolidated-tenant-configuration-the-platform-runs-on-p-p-strong-relation-type-strong-a-configuration-object-that-describes-how-two-entity-types-are-linked-using-a-code-startobject-code-and-code-endobject-code-relation-types-can-carry-their-own-simple-attributes-p-p-strong-source-strong-a-registered-origin-of-data-in-a-tenant-defined-as-code-configuration-sources-name-code-every-record-loaded-into-reltio-is-associated-with-a-source-if-none-is-specified-the-source-defaults-to-code-reltio-code-p-hr-blockquote-class-disclaimer-p-strong-disclaimer"><strong>Configuration API</strong> — The REST API for retrieving, editing, and validating a tenant&#39;s metadata configuration. Its two most-used calls are <code>GET /configuration</code> and <code>PUT /configuration</code>.</p>
+<p><strong>Crosswalk</strong> — A reference that links a Reltio entity back to its record in a source system. Every record loaded into a tenant carries a crosswalk whose <code>type</code> points to a <code>configuration/sources/{name}</code> URI.</p>
+<p><strong>Entity type</strong> — A class of business object (for example, Individual or Organization) defined by metadata including a URI, label, and attributes. Entity types are the building blocks of a Reltio data model.</p>
+<p><strong>L3</strong> — The Layer 3, customer-owned configuration that overlays Reltio&#39;s L1 and L2 layers. When an L3 is applied, inheritance produces the consolidated tenant configuration the platform runs on.</p>
+<p><strong>Relation type</strong> — A configuration object that describes how two entity types are linked, using a <code>startObject</code> and <code>endObject</code>. Relation types can carry their own simple attributes.</p>
+<p><strong>Source</strong> — A registered origin of data in a tenant, defined as <code>configuration/sources/{name}</code>. Every record loaded into Reltio is associated with a source; if none is specified, the source defaults to <code>Reltio</code>.</p>
+<hr>
+<blockquote class="disclaimer">
+<p><strong>Disclaimer:</strong> AI-generated from the Reltio documentation snapshot 2026-05-06 02:14 UTC (3,240 topics). AI output can contain subtle inaccuracies, and the knowledge base syncs twice a week — so the content here may lag <a href="https://docs.reltio.com">docs.reltio.com</a>. Verify anything critical against the official docs and your own tenant. Full disclaimer: <a href="DISCLAIMER.html">DISCLAIMER.md</a>.</p>
+</blockquote>
+
+<script>
+  // Click-to-zoom for workflow diagrams — toggle zoomed class on click,
+  // dismiss on second click or by clicking anywhere outside the diagram.
+  document.querySelectorAll('.diagram').forEach(function (img) {
+    img.addEventListener('click', function (e) {
+      e.stopPropagation();
+      img.classList.toggle('zoomed');
+    });
+  });
+  document.addEventListener('click', function () {
+    document.querySelectorAll('.diagram.zoomed').forEach(function (img) {
+      img.classList.remove('zoomed');
+    });
+  });
+
+  // Copy button — top-right of every code block.
+  var ICON_COPY = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+  var ICON_CHECK = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>';
+  document.querySelectorAll('pre').forEach(function (pre) {
+    var btn = document.createElement('button');
+    btn.className = 'copy-btn';
+    btn.setAttribute('aria-label', 'Copy code');
+    btn.innerHTML = ICON_COPY;
+    pre.appendChild(btn);
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var code = pre.querySelector('code');
+      var text = code ? code.innerText : pre.innerText;
+      navigator.clipboard.writeText(text).then(function () {
+        btn.innerHTML = ICON_CHECK;
+        btn.classList.add('copied');
+        setTimeout(function () {
+          btn.innerHTML = ICON_COPY;
+          btn.classList.remove('copied');
+        }, 1500);
+      });
+    });
+  });
+</script>
+</body>
+</html>

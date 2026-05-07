@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Access Reltio Learn</title>
+  <style>
+/* Reltio HOWTO — HTML styles
+ * Brand colors:
+ *   Midnight     #000033
+ *   Blue         #000066
+ *   Bright Blue  #0000CC
+ *   Gold         #FFCC00
+ */
+
+:root {
+  --reltio-midnight: #000033;
+  --reltio-blue: #000066;
+  --reltio-bright-blue: #0000CC;
+  --reltio-gold: #FFCC00;
+  --text-primary: #1a1a1a;
+  --text-muted: #555;
+  --border-light: #e1e4e8;
+  --bg-code: #f6f8fa;
+  --bg-callout: #f0f4ff;
+  --bg-disclaimer: #fff8e1;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text-primary);
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 4rem;
+  background: #ffffff;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--reltio-midnight);
+  font-weight: 600;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.25;
+}
+
+h1 {
+  font-size: 2.25rem;
+  border-bottom: 3px solid var(--reltio-gold);
+  padding-bottom: 0.5rem;
+  margin-top: 0;
+}
+
+h2 {
+  font-size: 1.6rem;
+  border-bottom: 1px solid var(--border-light);
+  padding-bottom: 0.3rem;
+  margin-top: 2.5rem;
+}
+
+h3 { font-size: 1.25rem; color: var(--reltio-blue); }
+h4 { font-size: 1.1rem; color: var(--reltio-blue); }
+
+/* Paragraphs and links */
+p { margin: 0.75rem 0; }
+
+a {
+  color: var(--reltio-bright-blue);
+  text-decoration: none;
+}
+a:hover { text-decoration: underline; }
+
+/* Lists */
+ul, ol { padding-left: 1.75rem; margin: 0.75rem 0; }
+li { margin: 0.25rem 0; }
+
+/* Code */
+code {
+  font-family: "SF Mono", Monaco, Consolas, "Liberation Mono", monospace;
+  font-size: 0.9em;
+  background: var(--bg-code);
+  padding: 0.15em 0.4em;
+  border-radius: 3px;
+  color: #d63384;
+}
+
+pre {
+  background: var(--bg-code);
+  border: 1px solid var(--border-light);
+  border-radius: 6px;
+  padding: 1rem;
+  overflow-x: auto;
+  line-height: 1.5;
+  position: relative;
+}
+
+pre .copy-btn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: #ffffff;
+  color: var(--reltio-blue);
+  border: 1px solid var(--border-light);
+  border-radius: 4px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s ease, background 0.15s ease, color 0.15s ease;
+  user-select: none;
+}
+
+pre:hover .copy-btn { opacity: 1; }
+
+pre .copy-btn:hover {
+  background: var(--reltio-blue);
+  color: #ffffff;
+  border-color: var(--reltio-blue);
+}
+
+pre .copy-btn.copied {
+  background: #22863a;
+  color: #ffffff;
+  border-color: #22863a;
+  opacity: 1;
+}
+
+pre code {
+  background: transparent;
+  padding: 0;
+  color: inherit;
+  font-size: 0.875em;
+}
+
+/* Tables */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1rem 0;
+  font-size: 0.95em;
+}
+
+th, td {
+  border: 1px solid var(--border-light);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+th {
+  background: var(--reltio-midnight);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+tr:nth-child(even) td {
+  background: #fafbfc;
+}
+
+/* Blockquotes / callouts */
+blockquote {
+  border-left: 4px solid var(--reltio-bright-blue);
+  background: var(--bg-callout);
+  margin: 1rem 0;
+  padding: 0.75rem 1rem;
+  border-radius: 0 4px 4px 0;
+}
+
+blockquote p { margin: 0.25rem 0; }
+
+/* Disclaimer callout (last blockquote in the doc) */
+blockquote.disclaimer {
+  border-left-color: var(--reltio-gold);
+  background: var(--bg-disclaimer);
+}
+
+/* Horizontal rule */
+hr {
+  border: none;
+  border-top: 1px solid var(--border-light);
+  margin: 2.5rem 0 1.5rem;
+}
+
+/* Mermaid SVG — keep diagrams readable and centered */
+.diagram {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 1.5rem auto;
+  cursor: zoom-in;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.3s ease;
+  transform-origin: center center;
+  border-radius: 4px;
+}
+
+/* Click to enlarge — toggle class via JS; hover does nothing */
+.diagram.zoomed {
+  transform: scale(1.8);
+  box-shadow: 0 20px 60px rgba(0, 0, 51, 0.35);
+  position: relative;
+  z-index: 100;
+  background: #ffffff;
+  cursor: zoom-out;
+}
+
+/* highlight.js — GitHub-like theme, compact */
+.hljs { color: #24292e; background: var(--bg-code); }
+.hljs-comment, .hljs-quote { color: #6a737d; font-style: italic; }
+.hljs-keyword, .hljs-selector-tag { color: #d73a49; }
+.hljs-string, .hljs-attr { color: #032f62; }
+.hljs-number, .hljs-literal { color: #005cc5; }
+.hljs-title, .hljs-name { color: #6f42c1; }
+.hljs-section, .hljs-type { color: #22863a; }
+.hljs-tag { color: #22863a; }
+.hljs-built_in, .hljs-builtin-name { color: #e36209; }
+
+/* Footer banner (appears on index.html only) */
+.site-header {
+  border-bottom: 3px solid var(--reltio-gold);
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.site-header .subtitle {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-top: 0.25rem;
+}
+
+/* Glossary term — inline hover tooltip */
+.glossary-term {
+  border-bottom: 1px dashed var(--reltio-blue);
+  cursor: help;
+  position: relative;
+  white-space: nowrap;
+}
+
+.glossary-term::after {
+  content: attr(data-def);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  padding: 0.6rem 0.85rem;
+  background: var(--bg-callout);
+  color: var(--text-primary);
+  border: 1px dashed var(--reltio-bright-blue);
+  font-size: 0.82rem;
+  font-weight: 400;
+  line-height: 1.45;
+  border-radius: 5px;
+  box-shadow: 0 4px 14px rgba(0, 0, 204, 0.12);
+  white-space: normal;
+  text-align: left;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  z-index: 200;
+}
+
+.glossary-term:hover::after { opacity: 1; }
+
+/* Print */
+@media print {
+  body { max-width: none; padding: 1rem; }
+  a { color: var(--text-primary); text-decoration: none; }
+  pre, blockquote { page-break-inside: avoid; }
+}
+
+  </style>
+</head>
+<body>
+<h1 id="howto-access-reltio-learn">HOWTO: Access Reltio Learn</h1>
+<p>A step-by-step guide to registering, signing in, and getting started with Reltio&#39;s training and certification platform.</p>
+<hr>
+<h2 id="table-of-contents">Table of contents</h2>
+<ol>
+<li><a href="#1-what-is-reltio-learn">What is Reltio Learn?</a></li>
+<li><a href="#2-register-for-a-reltio-learn-account">Register for a Reltio Learn account</a></li>
+<li><a href="#3-sign-in-to-reltio-learn">Sign in to Reltio Learn</a></li>
+<li><a href="#4-explore-courses-and-learning-paths">Explore courses and learning paths</a></li>
+<li><a href="#5-get-certified">Get certified</a></li>
+<li><a href="#6-access-the-partner-portal">Access the Partner Portal</a></li>
+<li><a href="#7-get-help-from-reltio-support">Get help from Reltio Support</a></li>
+</ol>
+<hr>
+<h2 id="prerequisites">Prerequisites</h2>
+<table>
+<thead>
+<tr>
+<th>What</th>
+<th>Details</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Business email</strong></td>
+<td>A valid Reltio Customer or Partner business email address</td>
+</tr>
+<tr>
+<td><strong>Web browser</strong></td>
+<td>Any modern browser</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><strong>Important:</strong> Reltio Learn is reserved for current Reltio Customers and Partners.</p>
+</blockquote>
+<hr>
+<h2 id="1-what-is-reltio-learn">1. What is Reltio Learn?</h2>
+<p><strong>Reltio Learn</strong> is Reltio&#39;s training platform for developing your skills and expertise in data unification and Master Data Management (MDM). It offers:</p>
+<ul>
+<li>Role-based <strong>learning paths</strong> that build your skills whether you&#39;re preparing for an implementation, becoming a Data Steward, or upskilling on best practices</li>
+<li><strong>Instructor-led sessions</strong> (Live Events)</li>
+<li><strong>Certifications</strong> with industry-recognized credentials via Credly</li>
+</ul>
+<p>Reltio Learn uses <strong>separate credentials</strong> from the Reltio Context Intelligence Platform — your Reltio platform login won&#39;t work here.</p>
+<blockquote>
+<p><strong>Note:</strong> If you&#39;re an existing <strong>Reltio Academy</strong> user, you still access training through <a href="https://learn.reltio.com/">Reltio Learn</a> — the platform has been consolidated.</p>
+</blockquote>
+<hr>
+<h2 id="2-register-for-a-reltio-learn-account">2. Register for a Reltio Learn account</h2>
+<p>If you don&#39;t yet have an account, follow these steps to request access.</p>
+<h3 id="steps">Steps</h3>
+<ol>
+<li>Open <a href="https://learn.reltio.com/">Reltio Learn</a> in your browser.</li>
+<li>On the <strong>Sign In</strong> page, select <strong>New User? Register</strong>.</li>
+<li>Complete the registration form using your <strong>business email address</strong>.</li>
+<li>In the <strong>Additional fields</strong> section, select your role:<ul>
+<li>Data Steward</li>
+<li>System Administrator</li>
+<li>Technical Delivery Manager</li>
+<li>Technical Consultant</li>
+<li>Solution Architect</li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<p><strong>Note:</strong> Reltio Learn roles may combine multiple product personas into a single training role. For example, the <strong>Technical Consultant</strong> role includes responsibilities described under the <strong>Reltio Configurator</strong> and <strong>Developer</strong> personas. For more information, see <a href="https://docs.reltio.com/en/roles/about-roles">About roles</a>.</p>
+</blockquote>
+<ol start="5">
+<li>Submit the registration request.</li>
+</ol>
+<h3 id="what-happens-next">What happens next</h3>
+<p>The Reltio training team reviews your registration and enables access after approval. Allow up to <strong>48 hours</strong> for the review.</p>
+<hr>
+<h2 id="3-sign-in-to-reltio-learn">3. Sign in to Reltio Learn</h2>
+<p>Once you have an approved account, sign in to start learning.</p>
+<h3 id="steps">Steps</h3>
+<ol>
+<li>Open <a href="https://learn.reltio.com/">Reltio Learn</a> in your browser.</li>
+<li>On the <strong>Sign In</strong> page, enter your business email address as your username.</li>
+<li>Enter your password.</li>
+</ol>
+<blockquote>
+<p><strong>Important:</strong> If your account was migrated from <strong>Reltio Academy</strong> (created before January 15, 2026), your temporary password is <code>Welcome10</code>. You&#39;ll be prompted to change it on first login.</p>
+</blockquote>
+<ol start="4">
+<li>Complete the sign-in process.</li>
+</ol>
+<h3 id="what-youll-see">What you&#39;ll see</h3>
+<p>After you sign in, the <strong>Reltio Learn</strong> home page opens. You can:</p>
+<ul>
+<li>View your <strong>in-progress courses</strong></li>
+<li>Access your <strong>assigned learning path</strong></li>
+<li>Resume where you left off</li>
+</ul>
+<p>If it&#39;s your first time signing in, the home page displays options to:</p>
+<ul>
+<li>Browse the <strong>Reltio Learn Course Catalog</strong></li>
+<li>Register for <strong>Live Events</strong></li>
+<li>Explore <a href="https://learn.reltio.com/learn/catalog/view/20">Reltio Certification</a> paths</li>
+</ul>
+<hr>
+<h2 id="4-explore-courses-and-learning-paths">4. Explore courses and learning paths</h2>
+<p>Reltio Learn organizes content around your role and the Reltio components you work with. After signing in, you can access certification tracks and learning plans organized by core Reltio components such as:</p>
+<ul>
+<li><strong>APIs</strong></li>
+<li><strong>Match &amp; Merge</strong></li>
+<li><strong>Data Loader</strong></li>
+</ul>
+<p>To stay current with new training content, visit the <strong>What&#39;s New &amp; Release Resources</strong> page.</p>
+<blockquote>
+<p><strong>Tip:</strong> Check the <a href="https://learn.reltio.com/page/whats-new">What&#39;s New</a> page regularly — Reltio adds new learning paths and content with each release.</p>
+</blockquote>
+<hr>
+<h2 id="5-get-certified">5. Get certified</h2>
+<p>Reltio Certifications provide industry-recognized credentials to validate your expertise. Exams use advanced proctoring for secure, high-integrity assessments.</p>
+<h3 id="prerequisites">Prerequisites</h3>
+<p>You need a <strong>Reltio Learn account</strong> before you can enroll in certifications.</p>
+<h3 id="steps">Steps</h3>
+<ol>
+<li>Log in to <a href="https://learn.reltio.com/">Reltio Learn</a>.</li>
+<li>On the <strong>Welcome</strong> page, scroll down to <strong>Certifications</strong>.</li>
+<li>Select and enroll in the certification you want.</li>
+<li>First time? Complete any noted prerequisites and the <strong>Reltio Certification Exam Guide</strong> in the Syllabus of the selected certification.</li>
+<li>Complete the exam.</li>
+<li>Results are sent via email.</li>
+<li>If you pass, you&#39;ll receive an email from <strong>Credly</strong> with instructions to claim your credential.</li>
+<li>Log in to <strong>Credly</strong> via the link in your email.<ul>
+<li>If you don&#39;t have a Credly account, create one.</li>
+<li>If you already have an account, go to your profile page to view your awarded credential.</li>
+</ul>
+</li>
+<li>Learn how to share your credential <a href="https://vimeo.com/315901382">here</a>.</li>
+<li>Share feedback to <a href="mailto:training@reltio.com">training@reltio.com</a>.</li>
+</ol>
+<p>After earning your certification, explore additional learning paths and resources in <a href="https://learn.reltio.com/">Reltio Learn</a>.</p>
+<hr>
+<h2 id="6-access-the-partner-portal">6. Access the Partner Portal</h2>
+<p>If you&#39;re a Reltio implementation partner, the <a href="https://partner.reltio.com/">Reltio Partner Portal</a> provides resources to help you succeed. If you don&#39;t already have an account, request one from the portal.</p>
+<blockquote>
+<p><strong>Note:</strong> The Partner Portal is separate from Reltio Learn. It&#39;s designed specifically for implementation partners.</p>
+</blockquote>
+<hr>
+<h2 id="7-get-help-from-reltio-support">7. Get help from Reltio Support</h2>
+<p>If you run into issues with Reltio Learn or need help with the Reltio platform, the <a href="https://support.reltio.com/hc/en-us">Reltio Support Portal</a> offers Knowledge Base articles, a community forum, and an AI assistant called <strong>Sage</strong>.</p>
+<h3 id="support-portal-roles-and-what-you-can-do">Support Portal roles and what you can do</h3>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th>Regular user</th>
+<th>Designated Contact</th>
+<th>Designated Contact Admin</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Submit a support request</td>
+<td>✗</td>
+<td>✓</td>
+<td>Only if also a Designated Contact</td>
+</tr>
+<tr>
+<td>Manage Designated Contacts list</td>
+<td>✗</td>
+<td>✗</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Access the chatbot (Sage)</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><strong>Note:</strong> Only <strong>Designated Contacts</strong> can submit support tickets. The number of Designated Contacts depends on your support plan (Standard: 4, Premier: 8, Concierge: 12 per production tenant). For details, see <a href="https://www.reltio.com/sla-and-support-policy/">Support Level Agreement and Support Policy</a>.</p>
+</blockquote>
+<h3 id="other-helpful-resources">Other helpful resources</h3>
+<table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>What it&#39;s for</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="https://community.reltio.com">Reltio Community</a></td>
+<td>Peer discussions, technical blogs, use cases, and best practices</td>
+</tr>
+<tr>
+<td><a href="https://support.reltio.com/hc/en-us/categories/360001751992">Knowledge Base</a></td>
+<td>Technical articles and how-to guides from the Reltio Support team</td>
+</tr>
+<tr>
+<td><a href="https://developer.reltio.com/">Developer Portal</a></td>
+<td>REST API syntax reference</td>
+</tr>
+<tr>
+<td><a href="https://reltio.ideas.aha.io/portal_session/new">Ideas Portal</a></td>
+<td>Submit product improvement suggestions</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="further-reading">Further reading</h2>
+<ul>
+<li><a href="https://docs.reltio.com/en/reltio/whats-in-the-box/whats-in-the-box-at-a-glance/technical-assistance-at-a-glance/technical-assistance-operations/develop-skills-in-learn--partner-portal/get-started-with-reltio-learn">Get started with Reltio Learn</a> — Official getting started guide</li>
+<li><a href="https://docs.reltio.com/en/reltio/whats-in-the-box/whats-in-the-box-at-a-glance/technical-assistance-at-a-glance/technical-assistance-operations/develop-skills-in-learn--partner-portal/get-started-with-reltio-learn/register-for-a-reltio-learn-account">Register for a Reltio Learn account</a> — Registration details</li>
+<li><a href="https://docs.reltio.com/en/reltio/whats-in-the-box/whats-in-the-box-at-a-glance/technical-assistance-at-a-glance/technical-assistance-operations/develop-skills-in-learn--partner-portal/get-started-with-reltio-learn/sign-in-to-reltio-learn">Sign in to Reltio Learn</a> — Sign-in details</li>
+<li><a href="https://docs.reltio.com/en/reltio/whats-in-the-box/whats-in-the-box-at-a-glance/technical-assistance-at-a-glance/technical-assistance-operations/develop-skills-in-learn--partner-portal/get-started-with-reltio-certifications">Get started with Reltio Certifications</a> — Certification enrollment</li>
+<li><a href="https://docs.reltio.com/en/roles/about-roles">About roles</a> — Reltio role definitions</li>
+<li><a href="https://docs.reltio.com/en/reltio/whats-in-the-box/whats-in-the-box-at-a-glance/technical-assistance-at-a-glance/technical-assistance-operations/get-help-in-support-portal/support-portal-designated-contacts">Support Portal designated contacts</a> — How designated contacts work</li>
+</ul>
+<hr>
+<blockquote class="disclaimer">
+<p><strong>Disclaimer:</strong> This guide was generated with AI assistance using official Reltio documentation as source material. While every effort has been made to ensure accuracy, Reltio product behavior may change between releases. Always verify critical steps against your own Reltio environment and the <a href="https://docs.reltio.com">official documentation</a>. Last validated against documentation dated March 31, 2026.</p>
+</blockquote>
+<p><em>Guide based on Reltio documentation (March 2026).</em></p>
+
+<script>
+  // Click-to-zoom for workflow diagrams — toggle zoomed class on click,
+  // dismiss on second click or by clicking anywhere outside the diagram.
+  document.querySelectorAll('.diagram').forEach(function (img) {
+    img.addEventListener('click', function (e) {
+      e.stopPropagation();
+      img.classList.toggle('zoomed');
+    });
+  });
+  document.addEventListener('click', function () {
+    document.querySelectorAll('.diagram.zoomed').forEach(function (img) {
+      img.classList.remove('zoomed');
+    });
+  });
+
+  // Copy button — top-right of every code block.
+  var ICON_COPY = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+  var ICON_CHECK = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>';
+  document.querySelectorAll('pre').forEach(function (pre) {
+    var btn = document.createElement('button');
+    btn.className = 'copy-btn';
+    btn.setAttribute('aria-label', 'Copy code');
+    btn.innerHTML = ICON_COPY;
+    pre.appendChild(btn);
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var code = pre.querySelector('code');
+      var text = code ? code.innerText : pre.innerText;
+      navigator.clipboard.writeText(text).then(function () {
+        btn.innerHTML = ICON_CHECK;
+        btn.classList.add('copied');
+        setTimeout(function () {
+          btn.innerHTML = ICON_COPY;
+          btn.classList.remove('copied');
+        }, 1500);
+      });
+    });
+  });
+</script>
+</body>
+</html>
