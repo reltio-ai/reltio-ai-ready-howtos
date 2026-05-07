@@ -1,6 +1,6 @@
 # HOWTO: Use the top 10 Reltio APIs
 
-Work through the ten most important Reltio REST APIs end to end — from fetching an access token to reading an entity's full audit trail — in a single connected workflow.
+Work through the ten most important Reltio REST APIs end to end — from fetching an access token to reading an [entity](#glossary)'s full audit trail — in a single connected workflow.
 
 ```mermaid
 %%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#000066', 'primaryTextColor': '#ffffff', 'primaryBorderColor': '#0000CC', 'lineColor': '#000033', 'textColor': '#000033', 'secondaryColor': '#f5f5f5', 'tertiaryColor': '#f0f4ff', 'edgeLabelBackground': '#f0f4ff', 'clusterBkg': '#f0f4ff', 'clusterBorder': '#0000CC'}, 'themeCSS': '.edgeLabel { color: #000033 !important; background-color: #f0f4ff !important; font-weight: 500 !important; } .edgeLabel rect, .edgeLabel foreignObject { fill: #f0f4ff !important; }', 'flowchart': {'nodeSpacing': 40, 'rankSpacing': 55, 'curve': 'basis', 'padding': 12}}}%%
@@ -18,7 +18,7 @@ flowchart LR
 
 ## Overview
 
-This tutorial walks you through the ten Reltio API calls that cover the full lifecycle of a mastered record: authenticate, inspect the tenant's data model, create and search entities, reconcile them by crosswalk, update attributes, link entities with a relation, surface potential duplicates, merge them, and review the change history. Each step reuses the data created by the previous one, so by the end you have a working golden record with a complete audit trail. Everything runs against Reltio's REST APIs using `curl` — no SDK or UI required.
+This tutorial walks you through the ten Reltio API calls that cover the full lifecycle of a mastered record: authenticate, inspect the tenant's data model, create and search entities, reconcile them by [crosswalk](#glossary), update attributes, link entities with a relation, surface potential duplicates, merge them, and review the change history. Each step reuses the data created by the previous one, so by the end you have a working golden record with a complete audit trail. Everything runs against Reltio's REST APIs using `curl` — no SDK or UI required.
 
 This guide is for this Reltio role: **Developer**. For more information on data unification roles in the Reltio Context Intelligence Platform, see [About roles](https://docs.reltio.com/en/roles/about-roles).
 
@@ -68,7 +68,7 @@ The ten APIs in this guide fall into four groups — one authentication call, on
 - **[OAuth 2.0 client credentials](#15-glossary)** — Reltio's Authentication API issues a short-lived bearer token. Every tenant call needs `Authorization: Bearer ${TOKEN}`.
 - **[Entity](#15-glossary)** — one record of a real-world thing (a person, an organization). Entities have attributes and are identified by a URI like `entities/ABC123`.
 - **[Crosswalk](#15-glossary)** — the pointer from an entity back to its source record. `CRM-1001` in the `CRM` source and `ERP-5001` in the `ERP` source are both crosswalks on the same Reltio entity.
-- **[Operational value (OV)](#15-glossary)** — the survivorship-selected winning value for an attribute after Reltio reconciles multiple sources.
+- **[Operational value (OV)](#15-glossary)** — the [survivorship](#glossary)-selected winning value for an attribute after Reltio reconciles multiple sources.
 - **[Match rule](#15-glossary)** — a configured predicate that flags likely duplicates. The setup guide defines a single `suspect`-type rule called `SuspectLastNameEmail`.
 - **Asynchronous processing** — entity creation, match evaluation, and merges complete asynchronously. A successful `HTTP 200` means the request was accepted, not that every downstream index is updated. Wait a few seconds before polling a follow-up call.
 
@@ -368,7 +368,7 @@ Update modes differ in what happens to attributes **not** in the payload:
 **Key rules:**
 
 - Always use `partialOverride` unless you intentionally want a full replace.
-- The match that drives upsert happens on the crosswalk, not on attribute values or the entity URI.
+- The match that drives [upsert](#glossary) happens on the crosswalk, not on attribute values or the entity URI.
 - If no crosswalk matches, Reltio creates a new entity — make sure the crosswalk value is correct before running an "update".
 
 **What can go wrong:**
@@ -619,7 +619,7 @@ Common event types:
 |-------|---------|
 | `ENTITY_CREATED` | First insert |
 | `ENTITY_CHANGED` | Attribute, tag, or role update |
-| `ENTITIES_MERGED` | Merged via a match rule |
+| `ENTITIES_MERGED` | Merged via a [match rule](#glossary) |
 | `ENTITIES_MERGED_MANUALLY` | Merged via API or UI (as you did in [Step 11](#11-merge-two-entities)) |
 | `ENTITIES_MERGED_ON_THE_FLY` | Auto-merged because crosswalks collided on create |
 | `ENTITIES_SPLITTED` | A previous merge was reversed |
@@ -692,19 +692,31 @@ Rate-limit defaults worth knowing:
 
 ## 15. Glossary
 
-- **Application client** — a machine-to-machine identity in Reltio Auth, identified by a Client ID and secured by a Client Secret. Used by integrations; no human user is attached.
-- **Crosswalk** — a pointer from a Reltio entity to a record in a source system. Carries a `type` (the source URI) and a `value` (the source's ID for the record).
-- **Entity** — one record of a real-world thing (person, organization, product). Identified by a URI like `entities/ABC123`.
-- **Entity History API** — `/{entityURI}/_changes`. Returns the audit log of an entity, up to 1,000 most recent events.
-- **Entity Search API** — `/entities` (GET) and `/entities/_search` (POST). Accepts filter expressions to query entities.
-- **L3 layer** — the customer-owned configuration layer. The model a tenant runs on is the inheritance of L1, L2, and L3.
-- **Match rule** — a configured predicate that flags likely duplicates. Rules are classified as `automatic`, `suspect`, or `relevance_based`.
-- **OAuth 2.0 client credentials** — the OAuth grant Reltio uses for machine-to-machine authentication. Trades Client ID + Client Secret for a short-lived bearer token.
-- **Operational value (OV)** — the survivorship-selected winning value for an attribute. In API responses, the winner has `"ov": true`.
-- **Potential Matches API** — `/{entityURI}/_matches`. Returns rule-evaluated duplicate candidates grouped by match-group URI.
-- **Relations API** — `/relations`. Creates, reads, updates, and deletes directional links between entities.
-- **Survivorship** — the logic that chooses which candidate value becomes OV when multiple sources disagree.
-- **Upsert** — the Reltio pattern where `POST /entities` with an existing crosswalk updates instead of creating. Combine with `?options=partialOverride` for incremental updates.
+**Application client:** a machine-to-machine identity in Reltio Auth, identified by a Client ID and secured by a Client Secret. Used by integrations; no human user is attached.
+
+**Crosswalk:** a pointer from a Reltio entity to a record in a source system. Carries a `type` (the source URI) and a `value` (the source's ID for the record).
+
+**Entity:** one record of a real-world thing (person, organization, product). Identified by a URI like `entities/ABC123`.
+
+**Entity History API:** `/{entityURI}/_changes`. Returns the audit log of an entity, up to 1,000 most recent events.
+
+**Entity Search API:** `/entities` (GET) and `/entities/_search` (POST). Accepts filter expressions to query entities.
+
+**L3 layer:** the customer-owned configuration layer. The model a tenant runs on is the inheritance of L1, L2, and L3.
+
+**Match rule:** a configured predicate that flags likely duplicates. Rules are classified as `automatic`, `suspect`, or `relevance_based`.
+
+**OAuth 2.0 client credentials:** the OAuth grant Reltio uses for machine-to-machine authentication. Trades Client ID + Client Secret for a short-lived bearer token.
+
+**Operational value (OV):** the survivorship-selected winning value for an attribute. In API responses, the winner has `"ov": true`.
+
+**Potential Matches API:** `/{entityURI}/_matches`. Returns rule-evaluated duplicate candidates grouped by match-group URI.
+
+**Relations API:** `/relations`. Creates, reads, updates, and deletes directional links between entities.
+
+**Survivorship:** the logic that chooses which candidate value becomes OV when multiple sources disagree.
+
+**Upsert:** the Reltio pattern where `POST /entities` with an existing crosswalk updates instead of creating. Combine with `?options=partialOverride` for incremental updates.
 
 ---
 

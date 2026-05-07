@@ -16,7 +16,7 @@ flowchart LR
 
 ## Overview
 
-This guide walks you through configuring an empty Reltio tenant so the Top 10 APIs tutorial works end to end. You'll apply a Layer 3 (L3) configuration that defines two entity types, two sources, and one relation type, then verify the tenant is ready. Everything runs against the Configuration API — no Console UI required.
+This guide walks you through configuring an empty Reltio tenant so the Top 10 APIs tutorial works end to end. You'll apply a Layer 3 ([L3](#glossary)) configuration that defines two entity types, two sources, and one [relation type](#glossary), then verify the tenant is ready. Everything runs against the [Configuration API](#glossary) — no Console UI required.
 
 This guide is for this Reltio role: **Developer**. For more information on data unification roles in the Reltio Context Intelligence Platform, see [About roles](https://docs.reltio.com/en/roles/about-roles).
 
@@ -64,8 +64,8 @@ The tutorial's data model is small on purpose — three object types, three attr
 | Component | Purpose |
 |-----------|---------|
 | [Entity type](#13-glossary) `Individual` | Represents a person with `FirstName`, `LastName`, and `Email` simple attributes |
-| Entity type `Organization` | Represents a company with a `Name` simple attribute |
-| [Source](#13-glossary) `CRM` | Primary source for individuals and organizations created during the tutorial |
+| [Entity type](#glossary) `Organization` | Represents a company with a `Name` simple attribute |
+| [Source](#13-glossary) `CRM` | Primary [source](#glossary) for individuals and organizations created during the tutorial |
 | Source `ERP` | Second source used to create a near-duplicate record |
 | [Relation type](#13-glossary) `Employment` | Links an `Individual` (start) to an `Organization` (end), with a `Title` attribute |
 
@@ -73,7 +73,7 @@ A few platform concepts to keep straight:
 
 - **[L3](#13-glossary)** — the customer-owned configuration layer; the consolidated model a tenant actually runs on is L1 + L2 + L3 after inheritance.
 - **[Configuration API](#13-glossary)** — the REST surface used to get and set L3. The two most-used calls are `GET /configuration` (with `_noInheritance` for just the L3 you own) and `PUT /configuration`.
-- **[Crosswalk](#13-glossary)** — a pointer from a Reltio entity back to its source record; every record you load during the tutorial lands in the tenant with a crosswalk whose `type` points to `configuration/sources/CRM` or `configuration/sources/ERP`.
+- **[Crosswalk](#13-glossary)** — a pointer from a Reltio entity back to its source record; every record you load during the tutorial lands in the tenant with a [crosswalk](#glossary) whose `type` points to `configuration/sources/CRM` or `configuration/sources/ERP`.
 
 The Top 10 APIs tutorial exercises CRUD, search, crosswalks, relations, match, and merge. The V1 tutorial you can follow today is [HOWTO: Top 10 Reltio APIs](./HOWTO-top-10-reltio-apis.md). A V2 of that tutorial (`HOWTO-top-10-reltio-apis-v2.md`) will follow the same structure as this guide once published.
 
@@ -501,17 +501,17 @@ curl -s -X DELETE "${TENANT}/configuration/sources/ERP?option=purgeAllData" \
 
 ## 13. Glossary
 
-**Configuration API** — The REST API for retrieving, editing, and validating a tenant's metadata configuration. Its two most-used calls are `GET /configuration` and `PUT /configuration`.
+**Configuration API:** The REST API for retrieving, editing, and validating a tenant's metadata configuration. Its two most-used calls are `GET /configuration` and `PUT /configuration`.
 
-**Crosswalk** — A reference that links a Reltio entity back to its record in a source system. Every record loaded into a tenant carries a crosswalk whose `type` points to a `configuration/sources/{name}` URI.
+**Crosswalk:** A reference that links a Reltio entity back to its record in a source system. Every record loaded into a tenant carries a crosswalk whose `type` points to a `configuration/sources/{name}` URI.
 
-**Entity type** — A class of business object (for example, Individual or Organization) defined by metadata including a URI, label, and attributes. Entity types are the building blocks of a Reltio data model.
+**Entity type:** A class of business object (for example, Individual or Organization) defined by metadata including a URI, label, and attributes. Entity types are the building blocks of a Reltio data model.
 
-**L3** — The Layer 3, customer-owned configuration that overlays Reltio's L1 and L2 layers. When an L3 is applied, inheritance produces the consolidated tenant configuration the platform runs on.
+**L3:** The Layer 3, customer-owned configuration that overlays Reltio's L1 and L2 layers. When an L3 is applied, inheritance produces the consolidated tenant configuration the platform runs on.
 
-**Relation type** — A configuration object that describes how two entity types are linked, using a `startObject` and `endObject`. Relation types can carry their own simple attributes.
+**Relation type:** A configuration object that describes how two entity types are linked, using a `startObject` and `endObject`. Relation types can carry their own simple attributes.
 
-**Source** — A registered origin of data in a tenant, defined as `configuration/sources/{name}`. Every record loaded into Reltio is associated with a source; if none is specified, the source defaults to `Reltio`.
+**Source:** A registered origin of data in a tenant, defined as `configuration/sources/{name}`. Every record loaded into Reltio is associated with a source; if none is specified, the source defaults to `Reltio`.
 
 ---
 

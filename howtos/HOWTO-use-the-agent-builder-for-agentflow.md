@@ -1,6 +1,6 @@
 # HOWTO: Use the Agent Builder for AgentFlow
 
-Author, test, submit, review, and publish custom AI agents in Reltio [AgentFlow](#13-glossary) through a governed lifecycle — from draft through automated security scan to reviewer approval and live publication.
+Author, test, submit, review, and publish custom AI agents in Reltio [AgentFlow](#13-glossary) through a governed lifecycle — from draft through automated [security scan](#glossary) to reviewer approval and live publication.
 
 ```mermaid
 %%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#000066', 'primaryTextColor': '#ffffff', 'primaryBorderColor': '#0000CC', 'lineColor': '#000033', 'textColor': '#000033', 'secondaryColor': '#f5f5f5', 'tertiaryColor': '#f0f4ff', 'edgeLabelBackground': '#f0f4ff', 'clusterBkg': '#f0f4ff', 'clusterBorder': '#0000CC'}, 'themeCSS': '.edgeLabel { color: #000033 !important; background-color: #f0f4ff !important; font-weight: 500 !important; } .edgeLabel rect, .edgeLabel foreignObject { fill: #f0f4ff !important; }', 'flowchart': {'nodeSpacing': 40, 'rankSpacing': 55, 'curve': 'basis', 'padding': 12}}}%%
@@ -21,7 +21,7 @@ flowchart LR
 
 ## Overview
 
-[Agent Builder](#13-glossary) is the authoring and governance surface inside [AgentFlow](#13-glossary). [Agent Authors](#13-glossary) create a custom agent by writing a [system prompt](#13-glossary), selecting the [tools](#13-glossary) the agent is allowed to call, and testing it interactively. When the author submits a [publish request](#13-glossary), an automated [security scan](#13-glossary) checks the prompt for policy violations. Clean requests enter the [Agent Approver's](#13-glossary) queue; violations are [auto-blocked](#13-glossary) before a human sees them. Once approved, the agent is published as an immutable version and appears in **Discover Agents** for end users. This guide walks through the full lifecycle — authoring, scanning, reviewing, and managing state transitions — covering both the author and approver workflows.
+[Agent Builder](#13-glossary) is the authoring and governance surface inside [AgentFlow](#13-glossary). [Agent Authors](#13-glossary) create a custom agent by writing a [system prompt](#13-glossary), selecting the [tools](#13-glossary) the agent is allowed to call, and testing it interactively. When the author submits a [publish request](#13-glossary), an automated [security scan](#13-glossary) checks the prompt for policy violations. Clean requests enter the [Agent Approver's](#13-glossary) queue; violations are [auto-blocked](#13-glossary) before a human sees them. Once approved, the agent is published as an [immutable version](#glossary) and appears in **Discover Agents** for end users. This guide walks through the full lifecycle — authoring, scanning, reviewing, and managing state transitions — covering both the author and approver workflows.
 
 This guide is for these Reltio roles: **Developer**, **Reltio Configurator**, **Data Product Owner**. For more information on data unification roles in the Reltio Context Intelligence Platform, see [About roles](https://docs.reltio.com/en/roles/about-roles).
 
@@ -31,7 +31,7 @@ This guide is for these Reltio roles: **Developer**, **Reltio Configurator**, **
 2. [Key concepts](#2-key-concepts)
 3. [Create a draft agent](#3-create-a-draft-agent)
 4. [Write the system prompt](#4-write-the-system-prompt)
-5. [Select tools](#5-select-tools)
+5. [Select tools](#5-select-[tools](#glossary))
 6. [Test the draft agent](#6-test-the-draft-agent)
 7. [Submit the agent for review](#7-submit-the-agent-for-review)
 8. [Review and act on a publish request](#8-review-and-act-on-a-publish-request)
@@ -47,7 +47,7 @@ Gather these before you start:
 
 | What | Details |
 |------|---------|
-| **AgentFlow access** | You can sign in to AgentFlow and open the Agent Builder surface |
+| **AgentFlow access** | You can sign in to [AgentFlow](#glossary) and open the [Agent Builder](#glossary) surface |
 | **Author role** | `ROLE_AGENT_AUTHOR` on the target tenant (to create, test, and submit agents) |
 | **Approver role** | `ROLE_AGENT_APPROVER` on the target tenant (to review publish requests) — at least one user on the tenant must have PUBLISH permission |
 | **Tenant MCP and agent roles** | `ROLE_EXECUTE_MCP` and `ROLE_EXECUTE_AGENTS` (required for AgentFlow execution) |
@@ -60,7 +60,7 @@ Gather these before you start:
 
 Before you author your first agent, familiarize yourself with the four roles and the state machine that governs every agent:
 
-- **Agent Author** — Writes the system prompt, selects tools, tests the draft, and submits a publish request. Can withdraw a pending request and return the draft to editable state.
+- **Agent Author** — Writes the [system prompt](#glossary), selects tools, tests the draft, and submits a [publish request](#glossary). Can withdraw a pending request and return the draft to editable state.
 - **Agent Approver** — Reviews publish requests that passed the security scan. Can approve (publish the agent) or reject with a reason (return it to the author).
 - **Agent Admin** — Can update any published agent and archive agents. Archived agents are retained for audit but removed from **Discover Agents**.
 - **End User** — Discovers published agents in the catalog and starts conversations with them.
@@ -243,7 +243,7 @@ The author can revise the agent and resubmit. The previously published version, 
 
 ## 9. Update a published agent
 
-Use this path when you want to revise an agent that is already published. An Agent Author (for their own agents) or an Agent Admin can initiate an update. The published version remains live and available to users throughout the editing and review process.
+Use this path when you want to revise an agent that is already published. An [Agent Author](#glossary) (for their own agents) or an [Agent Admin](#glossary) can initiate an update. The published version remains live and available to users throughout the editing and review process.
 
 1. Sign in to **AgentFlow** and go to **Agent Builder**.
 2. Locate the published agent in the **All Agents** tab.
@@ -279,7 +279,7 @@ Agent Builder tracks the state of each agent throughout its lifecycle. The state
 
 ### Transition rules
 
-- **Submit for review** — Draft → Scanning → Pending review (if scan passes) or Draft → Scanning → Auto blocked (if a violation is detected).
+- **Submit for review** — Draft → Scanning → Pending review (if scan passes) or Draft → Scanning → [Auto blocked](#glossary) (if a violation is detected).
 - **Approve** — Pending review → Published. The agent appears in the **All Agents** tab.
 - **Reject** — Pending review → Rejected.
 - **Edit a rejected or auto-blocked agent** — returns the agent to Draft.
@@ -293,7 +293,7 @@ Agent Builder tracks the state of each agent throughout its lifecycle. The state
 | Issue | Likely cause | What to try |
 |-------|--------------|-------------|
 | Submit action unavailable | You do not have `ROLE_AGENT_AUTHOR` on the tenant, or no user on the tenant has `ROLE_AGENT_APPROVER` with PUBLISH permission | Ask your System Administrator to assign the required roles |
-| Request auto-blocked on submit | The security scan detected a `policy_category` violation in the system prompt | Open the scan result, identify the policy category, revise the offending section of the prompt, and submit again |
+| Request auto-blocked on submit | The security scan detected a `policy_category` violation in the system prompt | Open the scan result, identify the [policy category](#glossary), revise the offending section of the prompt, and submit again |
 | Test run blocked | Same build-time scan as submission; violation in the current prompt | Revise the prompt and retest. The scan re-runs on every test |
 | Tool not visible when selecting | The tool is not in the tenant-approved catalog | Ask your Agent Admin to add the tool to the catalog |
 | Approve action unavailable | You have `ROLE_AGENT_APPROVER` but not PUBLISH permission | Ask your System Administrator to grant PUBLISH permission |
@@ -313,31 +313,31 @@ Agent Builder tracks the state of each agent throughout its lifecycle. The state
 
 ## 13. Glossary
 
-**Agent Admin** — A role in Agent Builder that can update any published agent and archive agents. Archived agents are retained for audit purposes but removed from Discover Agents.
+**Agent Admin:** A role in Agent Builder that can update any published agent and archive agents. Archived agents are retained for audit purposes but removed from Discover Agents.
 
-**Agent Approver** — A role in Agent Builder that reviews pending publish requests and decides whether to approve (publish) or reject (return to author). Requires `ROLE_AGENT_APPROVER` on the tenant.
+**Agent Approver:** A role in Agent Builder that reviews pending publish requests and decides whether to approve (publish) or reject (return to author). Requires `ROLE_AGENT_APPROVER` on the tenant.
 
-**Agent Author** — A role in Agent Builder that creates, edits, tests, and submits agents for publish review. Requires `ROLE_AGENT_AUTHOR` on the tenant.
+**Agent Author:** A role in Agent Builder that creates, edits, tests, and submits agents for publish review. Requires `ROLE_AGENT_AUTHOR` on the tenant.
 
-**Agent Builder** — The authoring and governance surface within AgentFlow. It is where authors create, test, and submit AI agents, and where approvers review and publish them.
+**Agent Builder:** The authoring and governance surface within AgentFlow. It is where authors create, test, and submit AI agents, and where approvers review and publish them.
 
-**AgentFlow** — Reltio's product for real-time, AI-driven data stewardship through secure, governed conversations with purpose-built agents. Agent Builder is one of its surfaces.
+**AgentFlow:** Reltio's product for real-time, AI-driven data stewardship through secure, governed conversations with purpose-built agents. Agent Builder is one of its surfaces.
 
-**Auto blocked** — An agent state reached when the automated security scan detects a policy violation in the system prompt during submission. The publish request does not reach a reviewer. The author can revise the prompt and resubmit.
+**Auto blocked:** An agent state reached when the automated security scan detects a policy violation in the system prompt during submission. The publish request does not reach a reviewer. The author can revise the prompt and resubmit.
 
-**Discover Agents** — The catalog of published agents that end users browse to start conversations. Archived and draft agents do not appear here.
+**Discover Agents:** The catalog of published agents that end users browse to start conversations. Archived and draft agents do not appear here.
 
-**Immutable version** — A published agent version that cannot be edited in place. Further changes create a new draft version while the immutable published version stays live.
+**Immutable version:** A published agent version that cannot be edited in place. Further changes create a new draft version while the immutable published version stays live.
 
-**Policy category** — A classifier value returned by the security scan when a system prompt is blocked, identifying the type of violation detected. If the scanner cannot classify the violation, the value is `UNKNOWN`.
+**Policy category:** A classifier value returned by the security scan when a system prompt is blocked, identifying the type of violation detected. If the scanner cannot classify the violation, the value is `UNKNOWN`.
 
-**Publish request** — The submission a Agent Author creates to move a draft into review. Every publish request triggers an automated security scan before reaching an approver.
+**Publish request:** The submission a Agent Author creates to move a draft into review. Every publish request triggers an automated security scan before reaching an approver.
 
-**Security scan** — The automated system prompt scan that runs on every submission and every test run. Result is either `pass` (proceeds) or `blocked` (auto-blocked with a `policy_category`).
+**Security scan:** The automated system prompt scan that runs on every submission and every test run. Result is either `pass` (proceeds) or `blocked` (auto-blocked with a `policy_category`).
 
-**System prompt** — The complete instruction set the model evaluates when an agent starts. Limited to 100,000 characters including spaces. Defines the agent's identity, objectives, tool usage rules, workflow, guardrails, output format, and error handling.
+**System prompt:** The complete instruction set the model evaluates when an agent starts. Limited to 100,000 characters including spaces. Defines the agent's identity, objectives, tool usage rules, workflow, guardrails, output format, and error handling.
 
-**Tools** — The functions an agent is allowed to call. Only tools in the tenant-approved catalog can be added to an agent's allowlist. An agent cannot call tools outside its allowlist.
+**Tools:** The functions an agent is allowed to call. Only tools in the tenant-approved catalog can be added to an agent's allowlist. An agent cannot call tools outside its allowlist.
 
 ---
 

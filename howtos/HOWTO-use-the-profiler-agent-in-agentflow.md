@@ -1,6 +1,6 @@
 # HOWTO: Use the Profiler Agent in AgentFlow
 
-Assess your source data quality, review column-level metrics, fix validation rules, and load clean data into Reltio — all through a conversational interface in AgentFlow.
+Assess your source data quality, review column-level metrics, fix validation rules, and load clean data into Reltio — all through a conversational interface in [AgentFlow](#glossary).
 
 ```mermaid
 %%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#000066', 'primaryTextColor': '#ffffff', 'primaryBorderColor': '#0000CC', 'lineColor': '#000033', 'textColor': '#000033', 'secondaryColor': '#f5f5f5', 'tertiaryColor': '#f0f4ff', 'edgeLabelBackground': '#f0f4ff', 'clusterBkg': '#f0f4ff', 'clusterBorder': '#0000CC'}, 'themeCSS': '.edgeLabel { color: #000033 !important; background-color: #f0f4ff !important; font-weight: 500 !important; } .edgeLabel rect, .edgeLabel foreignObject { fill: #f0f4ff !important; }', 'flowchart': {'nodeSpacing': 40, 'rankSpacing': 55, 'curve': 'basis', 'padding': 12}}}%%
@@ -17,7 +17,7 @@ flowchart LR
 
 ## Overview
 
-The [Profiler](#13-glossary) agent is a pre-ingestion data quality assistant in [AgentFlow](#13-glossary). It connects to structured files in cloud storage or SFTP, previews file structure, computes column-level quality scores, identifies issues with ranked suggestions, and optionally maps source fields to your tenant schema for loading via [Data Loader](#13-glossary). This guide walks you through enabling the agent, running your first profiling job, interpreting results, and loading validated data.
+The [Profiler](#13-glossary) agent is a pre-ingestion data quality assistant in [AgentFlow](#13-glossary). It connects to structured files in cloud storage or [SFTP](#glossary), previews file structure, computes column-level quality scores, identifies issues with ranked suggestions, and optionally maps source fields to your tenant schema for loading via [Data Loader](#13-glossary). This guide walks you through enabling the agent, running your first profiling job, interpreting results, and loading validated data.
 
 This guide is for these Reltio roles: **Data Steward**, **Reltio Configurator**. For more information on data unification roles in the Reltio Context Intelligence Platform, see [About roles](https://docs.reltio.com/en/roles/about-roles).
 
@@ -25,7 +25,7 @@ This guide is for these Reltio roles: **Data Steward**, **Reltio Configurator**.
 
 1. [Getting started](#1-getting-started)
 2. [Key concepts](#2-key-concepts)
-3. [Enable the Profiler agent for your tenant](#3-enable-the-profiler-agent-for-your-tenant)
+3. [Enable the [Profiler](#glossary) agent for your tenant](#3-enable-the-profiler-agent-for-your-tenant)
 4. [Configure AWS IAM role for S3 access](#4-configure-aws-iam-role-for-s3-access)
 5. [Run your first profiling job](#5-run-your-first-profiling-job)
 6. [Review schema and validation rules](#6-review-schema-and-validation-rules)
@@ -43,7 +43,7 @@ Gather these before you start:
 
 | What | Details |
 |------|---------|
-| **AgentFlow access** | You can sign in to [reltio.ai](https://reltio.ai/login) and access the AgentFlow workspace |
+| **AgentFlow access** | You can sign in to [reltio.ai](https://reltio.ai/login) and access the AgentFlow [workspace](#glossary) |
 | **Roles** | `ROLE_AGENT_FLOW_PROFILER`, `ROLE_EXECUTE_AGENTS`, `ROLE_EXECUTE_MCP`, `ROLE_DATALOADER` |
 | **Additional roles** | `ROLE_USER` and `ROLE_API` on the target tenant |
 | **Cloud storage** | A file in AWS S3, Azure Blob Storage, Google Cloud Storage, or SFTP with valid access credentials |
@@ -57,10 +57,10 @@ Before diving into profiling, familiarize yourself with how the Profiler agent w
 
 - **Connect** — Provide the file location (S3, Azure, GCS, or SFTP) and access credentials. The agent checks access and confirms file availability.
 - **Preview** — The agent scans the file to detect delimiters, infer column headers and types, and identify potential structural issues. You confirm the inferred schema before proceeding.
-- **Profile** — The agent runs a profiling job to compute quality metrics per column — completeness, uniqueness, validity, and structural consistency. It identifies anomalies, missing values, and invalid formats.
+- **Profile** — The agent runs a profiling job to compute quality metrics per column — [completeness](#glossary), [uniqueness](#glossary), [validity](#glossary), and structural consistency. It identifies anomalies, missing values, and invalid formats.
 - **Review** — You receive a summary of quality scores, issue severity, and invalid value samples. You can ask follow-up questions like "Why is email quality low?" or "Show invalid phone numbers."
 - **Map and validate** — If profiling results are acceptable, ask the agent to generate a mapping to the Reltio tenant schema. The agent uses tenant metadata to align fields.
-- **Load** — Once the mapping is confirmed, the agent creates a Data Loader job and monitors its execution. The final output includes load status, job ID, and any load errors.
+- **Load** — Once the mapping is confirmed, the agent creates a [Data Loader](#glossary) job and monitors its execution. The final output includes load status, job ID, and any load errors.
 
 > **Learn more:** [Profiler](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-agents-catalog/profiler) in the Reltio documentation.
 
@@ -100,7 +100,7 @@ If your source files are in Amazon S3, configure an IAM role so the Profiler can
 - Permission to create IAM roles in your AWS account
 - An S3 bucket containing your source CSV files
 - The Reltio AWS account ID (obtain this from Reltio Support)
-- A unique External ID value in UUID v7 format
+- A unique [External ID](#glossary) value in UUID v7 format
 
 > **Important:** Use UUID **version 7** format for the External ID. Other formats (such as UUID v1) may result in failed access. Generate one using: `GET https://platform-management.reltio.com/api/v1/tools/externalId`
 
@@ -258,7 +258,7 @@ After profiling completes, the agent displays column-level quality scores and is
 
 ### View quality scores
 
-The agent computes a quality score (0–100%) for each column based on completeness, uniqueness, validity, and structural consistency. It identifies missing values, invalid formats, and pattern deviations, grouped by severity.
+The agent computes a [quality score](#glossary) (0–100%) for each column based on completeness, uniqueness, validity, and structural consistency. It identifies missing values, invalid formats, and pattern deviations, grouped by severity.
 
 ### Query invalid values
 
@@ -371,7 +371,7 @@ Common issues and how to resolve them:
 | Agent asks for credentials after every job | Default credentials not saved | Save credentials in **Settings** > **Agent Instructions** > **Profiler** (see [step 10](#10-save-default-credentials)) |
 | Profiling fails with large files | File exceeds single-job capacity | Split the file or use staged execution with smaller batches |
 | "No profiling workspace found" when querying invalid values | No quality analysis has been completed yet | Run a profiling job first, then query results |
-| Data load fails after mapping | Mapping references attributes not in the tenant config | Verify the entity type and attribute names in your tenant's L3 configuration |
+| Data load fails after mapping | Mapping references attributes not in the tenant config | Verify the entity type and attribute names in your tenant's [L3 configuration](#glossary) |
 | Cross-column validation not available | Not supported | The Profiler doesn't perform cross-column or referential integrity checks — validate those separately |
 
 > **Learn more:** [Profiler](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-agents-catalog/profiler) in the Reltio documentation.
@@ -391,27 +391,27 @@ Common issues and how to resolve them:
 
 ## 13. Glossary
 
-**AgentFlow** — Reltio's agent execution environment, available at [reltio.ai](https://reltio.ai/login), where conversational AI agents run against your tenant data.
+**AgentFlow:** Reltio's agent execution environment, available at [reltio.ai](https://reltio.ai/login), where conversational AI agents run against your tenant data.
 
-**Completeness** — A quality metric measuring the percentage of non-null, non-empty values in a column.
+**Completeness:** A quality metric measuring the percentage of non-null, non-empty values in a column.
 
-**Data Loader** — A Reltio tool for ingesting entities, relationships, and interactions into a tenant. The Profiler can generate Data Loader mapping files and submit load jobs.
+**Data Loader:** A Reltio tool for ingesting entities, relationships, and interactions into a tenant. The Profiler can generate Data Loader mapping files and submit load jobs.
 
-**External ID** — A customer-defined string (in UUID v7 format) used as an additional security parameter in AWS IAM trust policies. It ensures only authorized callers can assume the IAM role.
+**External ID:** A customer-defined string (in UUID v7 format) used as an additional security parameter in AWS IAM trust policies. It ensures only authorized callers can assume the IAM role.
 
-**L3 configuration** — The business-level data model in Reltio, defining entity types, attributes, sources, match rules, and survivorship.
+**L3 configuration:** The business-level data model in Reltio, defining entity types, attributes, sources, match rules, and survivorship.
 
-**Profiler** — A pre-ingestion data quality assistant in AgentFlow that scans structured source files, computes column-level quality metrics, and prepares data for loading into Reltio.
+**Profiler:** A pre-ingestion data quality assistant in AgentFlow that scans structured source files, computes column-level quality metrics, and prepares data for loading into Reltio.
 
-**Quality score** — A 0–100% score computed per column based on completeness, uniqueness, validity, and structural consistency.
+**Quality score:** A 0–100% score computed per column based on completeness, uniqueness, validity, and structural consistency.
 
-**SFTP** — Secure File Transfer Protocol, one of the supported file access methods for the Profiler agent.
+**SFTP:** Secure File Transfer Protocol, one of the supported file access methods for the Profiler agent.
 
-**Uniqueness** — A quality metric measuring the percentage of distinct values in a column relative to total values.
+**Uniqueness:** A quality metric measuring the percentage of distinct values in a column relative to total values.
 
-**Validity** — A quality metric measuring the percentage of values that conform to the expected data type, format, or pattern for a column.
+**Validity:** A quality metric measuring the percentage of values that conform to the expected data type, format, or pattern for a column.
 
-**Workspace** — A profiling session context created by the Profiler agent. Each profiling job runs in its own workspace, identified by a workspace ID. Follow-up queries reference this workspace.
+**Workspace:** A profiling session context created by the Profiler agent. Each profiling job runs in its own workspace, identified by a workspace ID. Follow-up queries reference this workspace.
 
 ---
 
