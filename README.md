@@ -112,7 +112,7 @@ Then regenerate any guides that cover topics that may have changed. Check the `_
 
 ## License
 
-The generator infrastructure (scripts, templates, style guides) is licensed under [ISC](LICENSE). Guides you generate in your fork belong to you.
+The generator infrastructure (scripts, templates, style guides) is licensed under the [Reltio HOWTOs License](LICENSE.md). Guides you generate using this kit are for your own internal use — you may not republish or redistribute them.
 
 ---
 

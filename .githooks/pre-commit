@@ -3,7 +3,7 @@
 # pre-commit — auto-generate HTML for HOWTO Markdown files
 #
 # Runs automatically on every `git commit` when the hooks path is configured
-# (see CONTRIBUTING.md or run `npm install` to set it up).
+# (run `npm install` to set it up).
 #
 # What it does:
 #   • Any newly added or modified howtos/HOWTO-*.md in the staging area gets
