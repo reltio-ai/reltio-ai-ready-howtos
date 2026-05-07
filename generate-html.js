@@ -322,6 +322,59 @@ function loadCss() {
   return fs.readFileSync(path.join(TEMPLATE_DIR, "styles.css"), "utf-8");
 }
 
+// --- Glossary link resolution ---
+
+function resolveGlossaryLinks(html) {
+  const headingRe = /<h2[^>]*>[^<]*[Gg]lossary[^<]*<\/h2>/;
+  const headingMatch = html.match(headingRe);
+  if (!headingMatch) return html;
+
+  const afterGlossary = html.slice(html.indexOf(headingMatch[0]) + headingMatch[0].length);
+
+  const termMap = new Map();
+  const termRe = /<p><strong>([^:]+):<\/strong>([\s\S]*?)<\/p>/g;
+  let m;
+  while ((m = termRe.exec(afterGlossary)) !== null) {
+    const term = m[1].trim();
+    const slug = 'glossary-' + term.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/, '');
+    const def = m[2].replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+    termMap.set(term, { slug, def });
+  }
+  if (termMap.size === 0) return html;
+
+  for (const [term, { slug }] of termMap) {
+    const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    html = html.replace(
+      new RegExp(`<p><strong>${escaped}:<\\/strong>`, 'g'),
+      `<p id="${slug}"><strong>${term}:</strong>`
+    );
+  }
+
+  html = html.replace(/<a href="#glossary">([^<]+)<\/a>/g, (full, linkText) => {
+    const key = linkText.trim();
+    let found = null;
+    if (termMap.has(key)) {
+      found = termMap.get(key);
+    } else {
+      for (const [term, data] of termMap) {
+        if (term.toLowerCase() === key.toLowerCase()) { found = data; break; }
+      }
+    }
+    if (!found) {
+      for (const [term, data] of termMap) {
+        if (term.toLowerCase().includes(key.toLowerCase()) || key.toLowerCase().includes(term.toLowerCase())) {
+          found = data; break;
+        }
+      }
+    }
+    if (!found) return full;
+    const escapedDef = found.def.replace(/"/g, '&quot;');
+    return `<span class="glossary-term" data-def="${escapedDef}">${linkText}</span>`;
+  });
+
+  return html;
+}
+
 // --- HOWTO processing ---
 
 function processHowto(mdFilePath, css) {
@@ -338,6 +391,7 @@ function processHowto(mdFilePath, css) {
   let html = marked.parse(md);
   html = rewriteLinks(html);
   html = flagDisclaimerBlockquote(html);
+  html = resolveGlossaryLinks(html);
 
   fs.writeFileSync(outputFile, wrapHtml(title, html, css));
   return { baseName, title, outputFile };
