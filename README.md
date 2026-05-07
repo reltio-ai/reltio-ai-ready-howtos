@@ -79,7 +79,7 @@ howtos/HOWTO-your-topic.md          ← the Markdown source
 howtos-html/HOWTO-your-topic.html   ← self-contained HTML (email it, host it, share it)
 ```
 
-Every HTML file is fully self-contained — CSS embedded, diagrams inlined. No server, no build step, no external dependencies. To view it, download the file and open it in any browser — GitHub does not render HTML files directly.
+Every HTML file is fully self-contained, CSS embedded, diagrams inlined. No server, no build step, no external dependencies. To view it, download the file and open it in any browser. GitHub does not render HTML files directly.
 
 ## What makes a good HOWTO request
 
