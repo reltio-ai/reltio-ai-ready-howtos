@@ -44,7 +44,7 @@ This guide is for this Reltio role: **Developer**. For more information on data 
 
 Gather these before you begin:
 
-- A Reltio tenant configured with the tutorial data model — two entity types (`Individual`, `Organization`), two sources (`CRM`, `ERP`), and an `Employment` relation. If you don't have one yet, run [HOWTO: Configure a Reltio tenant for the Top 10 APIs tutorial](./HOWTO-SETUP-for-top-10-reltio-apis-v2.md) first.
+- A Reltio tenant configured with the tutorial data model — two entity types (`Individual`, `Organization`), two sources (`CRM`, `ERP`), and an `Employment` relation. If you don't have one yet, run [HOWTO: Configure a Reltio tenant for the Top 10 APIs tutorial](./HOWTO-SETUP-for-top-10-reltio-apis.md) first.
 - Your **Client ID** and **Client Secret** — credentials for an [application client](#15-glossary) that can read and write the tenant.
 - Your **Tenant URL** in the format `https://{environment}.reltio.com/reltio/api/{tenantId}` (for example, `https://na07-prod.reltio.com/reltio/api/YOUR_TENANT_ID`).
 - A terminal with `curl` and `jq` installed.
@@ -162,7 +162,7 @@ curl -s -X GET "${TENANT}/configuration" \
 |--------|-------|-----|
 | `401 Unauthorized` | `TOKEN` missing, expired, or malformed | Re-run [Step 3](#3-authenticate) |
 | `404 Not Found` | `TENANT` URL points at the wrong environment or tenant ID | Check `https://{env}.reltio.com/reltio/api/{tenantId}` |
-| Empty list | Tenant has no L3 entity types yet | Run the [setup guide](./HOWTO-SETUP-for-top-10-reltio-apis-v2.md) |
+| Empty list | Tenant has no L3 entity types yet | Run the [setup guide](./HOWTO-SETUP-for-top-10-reltio-apis.md) |
 
 > **Learn more:** [Configuration API](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/configuration-api) in the Reltio documentation.
 

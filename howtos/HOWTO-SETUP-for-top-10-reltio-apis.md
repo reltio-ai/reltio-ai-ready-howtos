@@ -75,7 +75,7 @@ A few platform concepts to keep straight:
 - **[Configuration API](#13-glossary)** — the REST surface used to get and set L3. The two most-used calls are `GET /configuration` (with `_noInheritance` for just the L3 you own) and `PUT /configuration`.
 - **[Crosswalk](#13-glossary)** — a pointer from a Reltio entity back to its source record; every record you load during the tutorial lands in the tenant with a [crosswalk](#glossary) whose `type` points to `configuration/sources/CRM` or `configuration/sources/ERP`.
 
-The Top 10 APIs tutorial exercises CRUD, search, crosswalks, relations, match, and merge. The V1 tutorial you can follow today is [HOWTO: Top 10 Reltio APIs](./HOWTO-top-10-reltio-apis.md). A V2 of that tutorial (`HOWTO-top-10-reltio-apis-v2.md`) will follow the same structure as this guide once published.
+The Top 10 APIs tutorial exercises CRUD, search, crosswalks, relations, match, and merge. The V1 tutorial you can follow today is [HOWTO: Top 10 Reltio APIs](./HOWTO-top-10-reltio-apis.md).
 
 > **Learn more:** [Configuration API overview](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/configuration-api) in the Reltio documentation.
 
@@ -497,7 +497,7 @@ curl -s -X DELETE "${TENANT}/configuration/sources/ERP?option=purgeAllData" \
 - [Relation Types](https://docs.reltio.com/en/developer-resources/relation-management-apis/relation-management-apis-at-a-glance/relations-api/relation-types)
 - [Managing Sources](https://docs.reltio.com/en/objectives/model-data/data-modeling-at-a-glance/data-modeling-operation/define-relationships/configuring-relationship-types/managing-sources)
 - [HOWTO: Authenticate and use Reltio APIs](./HOWTO-authenticate-and-use-reltio-apis.md)
-- [HOWTO: Top 10 Reltio APIs](./HOWTO-top-10-reltio-apis.md) — the tutorial this setup enables. A V2 pass (`HOWTO-top-10-reltio-apis-v2.md`) is planned.
+- [HOWTO: Top 10 Reltio APIs](./HOWTO-top-10-reltio-apis.md) — the tutorial this setup enables.
 
 ## 13. Glossary
 
