@@ -18,7 +18,7 @@ flowchart LR
 
 The **[Data Explorer](#glossary)** agent in **[AgentFlow](#glossary)** lets you query your Reltio master data using plain language instead of API calls. This guide covers how to access the agent, write prompts that produce reliable results, and avoid common patterns that stall or mislead it.
 
-This guide is for these Reltio roles: **Business User**, **Data Steward**, **Reltio Configurator**, **Solution Architect**. For more information on data unification roles in the Reltio Context Intelligence Platform, see [About roles](https://docs.reltio.com/en/roles/about-roles).
+This guide is for these Reltio roles: **Business User**, **Data Steward**, **Reltio Configurator**, **Solution Architect**. For more information on data unification roles in the Reltio Context Intelligence Platform, see [About roles](https://docs.reltio.com/en/roles/about-roles?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs).
 
 ## Contents
 
@@ -53,7 +53,7 @@ Before you begin, confirm the following:
 
 Data Explorer does not require a separate license. It is included with AgentFlow access.
 
-> **Learn more:** [AgentFlow capabilities and permissions](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-capabilities-and-permissions) in the Reltio documentation.
+> **Learn more:** [AgentFlow capabilities and permissions](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-capabilities-and-permissions?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 2. Key concepts
 
@@ -65,7 +65,7 @@ Every response respects your tenant's [RBAC](#glossary) policies and attribute m
 
 The agent runs in AgentFlow through the MCP server in read-only mode — its design makes accidental data modifications impossible.
 
-> **Learn more:** [Reltio AgentFlow at a glance](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance) in the Reltio documentation.
+> **Learn more:** [Reltio AgentFlow at a glance](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 3. Open and launch Data Explorer
 
@@ -80,7 +80,7 @@ Follow these steps to start a Data Explorer session:
 
 > **Important:** Each conversation is scoped to one agent. If you need to take an action (such as merging records), start a new conversation and select the appropriate agent — for example, **Resolver** for merge decisions.
 
-> **Learn more:** [Use the AgentFlow workspace](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/use-the-agentflow-workspace) in the Reltio documentation.
+> **Learn more:** [Use the AgentFlow workspace](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/use-the-agentflow-workspace?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 4. Write effective prompts
 
@@ -138,7 +138,7 @@ Queries that scan large portions of your tenant may hit scanning limits or time 
 
 Use Data Explorer for exploration and discovery. For precise bulk counts over large datasets, use Reltio UI advanced search.
 
-> **Learn more:** [Prompt samples for Data Explorer](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-agents-catalog/data-explorer/prompt-samples-for-data-explorer) in the Reltio documentation.
+> **Learn more:** [Prompt samples for Data Explorer](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-agents-catalog/data-explorer/prompt-samples-for-data-explorer?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 5. Common tasks
 
@@ -181,7 +181,7 @@ Get a clear picture of how your tenant is structured before running complex quer
 
 Starting with a data model query is especially useful when you're working in an unfamiliar tenant. The agent will summarize entity types, relationship types, graph types, and groupings in a single response.
 
-> **Learn more:** [AgentFlow agents catalog](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-agents-catalog) in the Reltio documentation.
+> **Learn more:** [AgentFlow agents catalog](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-agents-catalog?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 6. Limitations and safeguards
 
@@ -207,7 +207,7 @@ Understanding what Data Explorer cannot do is as important as knowing what it ca
 - Prompts that reference collection counts (for example, *"more than 10 Addresses"*) depend on your entity type configuration supporting those patterns.
 - If your tenant models addresses differently (for example, as nested Location entities rather than a multi-valued attribute named **Addresses**), provide custom instructions with concrete filter examples for your schema. The agent needs these to apply the correct attribute paths.
 
-> **Learn more:** [Data Explorer](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-agents-catalog/data-explorer) in the Reltio documentation.
+> **Learn more:** [Data Explorer](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-agents-catalog/data-explorer?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 7. Troubleshooting
 
@@ -222,12 +222,12 @@ Understanding what Data Explorer cannot do is as important as knowing what it ca
 
 ## 8. Further reading
 
-- [Reltio AgentFlow at a glance](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance)
-- [AgentFlow agents catalog](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-agents-catalog)
-- [Data Explorer agent](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-agents-catalog/data-explorer)
-- [Prompt samples for Data Explorer](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-agents-catalog/data-explorer/prompt-samples-for-data-explorer)
-- [AgentFlow capabilities and permissions](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-capabilities-and-permissions)
-- [Use the AgentFlow workspace](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/use-the-agentflow-workspace)
+- [Reltio AgentFlow at a glance](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
+- [AgentFlow agents catalog](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-agents-catalog?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
+- [Data Explorer agent](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-agents-catalog/data-explorer?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
+- [Prompt samples for Data Explorer](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-agents-catalog/data-explorer/prompt-samples-for-data-explorer?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
+- [AgentFlow capabilities and permissions](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-capabilities-and-permissions?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
+- [Use the AgentFlow workspace](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/use-the-agentflow-workspace?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
 
 ## 9. Glossary
 

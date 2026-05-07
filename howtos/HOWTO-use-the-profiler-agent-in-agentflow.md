@@ -19,7 +19,7 @@ flowchart LR
 
 The [Profiler](#glossary) agent is a pre-ingestion data quality assistant in [AgentFlow](#glossary). It connects to structured files in cloud storage or [SFTP](#glossary), previews file structure, computes column-level quality scores, identifies issues with ranked suggestions, and optionally maps source fields to your tenant schema for loading via [Data Loader](#glossary). This guide walks you through enabling the agent, running your first profiling job, interpreting results, and loading validated data.
 
-This guide is for these Reltio roles: **Data Steward**, **Reltio Configurator**. For more information on data unification roles in the Reltio Context Intelligence Platform, see [About roles](https://docs.reltio.com/en/roles/about-roles).
+This guide is for these Reltio roles: **Data Steward**, **Reltio Configurator**. For more information on data unification roles in the Reltio Context Intelligence Platform, see [About roles](https://docs.reltio.com/en/roles/about-roles?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs).
 
 ## Contents
 
@@ -49,7 +49,7 @@ Gather these before you start:
 | **Cloud storage** | A file in AWS S3, Azure Blob Storage, Google Cloud Storage, or SFTP with valid access credentials |
 | **File format** | CSV or XLSX only. XML, nested JSON, and streaming data aren't supported |
 
-> **Learn more:** [AgentFlow capabilities and permissions](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-capabilities-and-permissions) in the Reltio documentation.
+> **Learn more:** [AgentFlow capabilities and permissions](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-capabilities-and-permissions?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 2. Key concepts
 
@@ -62,7 +62,7 @@ Before diving into profiling, familiarize yourself with how the Profiler agent w
 - **Map and validate** — If profiling results are acceptable, ask the agent to generate a mapping to the Reltio tenant schema. The agent uses tenant metadata to align fields.
 - **Load** — Once the mapping is confirmed, the agent creates a [Data Loader](#glossary) job and monitors its execution. The final output includes load status, job ID, and any load errors.
 
-> **Learn more:** [Profiler](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-agents-catalog/profiler) in the Reltio documentation.
+> **Learn more:** [Profiler](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-agents-catalog/profiler?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 3. Enable the Profiler agent for your tenant
 
@@ -89,7 +89,7 @@ Assign these roles to every user who needs Profiler access:
 - Confirm the Profiler agent appears under **RELTIO AGENTS**.
 - Start a test profiling session to confirm the agent responds.
 
-> **Learn more:** [Enable the Profiler agent for a tenant](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-agents-catalog/profiler/enable-the-profiler-agent-for-a-tenant) in the Reltio documentation.
+> **Learn more:** [Enable the Profiler agent for a tenant](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-agents-catalog/profiler/enable-the-profiler-agent-for-a-tenant?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 4. Configure AWS IAM role for S3 access
 
@@ -175,7 +175,7 @@ Attach a policy that grants read access to your bucket:
 2. Provide the role ARN, External ID, and region when prompted.
 3. Confirm the job starts without access errors.
 
-> **Learn more:** [Configure an AWS IAM role for Profiler](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-agents-catalog/profiler/configure-an-aws-iam-role-for-profiler) in the Reltio documentation.
+> **Learn more:** [Configure an AWS IAM role for Profiler](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-agents-catalog/profiler/configure-an-aws-iam-role-for-profiler?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 5. Run your first profiling job
 
@@ -223,7 +223,7 @@ The agent creates a profiling workspace and:
 | Access error on job start | IAM role misconfigured or External ID mismatch | Verify the trust policy and External ID match exactly |
 | Unsupported file format error | File isn't CSV or XLSX | Convert to CSV or XLSX before profiling |
 
-> **Learn more:** [Run your first data profiling job](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-agents-catalog/profiler/run-your-first-data-profiling-job) in the Reltio documentation.
+> **Learn more:** [Run your first data profiling job](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-agents-catalog/profiler/run-your-first-data-profiling-job?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 6. Review schema and validation rules
 
@@ -250,7 +250,7 @@ Change column 3 from STRING to DATE with format yyyy-MM-dd, and add email patter
 - **Schema confirmation is required** — the agent won't proceed to full profiling until you explicitly approve or adjust the schema.
 - **Be specific about changes** — reference columns by name or number and state the expected type or validation pattern. Vague responses like "Some of those types don't look right" force the agent to ask follow-up questions.
 
-> **Learn more:** [Prompt samples for Profiler](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-agents-catalog/profiler/prompt-samples-for-profiler) in the Reltio documentation.
+> **Learn more:** [Prompt samples for Profiler](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-agents-catalog/profiler/prompt-samples-for-profiler?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 7. Explore quality metrics and invalid values
 
@@ -291,7 +291,7 @@ The agent decomposes the score into its metric components (fill rate, uniqueness
 - **Up to 100 invalid samples per column** — the agent can display up to 100 invalid values per column to support root-cause investigation.
 - **A completed profiling job is required** — asking for invalid values before running an analysis returns an error.
 
-> **Learn more:** [Profiler](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-agents-catalog/profiler) in the Reltio documentation.
+> **Learn more:** [Profiler](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-agents-catalog/profiler?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 8. Adjust rules and re-profile
 
@@ -310,7 +310,7 @@ The agent updates the validation rule, runs a new profiling job in a new workspa
 - **Each re-profile creates a new workspace** — the agent doesn't overwrite previous results. You can compare before and after.
 - **The Profiler is detection-only** — it analyzes and reports data quality issues but does not modify, correct, or write changes to the source file.
 
-> **Learn more:** [Prompt samples for Profiler](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-agents-catalog/profiler/prompt-samples-for-profiler) in the Reltio documentation.
+> **Learn more:** [Prompt samples for Profiler](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-agents-catalog/profiler/prompt-samples-for-profiler?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 9. Map to tenant schema and load data
 
@@ -345,7 +345,7 @@ The final output includes:
 - **Mapping and schema alignment are limited to flat attribute structures** defined in the Reltio tenant configuration.
 - **Match rules and survivorship logic aren't configured or applied** by this agent — those are separate configuration steps.
 
-> **Learn more:** [Data Loader at a glance](https://docs.reltio.com/en/applications/console/tenant-management-applications/data-loader-at-a-glance) in the Reltio documentation.
+> **Learn more:** [Data Loader at a glance](https://docs.reltio.com/en/applications/console/tenant-management-applications/data-loader-at-a-glance?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 10. Save default credentials
 
@@ -357,7 +357,7 @@ To avoid entering storage credentials every time you start a profiling job, save
 
 The agent reuses these credentials for future profiling jobs until you change them.
 
-> **Learn more:** [Run your first data profiling job](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-agents-catalog/profiler/run-your-first-data-profiling-job) in the Reltio documentation.
+> **Learn more:** [Run your first data profiling job](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-agents-catalog/profiler/run-your-first-data-profiling-job?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 11. Troubleshooting
 
@@ -374,20 +374,20 @@ Common issues and how to resolve them:
 | Data load fails after mapping | Mapping references attributes not in the tenant config | Verify the entity type and attribute names in your tenant's [L3 configuration](#glossary) |
 | Cross-column validation not available | Not supported | The Profiler doesn't perform cross-column or referential integrity checks — validate those separately |
 
-> **Learn more:** [Profiler](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-agents-catalog/profiler) in the Reltio documentation.
+> **Learn more:** [Profiler](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-agents-catalog/profiler?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 12. Further reading
 
-- [Profiler agent overview](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-agents-catalog/profiler)
-- [Prompt samples for Profiler](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-agents-catalog/profiler/prompt-samples-for-profiler)
-- [Enable the Profiler agent for a tenant](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-agents-catalog/profiler/enable-the-profiler-agent-for-a-tenant)
-- [Configure an AWS IAM role for Profiler](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-agents-catalog/profiler/configure-an-aws-iam-role-for-profiler)
-- [Run your first data profiling job](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-agents-catalog/profiler/run-your-first-data-profiling-job)
-- [Data Loader at a glance](https://docs.reltio.com/en/applications/console/tenant-management-applications/data-loader-at-a-glance)
-- [Data Loader API](https://docs.reltio.com/en/developer-resources/load-and-export-apis/load-and-export-apis-at-a-glance/data-loader-api)
-- [AgentFlow at a glance](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance)
-- [AgentFlow agents catalog](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-agents-catalog)
-- [AgentFlow capabilities and permissions](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-capabilities-and-permissions)
+- [Profiler agent overview](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-agents-catalog/profiler?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
+- [Prompt samples for Profiler](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-agents-catalog/profiler/prompt-samples-for-profiler?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
+- [Enable the Profiler agent for a tenant](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-agents-catalog/profiler/enable-the-profiler-agent-for-a-tenant?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
+- [Configure an AWS IAM role for Profiler](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-agents-catalog/profiler/configure-an-aws-iam-role-for-profiler?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
+- [Run your first data profiling job](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-agents-catalog/profiler/run-your-first-data-profiling-job?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
+- [Data Loader at a glance](https://docs.reltio.com/en/applications/console/tenant-management-applications/data-loader-at-a-glance?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
+- [Data Loader API](https://docs.reltio.com/en/developer-resources/load-and-export-apis/load-and-export-apis-at-a-glance/data-loader-api?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
+- [AgentFlow at a glance](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
+- [AgentFlow agents catalog](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-agents-catalog?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
+- [AgentFlow capabilities and permissions](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-capabilities-and-permissions?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
 
 ## 13. Glossary
 

@@ -26,7 +26,7 @@ flowchart LR
 
 The Reltio Integration for Veeva Vault CRM uses Reltio Integration Hub recipes to keep [HCP](#glossary) and [HCO](#glossary) master records in sync bidirectionally between Reltio and Veeva Vault CRM. This guide covers the complete setup: deploying the recipe package, configuring connections and project properties, setting up event queue streaming, and activating the recipes for your chosen sync mode.
 
-This guide is for these Reltio roles: **Reltio Configurator**, **System Administrator**. For more information on data unification roles in the Reltio Context Intelligence Platform, see [About roles](https://docs.reltio.com/en/roles/about-roles).
+This guide is for these Reltio roles: **Reltio Configurator**, **System Administrator**. For more information on data unification roles in the Reltio Context Intelligence Platform, see [About roles](https://docs.reltio.com/en/roles/about-roles?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs).
 
 ## Contents
 
@@ -59,7 +59,7 @@ Before you begin, confirm you have access to the following systems and credentia
 
 > **Note:** Batch integrations don't require event queue setup. If you only plan to use scheduled batch sync, you can skip the queue prerequisites.
 
-> **Learn more:** [Prepare your environment for Reltio–Veeva Vault CRM integration](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/introduction-to-the-reltio-integration-for-veeva-vault-crm/prepare-your-environment-for-reltioveeva-vault-crm-integration)
+> **Learn more:** [Prepare your environment for Reltio–Veeva Vault CRM integration](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/introduction-to-the-reltio-integration-for-veeva-vault-crm/prepare-your-environment-for-reltioveeva-vault-crm-integration?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
 
 ## 2. Key concepts
 
@@ -102,7 +102,7 @@ The integration handles these data types out of the box:
 | Identifiers | External IDs and system-specific keys for entity mapping |
 | Reference data | Dropdown and lookup values (through RDM) used in Veeva Vault CRM |
 
-> **Learn more:** [Introduction to the Reltio Integration for Veeva Vault CRM](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/introduction-to-the-reltio-integration-for-veeva-vault-crm)
+> **Learn more:** [Introduction to the Reltio Integration for Veeva Vault CRM](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/introduction-to-the-reltio-integration-for-veeva-vault-crm?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
 
 ## 3. Deploy the integration recipes
 
@@ -138,7 +138,7 @@ After import, the project should contain these folders:
 | `_Connections` | Connection configurations |
 | `Lookup` | Attribute and object mapping tables |
 
-> **Learn more:** [Deploy and configure the Veeva Vault CRM integration recipes](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/introduction-to-the-reltio-integration-for-veeva-vault-crm/deploy-and-configure-the-veeva-vault-crm-integration-recipes)
+> **Learn more:** [Deploy and configure the Veeva Vault CRM integration recipes](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/introduction-to-the-reltio-integration-for-veeva-vault-crm/deploy-and-configure-the-veeva-vault-crm-integration-recipes?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
 
 ## 4. Configure connections
 
@@ -182,7 +182,7 @@ Configure the connection for your cloud provider. Choose one based on your infra
 
 > **Tip:** Test each connection immediately after configuring it. A green **Successful** status confirms RIH can reach the external system.
 
-> **Learn more:** [Configure connections](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/introduction-to-the-reltio-integration-for-veeva-vault-crm/deploy-and-configure-the-veeva-vault-crm-integration-recipes)
+> **Learn more:** [Configure connections](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/introduction-to-the-reltio-integration-for-veeva-vault-crm/deploy-and-configure-the-veeva-vault-crm-integration-recipes?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
 
 ## 5. Set project properties
 
@@ -222,7 +222,7 @@ Project properties are environment-specific settings that control recipe behavio
 
 > **Important:** The `RIH service user` must be used exclusively by RIH. Using the same credentials for other processes causes infinite event loops.
 
-> **Learn more:** [Reference: Integration project properties and values](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/introduction-to-the-reltio-integration-for-veeva-vault-crm/reference-integration-project-properties-and-values)
+> **Learn more:** [Reference: Integration project properties and values](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/introduction-to-the-reltio-integration-for-veeva-vault-crm/reference-integration-project-properties-and-values?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
 
 ## 6. Configure event queue streaming
 
@@ -285,7 +285,7 @@ Select these event types:
 2. Update a test entity in Reltio and confirm a message appears in the queue.
 3. Check the RIH recipe logs to confirm the event was processed.
 
-> **Learn more:** [Configure event queues (SQS, Pub/Sub, or Azure)](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/introduction-to-the-reltio-integration-for-veeva-vault-crm/configure-event-queues-sqs-pubsub-or-azure)
+> **Learn more:** [Configure event queues (SQS, Pub/Sub, or Azure)](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/introduction-to-the-reltio-integration-for-veeva-vault-crm/configure-event-queues-sqs-pubsub-or-azure?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
 
 ## 7. Choose a synchronization mode
 
@@ -301,7 +301,7 @@ You can combine modes — for example, use real-time for Reltio-to-Veeva and bat
 
 > **Note:** Real-time mode is not recommended for high-volume changes such as initial migrations, batch updates, or reindex tasks.
 
-> **Learn more:** [Real-time and batch integration flows](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/introduction-to-the-reltio-integration-for-veeva-vault-crm/real-time-and-batch-integration-flows)
+> **Learn more:** [Real-time and batch integration flows](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/introduction-to-the-reltio-integration-for-veeva-vault-crm/real-time-and-batch-integration-flows?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
 
 ## 8. Activate and test recipes
 
@@ -343,7 +343,7 @@ Confirm these items before going live:
 - Event queue is receiving and processing messages (real-time mode)
 - DCR workflow triggers correctly (if enabled)
 
-> **Learn more:** [Deploy and configure the Veeva Vault CRM integration recipes](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/introduction-to-the-reltio-integration-for-veeva-vault-crm/deploy-and-configure-the-veeva-vault-crm-integration-recipes)
+> **Learn more:** [Deploy and configure the Veeva Vault CRM integration recipes](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/introduction-to-the-reltio-integration-for-veeva-vault-crm/deploy-and-configure-the-veeva-vault-crm-integration-recipes?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
 
 ## 9. Customize attribute mappings
 
@@ -392,7 +392,7 @@ These are some of the default HCO attribute mappings included in the integration
 
 > **Note:** The documentation does not include a separate HCP attribute mapping reference table. Refer to the RIH lookup table `Veeva Integration Mapping - HCP` for the full list of HCP mappings in your environment.
 
-> **Learn more:** [Map and customize HCP, HCO, and relationship types](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/introduction-to-the-reltio-integration-for-veeva-vault-crm/map-and-customize-hcp-hco-and-relationship-types)
+> **Learn more:** [Map and customize HCP, HCO, and relationship types](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/introduction-to-the-reltio-integration-for-veeva-vault-crm/map-and-customize-hcp-hco-and-relationship-types?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
 
 ## 10. Troubleshooting
 
@@ -409,23 +409,23 @@ These are some of the default HCO attribute mappings included in the integration
 
 ## 11. Further reading
 
-- [Introduction to the Reltio Integration for Veeva Vault CRM](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/introduction-to-the-reltio-integration-for-veeva-vault-crm) — overview, capabilities, and target audience
-- [Use cases and supported data domains](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/introduction-to-the-reltio-integration-for-veeva-vault-crm/use-cases-and-supported-data-domains) — HCP, HCO, location, relationships, identifiers
-- [Integration architecture and components](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/introduction-to-the-reltio-integration-for-veeva-vault-crm/integration-architecture-and-components) — data flow, connectors, project structure
-- [Real-time and batch integration flows](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/introduction-to-the-reltio-integration-for-veeva-vault-crm/real-time-and-batch-integration-flows) — comparison of sync modes
-- [DCR-based synchronization between Reltio and Veeva](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/introduction-to-the-reltio-integration-for-veeva-vault-crm/dcr-based-synchronization-between-reltio-and-veeva) — data change request workflows
-- [Prepare your environment](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/introduction-to-the-reltio-integration-for-veeva-vault-crm/prepare-your-environment-for-reltioveeva-vault-crm-integration) — prerequisites and access requirements
-- [Deploy and configure recipes](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/introduction-to-the-reltio-integration-for-veeva-vault-crm/deploy-and-configure-the-veeva-vault-crm-integration-recipes) — import, connections, properties, testing
-- [Configure event queues (SQS, Pub/Sub, or Azure)](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/introduction-to-the-reltio-integration-for-veeva-vault-crm/configure-event-queues-sqs-pubsub-or-azure) — queue setup and streaming configuration
-- [Map and customize HCP, HCO, and relationship types](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/introduction-to-the-reltio-integration-for-veeva-vault-crm/map-and-customize-hcp-hco-and-relationship-types) — lookup tables and custom attribute mapping
-- [Enable delta handling for Reltio event streams](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/introduction-to-the-reltio-integration-for-veeva-vault-crm/enable-delta-handling-for-reltio-event-streams) — field-level change detection and sequencing
-- [Reference: HCO attribute mapping](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/introduction-to-the-reltio-integration-for-veeva-vault-crm/reference-hco-attribute-mapping-reltio--veeva) — HCO field-by-field mapping table
-- [Reference: Location/address mapping](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/introduction-to-the-reltio-integration-for-veeva-vault-crm/reference-locationaddress-mapping-for-veeva-account) — address field mapping
-- [Reference: Relationship mapping and crosswalk logic](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/introduction-to-the-reltio-integration-for-veeva-vault-crm/reference-relationship-mapping-and-crosswalk-logic) — HCP-HCO, HCO-HCO, and crosswalk formats
-- [Reference: Integration project properties and values](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/introduction-to-the-reltio-integration-for-veeva-vault-crm/reference-integration-project-properties-and-values) — all project properties with descriptions
-- [FAQs on Reltio–Veeva Vault CRM integration](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/introduction-to-the-reltio-integration-for-veeva-vault-crm/faqs-on-reltioveeva-vault-crm-integration) — common questions and answers
-- [Using multiple Veeva Vault connections in one integration](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/introduction-to-the-reltio-integration-for-veeva-vault-crm/using-multiple-veeva-vault-connections-in-one-integration) — multi-instance configuration
-- [Recipe organization and execution flow](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/introduction-to-the-reltio-integration-for-veeva-vault-crm/recipe-organization-and-execution-flow) — folder structure and recipe types
+- [Introduction to the Reltio Integration for Veeva Vault CRM](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/introduction-to-the-reltio-integration-for-veeva-vault-crm?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) — overview, capabilities, and target audience
+- [Use cases and supported data domains](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/introduction-to-the-reltio-integration-for-veeva-vault-crm/use-cases-and-supported-data-domains?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) — HCP, HCO, location, relationships, identifiers
+- [Integration architecture and components](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/introduction-to-the-reltio-integration-for-veeva-vault-crm/integration-architecture-and-components?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) — data flow, connectors, project structure
+- [Real-time and batch integration flows](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/introduction-to-the-reltio-integration-for-veeva-vault-crm/real-time-and-batch-integration-flows?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) — comparison of sync modes
+- [DCR-based synchronization between Reltio and Veeva](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/introduction-to-the-reltio-integration-for-veeva-vault-crm/dcr-based-synchronization-between-reltio-and-veeva?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) — data change request workflows
+- [Prepare your environment](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/introduction-to-the-reltio-integration-for-veeva-vault-crm/prepare-your-environment-for-reltioveeva-vault-crm-integration?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) — prerequisites and access requirements
+- [Deploy and configure recipes](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/introduction-to-the-reltio-integration-for-veeva-vault-crm/deploy-and-configure-the-veeva-vault-crm-integration-recipes?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) — import, connections, properties, testing
+- [Configure event queues (SQS, Pub/Sub, or Azure)](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/introduction-to-the-reltio-integration-for-veeva-vault-crm/configure-event-queues-sqs-pubsub-or-azure?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) — queue setup and streaming configuration
+- [Map and customize HCP, HCO, and relationship types](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/introduction-to-the-reltio-integration-for-veeva-vault-crm/map-and-customize-hcp-hco-and-relationship-types?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) — lookup tables and custom attribute mapping
+- [Enable delta handling for Reltio event streams](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/introduction-to-the-reltio-integration-for-veeva-vault-crm/enable-delta-handling-for-reltio-event-streams?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) — field-level change detection and sequencing
+- [Reference: HCO attribute mapping](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/introduction-to-the-reltio-integration-for-veeva-vault-crm/reference-hco-attribute-mapping-reltio--veeva?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) — HCO field-by-field mapping table
+- [Reference: Location/address mapping](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/introduction-to-the-reltio-integration-for-veeva-vault-crm/reference-locationaddress-mapping-for-veeva-account?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) — address field mapping
+- [Reference: Relationship mapping and crosswalk logic](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/introduction-to-the-reltio-integration-for-veeva-vault-crm/reference-relationship-mapping-and-crosswalk-logic?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) — HCP-HCO, HCO-HCO, and crosswalk formats
+- [Reference: Integration project properties and values](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/introduction-to-the-reltio-integration-for-veeva-vault-crm/reference-integration-project-properties-and-values?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) — all project properties with descriptions
+- [FAQs on Reltio–Veeva Vault CRM integration](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/introduction-to-the-reltio-integration-for-veeva-vault-crm/faqs-on-reltioveeva-vault-crm-integration?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) — common questions and answers
+- [Using multiple Veeva Vault connections in one integration](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/introduction-to-the-reltio-integration-for-veeva-vault-crm/using-multiple-veeva-vault-connections-in-one-integration?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) — multi-instance configuration
+- [Recipe organization and execution flow](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/introduction-to-the-reltio-integration-for-veeva-vault-crm/recipe-organization-and-execution-flow?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) — folder structure and recipe types
 
 ## 12. Glossary
 

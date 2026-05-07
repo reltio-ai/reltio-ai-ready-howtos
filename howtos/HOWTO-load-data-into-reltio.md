@@ -56,7 +56,7 @@ The [Data Loader](#glossary) can pull files from:
 - [Relationships](#glossary) (for example, Employment between an Individual and an Organization)
 - Interactions (available on Reltio Intelligent 360 tenants only)
 
-> **Learn more:** [Data Loader at a glance](https://docs.reltio.com/en/applications/console/tenant-management-applications/data-loader-at-a-glance)
+> **Learn more:** [Data Loader at a glance](https://docs.reltio.com/en/applications/console/tenant-management-applications/data-loader-at-a-glance?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
 
 ## 2. Access the Data Loader application
 
@@ -69,7 +69,7 @@ Follow these steps to navigate to the Data Loader in the Reltio Console:
 
 The Data Loader home page displays a **Job Definitions** area where you can work with **Drafts** and **Completed** jobs.
 
-> **Learn more:** [Get started with Data Loader](https://docs.reltio.com/en/applications/console/tenant-management-applications/data-loader-at-a-glance/get-started-with-data-loader)
+> **Learn more:** [Get started with Data Loader](https://docs.reltio.com/en/applications/console/tenant-management-applications/data-loader-at-a-glance/get-started-with-data-loader?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
 
 ## 3. Load entities into a tenant
 
@@ -140,7 +140,7 @@ Provide SFTP credentials: **Account Name**, **SFTP username**, **SFTP password**
 4. For remote sources (Amazon S3, GCS, Azure Blob Storage, SFTP), select the **Save the source settings** checkbox to store credentials for reuse.
 5. Select **CONTINUE** to proceed to the mapping stage.
 
-> **Learn more:** [Load entities into a tenant](https://docs.reltio.com/en/objectives/load-and-export-data/data-loading-at-a-glance/data-loading-operation/load-data-with-data-loader/load-entities-into-a-tenant)
+> **Learn more:** [Load entities into a tenant](https://docs.reltio.com/en/objectives/load-and-export-data/data-loading-at-a-glance/data-loading-operation/load-data-with-data-loader/load-entities-into-a-tenant?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
 
 ## 4. Map source columns to attributes
 
@@ -173,7 +173,7 @@ If your tenant has `aiEnabled` set to `true` in the physical configuration (unde
 
 > **Note:** Auto-mapping does not overwrite manual mappings. If a column is already mapped, the existing mapping remains unchanged.
 
-> **Learn more:** [Map Source Columns to Attributes](https://docs.reltio.com/en/objectives/load-and-export-data/data-loading-at-a-glance/data-loading-operation/load-data-with-data-loader/load-entities-into-a-tenant/map-source-columns-to-attributes)
+> **Learn more:** [Map Source Columns to Attributes](https://docs.reltio.com/en/objectives/load-and-export-data/data-loading-at-a-glance/data-loading-operation/load-data-with-data-loader/load-entities-into-a-tenant/map-source-columns-to-attributes?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
 
 ## 5. Specify record update preference
 
@@ -200,7 +200,7 @@ After setting your preferences, you can:
 - Select **LOAD DATA** to start the load immediately.
 - Select **SUGGEST LOAD DATA** (when DCR is enabled) to submit the load for approval.
 
-> **Learn more:** [Specify record update preference](https://docs.reltio.com/en/objectives/load-and-export-data/data-loading-at-a-glance/data-loading-operation/load-data-with-data-loader/load-entities-into-a-tenant/specify-record-update-preference)
+> **Learn more:** [Specify record update preference](https://docs.reltio.com/en/objectives/load-and-export-data/data-loading-at-a-glance/data-loading-operation/load-data-with-data-loader/load-entities-into-a-tenant/specify-record-update-preference?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
 
 ## 6. Consolidate multiple records into one entity
 
@@ -226,7 +226,7 @@ PUT {{dataloader_uri}}/dataloader/api/{{tenantId}}/project/{{projectId}}
 Body: {"groupingEnabled": true}
 ```
 
-> **Learn more:** [Create one entity from multiple records](https://docs.reltio.com/en/objectives/load-and-export-data/data-loading-at-a-glance/data-loading-operation/load-data-with-data-loader/load-entities-into-a-tenant/create-one-entity-from-multiple-records)
+> **Learn more:** [Create one entity from multiple records](https://docs.reltio.com/en/objectives/load-and-export-data/data-loading-at-a-glance/data-loading-operation/load-data-with-data-loader/load-entities-into-a-tenant/create-one-entity-from-multiple-records?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
 
 ## 7. Load relationships into a tenant
 
@@ -246,7 +246,7 @@ You can load two types of [relationships](#glossary) between entities: unidirect
 
 > **Note:** You must map the crosswalks for both the start object and the end object. The relationship type determines which attributes appear in the mapping panel.
 
-> **Learn more:** [Load relationships into a tenant](https://docs.reltio.com/en/objectives/load-and-export-data/data-loading-at-a-glance/data-loading-operation/load-data-with-data-loader/load-relationships-into-a-tenant)
+> **Learn more:** [Load relationships into a tenant](https://docs.reltio.com/en/objectives/load-and-export-data/data-loading-at-a-glance/data-loading-operation/load-data-with-data-loader/load-relationships-into-a-tenant?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
 
 ## 8. Monitor jobs and handle errors
 
@@ -300,7 +300,7 @@ When a job completes with errors, you can download an error file from the job de
 
 You can set job priority to **High**, **Normal** (default), or **Low**. Higher-priority jobs run before lower-priority ones. Jobs with the same priority run in creation order (FIFO). You can also schedule a job to run on a recurring basis from the job definition.
 
-> **Learn more:** [Data Loader at a glance](https://docs.reltio.com/en/applications/console/tenant-management-applications/data-loader-at-a-glance)
+> **Learn more:** [Data Loader at a glance](https://docs.reltio.com/en/applications/console/tenant-management-applications/data-loader-at-a-glance?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
 
 ## 9. Glossary
 

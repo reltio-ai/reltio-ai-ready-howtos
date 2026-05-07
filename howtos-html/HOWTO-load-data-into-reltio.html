@@ -351,7 +351,7 @@ hr {
 <li>Interactions (available on Reltio Intelligent 360 tenants only)</li>
 </ul>
 <blockquote>
-<p><strong>Learn more:</strong> <a href="https://docs.reltio.com/en/applications/console/tenant-management-applications/data-loader-at-a-glance">Data Loader at a glance</a></p>
+<p><strong>Learn more:</strong> <a href="https://docs.reltio.com/en/applications/console/tenant-management-applications/data-loader-at-a-glance?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs">Data Loader at a glance</a></p>
 </blockquote>
 <h2 id="2-access-the-data-loader-application">2. Access the Data Loader application</h2>
 <p>Follow these steps to navigate to the Data Loader in the Reltio Console:</p>
@@ -363,7 +363,7 @@ hr {
 </ol>
 <p>The Data Loader home page displays a <strong>Job Definitions</strong> area where you can work with <strong>Drafts</strong> and <strong>Completed</strong> jobs.</p>
 <blockquote>
-<p><strong>Learn more:</strong> <a href="https://docs.reltio.com/en/applications/console/tenant-management-applications/data-loader-at-a-glance/get-started-with-data-loader">Get started with Data Loader</a></p>
+<p><strong>Learn more:</strong> <a href="https://docs.reltio.com/en/applications/console/tenant-management-applications/data-loader-at-a-glance/get-started-with-data-loader?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs">Get started with Data Loader</a></p>
 </blockquote>
 <h2 id="3-load-entities-into-a-tenant">3. Load entities into a tenant</h2>
 <p>The high-level <span class="glossary-term" data-def="The sequence of steps for loading data using the Data Loader: create or duplicate a job → select file → map columns → specify update preference → optionally analyze → load → review results.">Data Loader workflow</span> for loading entities follows these steps:</p>
@@ -477,7 +477,7 @@ hr {
 <li>Select <strong>CONTINUE</strong> to proceed to the mapping stage.</li>
 </ol>
 <blockquote>
-<p><strong>Learn more:</strong> <a href="https://docs.reltio.com/en/objectives/load-and-export-data/data-loading-at-a-glance/data-loading-operation/load-data-with-data-loader/load-entities-into-a-tenant">Load entities into a tenant</a></p>
+<p><strong>Learn more:</strong> <a href="https://docs.reltio.com/en/objectives/load-and-export-data/data-loading-at-a-glance/data-loading-operation/load-data-with-data-loader/load-entities-into-a-tenant?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs">Load entities into a tenant</a></p>
 </blockquote>
 <h2 id="4-map-source-columns-to-attributes">4. Map source columns to attributes</h2>
 <p>After uploading a file, you map the file&#39;s columns to the corresponding entity attributes in Reltio&#39;s data model. The <strong>Map</strong> section displays the content of the uploaded file.</p>
@@ -510,7 +510,7 @@ hr {
 <p><strong>Note:</strong> Auto-mapping does not overwrite manual mappings. If a column is already mapped, the existing mapping remains unchanged.</p>
 </blockquote>
 <blockquote>
-<p><strong>Learn more:</strong> <a href="https://docs.reltio.com/en/objectives/load-and-export-data/data-loading-at-a-glance/data-loading-operation/load-data-with-data-loader/load-entities-into-a-tenant/map-source-columns-to-attributes">Map Source Columns to Attributes</a></p>
+<p><strong>Learn more:</strong> <a href="https://docs.reltio.com/en/objectives/load-and-export-data/data-loading-at-a-glance/data-loading-operation/load-data-with-data-loader/load-entities-into-a-tenant/map-source-columns-to-attributes?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs">Map Source Columns to Attributes</a></p>
 </blockquote>
 <h2 id="5-specify-record-update-preference">5. Specify record update preference</h2>
 <p>After mapping, you specify how records in the file should update existing data in Reltio. This is the <strong>Define</strong> stage.</p>
@@ -547,7 +547,7 @@ hr {
 <li>Select <strong>SUGGEST LOAD DATA</strong> (when DCR is enabled) to submit the load for approval.</li>
 </ul>
 <blockquote>
-<p><strong>Learn more:</strong> <a href="https://docs.reltio.com/en/objectives/load-and-export-data/data-loading-at-a-glance/data-loading-operation/load-data-with-data-loader/load-entities-into-a-tenant/specify-record-update-preference">Specify record update preference</a></p>
+<p><strong>Learn more:</strong> <a href="https://docs.reltio.com/en/objectives/load-and-export-data/data-loading-at-a-glance/data-loading-operation/load-data-with-data-loader/load-entities-into-a-tenant/specify-record-update-preference?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs">Specify record update preference</a></p>
 </blockquote>
 <h2 id="6-consolidate-multiple-records-into-one-entity">6. Consolidate multiple records into one entity</h2>
 <p>By default, the <span class="glossary-term" data-def="The Reltio application in the Console that enables you to prepare and upload data from files or cloud storage into a tenant. Requires the ROLE_DATALOADER global role.">Data Loader</span> creates a single entity from multiple records that share the same <span class="glossary-term" data-def="A pointer that links a Reltio entity back to its original record in a source system, storing the source system URI and the record&#39;s unique ID in that system.">crosswalk</span> value. This is called record consolidation or grouping.</p>
@@ -565,7 +565,7 @@ hr {
 <pre><code class="hljs"><span class="language-xml">PUT </span><span class="hljs-template-variable">{{<span class="hljs-name">dataloader_uri</span>}}</span><span class="language-xml">/dataloader/api/</span><span class="hljs-template-variable">{{<span class="hljs-name">tenantId</span>}}</span><span class="language-xml">/project/</span><span class="hljs-template-variable">{{<span class="hljs-name">projectId</span>}}</span><span class="language-xml">
 Body: {&quot;groupingEnabled&quot;: true}</span></code></pre>
 <blockquote>
-<p><strong>Learn more:</strong> <a href="https://docs.reltio.com/en/objectives/load-and-export-data/data-loading-at-a-glance/data-loading-operation/load-data-with-data-loader/load-entities-into-a-tenant/create-one-entity-from-multiple-records">Create one entity from multiple records</a></p>
+<p><strong>Learn more:</strong> <a href="https://docs.reltio.com/en/objectives/load-and-export-data/data-loading-at-a-glance/data-loading-operation/load-data-with-data-loader/load-entities-into-a-tenant/create-one-entity-from-multiple-records?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs">Create one entity from multiple records</a></p>
 </blockquote>
 <h2 id="7-load-relationships-into-a-tenant">7. Load relationships into a tenant</h2>
 <p>You can load two types of <span class="glossary-term" data-def="A typed link between two entities in Reltio — for example, an Employment relationship connecting an Individual entity to an Organization entity.">relationships</span> between entities: unidirectional and bidirectional. For example, a Healthcare Provider (HCP) can be associated with multiple Healthcare Organizations (HCOs), and vice versa.</p>
@@ -585,7 +585,7 @@ Body: {&quot;groupingEnabled&quot;: true}</span></code></pre>
 <p><strong>Note:</strong> You must map the crosswalks for both the start object and the end object. The relationship type determines which attributes appear in the mapping panel.</p>
 </blockquote>
 <blockquote>
-<p><strong>Learn more:</strong> <a href="https://docs.reltio.com/en/objectives/load-and-export-data/data-loading-at-a-glance/data-loading-operation/load-data-with-data-loader/load-relationships-into-a-tenant">Load relationships into a tenant</a></p>
+<p><strong>Learn more:</strong> <a href="https://docs.reltio.com/en/objectives/load-and-export-data/data-loading-at-a-glance/data-loading-operation/load-data-with-data-loader/load-relationships-into-a-tenant?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs">Load relationships into a tenant</a></p>
 </blockquote>
 <h2 id="8-monitor-jobs-and-handle-errors">8. Monitor jobs and handle errors</h2>
 <p>After starting a data load, the job appears in the <strong>Job Status</strong> page under the <strong>PENDING</strong> tab.</p>
@@ -647,7 +647,7 @@ Body: {&quot;groupingEnabled&quot;: true}</span></code></pre>
 <h3 id="job-priority-and-scheduling">Job priority and scheduling</h3>
 <p>You can set job priority to <strong>High</strong>, <strong>Normal</strong> (default), or <strong>Low</strong>. Higher-priority jobs run before lower-priority ones. Jobs with the same priority run in creation order (FIFO). You can also schedule a job to run on a recurring basis from the job definition.</p>
 <blockquote>
-<p><strong>Learn more:</strong> <a href="https://docs.reltio.com/en/applications/console/tenant-management-applications/data-loader-at-a-glance">Data Loader at a glance</a></p>
+<p><strong>Learn more:</strong> <a href="https://docs.reltio.com/en/applications/console/tenant-management-applications/data-loader-at-a-glance?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs">Data Loader at a glance</a></p>
 </blockquote>
 <h2 id="9-glossary">9. Glossary</h2>
 <p id="glossary-column-mapping"><strong>Column mapping:</strong> The configuration that connects each column in a source file to the corresponding attribute in Reltio&#39;s data model, enabling the Data Loader to transform and load data correctly.</p>

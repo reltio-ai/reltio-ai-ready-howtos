@@ -20,7 +20,7 @@ flowchart LR
 
 This guide walks you through authenticating with Reltio using the OAuth 2.0 client credentials grant, then making your first authenticated call to a tenant endpoint. You'll create an application client, fetch an access token, reuse it within its validity window, and know what to do when it expires or gets revoked.
 
-This guide is for this Reltio role: **Developer**. For more information on data unification roles in the Reltio Context Intelligence Platform, see [About roles](https://docs.reltio.com/en/roles/about-roles).
+This guide is for this Reltio role: **Developer**. For more information on data unification roles in the Reltio Context Intelligence Platform, see [About roles](https://docs.reltio.com/en/roles/about-roles?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs).
 
 ## Contents
 
@@ -46,7 +46,7 @@ Gather these before you begin:
 
 > **Tip:** If your tenant is configured for SSO, you must obtain access tokens from your SSO Auth server instead of the Reltio Auth API. This guide covers the client credentials flow for machine-to-machine integrations.
 
-> **Learn more:** [Authentication API overview](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/authentication-api) in the Reltio documentation.
+> **Learn more:** [Authentication API overview](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/authentication-api?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 2. Key concepts
 
@@ -58,7 +58,7 @@ Reltio's Authentication API implements [OAuth 2.0](#glossary). It's a centralize
 - **No refresh token with client credentials** — per the OAuth 2.0 spec, the client credentials grant does not issue a refresh token. When the access token expires, request a new one.
 - **IP whitelisting** — the Authentication API itself is not IP-whitelisted; whitelisting is enforced when the token is used against tenant-specific endpoints (for example, `/entities/_scan`). Requests from non-whitelisted IPs fail with `403 Forbidden` even with a valid token.
 
-> **Learn more:** [Access Reltio APIs](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/authentication-api/access-reltio-apis) in the Reltio documentation.
+> **Learn more:** [Access Reltio APIs](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/authentication-api/access-reltio-apis?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 3. Create an application client
 
@@ -126,7 +126,7 @@ curl -s -X POST "https://auth.reltio.com/oauth/customers/YOUR_CUSTOMER_ID/client
 | Validation error on `accessTokenValidity` | Value above `3600` seconds in RDBMS mode | Set `accessTokenValidity` to `3600` or less |
 | Client secret lost | Secret is only shown once at creation | Create a new client or reset its credentials |
 
-> **Learn more:** [Create a customer client](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/authentication-api/application-client-management-apis/create-a-customer-client) in the Reltio documentation.
+> **Learn more:** [Create a customer client](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/authentication-api/application-client-management-apis/create-a-customer-client?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 4. Get an access token
 
@@ -179,7 +179,7 @@ The `Authorization: Basic` header is the Base64 encoding of `client_id:client_se
 | `invalid_request` | Missing required parameter, repeated parameter, or multiple credential sources | Send only one credentialing method and include `grant_type` once |
 | `429 Too Many Requests` | More than 10 token requests per second | Cache your token and reuse it; only request a new one after it expires |
 
-> **Learn more:** [Obtaining access tokens with client credentials grant type](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/authentication-api/obtaining-access-tokens-with-client-credentials-grant-type) in the Reltio documentation.
+> **Learn more:** [Obtaining access tokens with client credentials grant type](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/authentication-api/obtaining-access-tokens-with-client-credentials-grant-type?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 5. Make your first tenant API call
 
@@ -234,7 +234,7 @@ All Data API requests must be signed with an authorization token that provides a
 | `403 Forbidden` | Request originates from a non-whitelisted IP, or client lacks the role/scope for this tenant | Call from a whitelisted IP; verify the client's `clientPermissions.roles` include this tenant |
 | `404 Not Found` | Wrong entity URI or wrong tenant URL | Verify the URI; check the `{environment}` and `{tenantId}` segments of your tenant URL |
 
-> **Learn more:** [Get Entity](https://docs.reltio.com/en/developer-resources/entity-management-apis/entity-management-apis-at-a-glance/entities-api/get-entity) in the Reltio documentation.
+> **Learn more:** [Get Entity](https://docs.reltio.com/en/developer-resources/entity-management-apis/entity-management-apis-at-a-glance/entities-api/get-entity?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 6. Refresh, revoke, and reuse tokens
 
@@ -297,7 +297,7 @@ Refresh tokens expire in `28` days. Revoke an expiring refresh token, log in aga
 
 By default, requesting a token before the old one expires returns the same token. Multi Token Support issues a new token on every request instead, so that a long-running job can start with a fresh validity window and not be cut off mid-run. It's configured at the customer level via the `multitokenConfig.clientCredentialsMultiTokenConfig.maxActiveTokensAllowed` parameter (platform max: `200`). This feature is only supported for the `client_credentials` grant type and only on tenants using Cassandra-based authorization — enabling it on `auth.migration.mode=rdbms` tenants returns a validation error.
 
-> **Learn more:** [Revoke an access token](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/authentication-api/revoke-an-access-token), [Refresh Token](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/authentication-api/refresh-token), and [Multi Token Support](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/authentication-api/multi-token-support) in the Reltio documentation.
+> **Learn more:** [Revoke an access token](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/authentication-api/revoke-an-access-token?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs), [Refresh Token](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/authentication-api/refresh-token?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs), and [Multi Token Support](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/authentication-api/multi-token-support?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 7. Troubleshooting
 
@@ -317,20 +317,20 @@ Use this table to triage errors from the Authentication API and from your first 
 
 > **Note:** There is no retry mechanism for auth token failures except for `429` errors under Multi Token Support.
 
-> **Learn more:** [Access Token Response](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/authentication-api/access-token-response) in the Reltio documentation.
+> **Learn more:** [Access Token Response](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/authentication-api/access-token-response?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 8. Further reading
 
-- [Authentication API](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/authentication-api) — the full API overview.
-- [Access Reltio APIs](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/authentication-api/access-reltio-apis) — how tokens fit into Reltio access overall.
-- [Obtaining access tokens with client credentials grant type](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/authentication-api/obtaining-access-tokens-with-client-credentials-grant-type) — parameters and examples for the client credentials flow.
-- [Application Client Management APIs](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/authentication-api/application-client-management-apis) — create, read, update, delete application clients.
-- [Client Credentials at a glance](https://docs.reltio.com/en/applications/console/security-applications/client-credentials-at-a-glance) — managing clients in the Reltio Console.
-- [Multi Token Support](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/authentication-api/multi-token-support) — issuing multiple concurrent tokens.
-- [Refresh Token](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/authentication-api/refresh-token) — password-grant refresh flow.
-- [Revoke an access token](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/authentication-api/revoke-an-access-token) — invalidating tokens.
-- [Auth API FAQs](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/authentication-api/auth-api-faqs) — short answers to the most common questions.
-- [Entities API](https://docs.reltio.com/en/developer-resources/entity-management-apis/entity-management-apis-at-a-glance/entities-api) — your first destination after authentication.
+- [Authentication API](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/authentication-api?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) — the full API overview.
+- [Access Reltio APIs](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/authentication-api/access-reltio-apis?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) — how tokens fit into Reltio access overall.
+- [Obtaining access tokens with client credentials grant type](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/authentication-api/obtaining-access-tokens-with-client-credentials-grant-type?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) — parameters and examples for the client credentials flow.
+- [Application Client Management APIs](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/authentication-api/application-client-management-apis?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) — create, read, update, delete application clients.
+- [Client Credentials at a glance](https://docs.reltio.com/en/applications/console/security-applications/client-credentials-at-a-glance?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) — managing clients in the Reltio Console.
+- [Multi Token Support](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/authentication-api/multi-token-support?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) — issuing multiple concurrent tokens.
+- [Refresh Token](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/authentication-api/refresh-token?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) — password-grant refresh flow.
+- [Revoke an access token](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/authentication-api/revoke-an-access-token?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) — invalidating tokens.
+- [Auth API FAQs](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/authentication-api/auth-api-faqs?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) — short answers to the most common questions.
+- [Entities API](https://docs.reltio.com/en/developer-resources/entity-management-apis/entity-management-apis-at-a-glance/entities-api?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) — your first destination after authentication.
 
 ## 9. Glossary
 

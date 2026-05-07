@@ -31,7 +31,7 @@ flowchart LR
 
 Reltio organizes configuration in three layers. L1 gives you industry-agnostic objects Reltio maintains. L2 adds industry-specific extensions like Life Sciences. L3 is your tenant — where you inherit L1 and L2 by reference and add your own customizations. Because inheritance is by reference, Reltio's platform improvements reach your tenant automatically.
 
-This guide is for these Reltio roles: **Reltio Configurator**, **Solution Architect**. For more information on data unification roles in the Reltio Context Intelligence Platform, see [About roles](https://docs.reltio.com/en/roles/about-roles).
+This guide is for these Reltio roles: **Reltio Configurator**, **Solution Architect**. For more information on data unification roles in the Reltio Context Intelligence Platform, see [About roles](https://docs.reltio.com/en/roles/about-roles?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs).
 
 ## Contents
 
@@ -64,7 +64,7 @@ Read these terms before diving into the layers.
 - **Attribute types** — simple, nested, reference, and analytic. These replace the rigid column types of a relational table.
 - **[Consolidated configuration](#glossary)** — the effective configuration your tenant uses, computed by merging L1, L2, and L3.
 
-> **Learn more:** [Tenant configuration inheritance across layers](https://docs.reltio.com/en/reltio/what-does-reltio-do/what-reltio-does-at-a-glance/data-unification-and-mdm-at-a-glance/data-unification-and-mdm-in-detail/reltio-information-model/data-model/tenant-configuration-inheritance-across-layers) in the Reltio documentation.
+> **Learn more:** [Tenant configuration inheritance across layers](https://docs.reltio.com/en/reltio/what-does-reltio-do/what-reltio-does-at-a-glance/data-unification-and-mdm-at-a-glance/data-unification-and-mdm-in-detail/reltio-information-model/data-model/tenant-configuration-inheritance-across-layers?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 3. Understand the three-layer model
 
@@ -82,7 +82,7 @@ Each layer is represented as JSON. You only touch L3. You can retrieve it, edit 
 
 A standalone L3 is technically possible — you just remove the L2 reference — but you forfeit those automatic improvements.
 
-> **Learn more:** [Reltio L3 Layer — Customer tenant](https://docs.reltio.com/en/reltio/what-does-reltio-do/what-reltio-does-at-a-glance/data-unification-and-mdm-at-a-glance/data-unification-and-mdm-in-detail/reltio-information-model/data-model/tenant-configuration-inheritance-across-layers/reltio-l3-layer----customer-tenant) in the Reltio documentation.
+> **Learn more:** [Reltio L3 Layer — Customer tenant](https://docs.reltio.com/en/reltio/what-does-reltio-do/what-reltio-does-at-a-glance/data-unification-and-mdm-at-a-glance/data-unification-and-mdm-in-detail/reltio-information-model/data-model/tenant-configuration-inheritance-across-layers/reltio-l3-layer----customer-tenant?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 4. Trace inheritance through a real example
 
@@ -111,7 +111,7 @@ In a relational data model, adding a column to an inherited concept means alteri
 
 When the same object is defined in multiple layers, L3 wins over L2 wins over L1. L3 modifications **merge with and extend** the parent definition — they don't replace it outright.
 
-> **Learn more:** [Reltio L1 Layer — Foundation](https://docs.reltio.com/en/reltio/what-does-reltio-do/what-reltio-does-at-a-glance/data-unification-and-mdm-at-a-glance/data-unification-and-mdm-in-detail/reltio-information-model/data-model/tenant-configuration-inheritance-across-layers/reltio-l1-layer--foundation) in the Reltio documentation.
+> **Learn more:** [Reltio L1 Layer — Foundation](https://docs.reltio.com/en/reltio/what-does-reltio-do/what-reltio-does-at-a-glance/data-unification-and-mdm-at-a-glance/data-unification-and-mdm-in-detail/reltio-information-model/data-model/tenant-configuration-inheritance-across-layers/reltio-l1-layer--foundation?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 5. Extend and override attributes in L3
 
@@ -135,7 +135,7 @@ To change a sub-attribute, specify only the sub-attribute that changes. The othe
 
 > **Note:** You must define these sub-attribute properties in your configuration or Reltio uses `false`: `Hidden`, `Important`, `System`, `skipInDataAccess`.
 
-> **Learn more:** [Reltio object types](https://docs.reltio.com/en/reltio/what-does-reltio-do/what-reltio-does-at-a-glance/data-unification-and-mdm-at-a-glance/data-unification-and-mdm-in-detail/reltio-information-model/data-model/reltio-object-types) in the Reltio documentation.
+> **Learn more:** [Reltio object types](https://docs.reltio.com/en/reltio/what-does-reltio-do/what-reltio-does-at-a-glance/data-unification-and-mdm-at-a-glance/data-unification-and-mdm-in-detail/reltio-information-model/data-model/reltio-object-types?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 6. Use the four canonical attribute types
 
@@ -179,7 +179,7 @@ A reference attribute enables:
 - **Easier navigation** — referenced attributes display as hyperlinks on the entity profile in the Hub.
 - **Refined search** — attributes of a referenced entity are indexed as though native to the referencing entity. Search by a referenced field and the query works end-to-end.
 
-> **Learn more:** [Reltio attribute types](https://docs.reltio.com/en/reltio/what-does-reltio-do/what-reltio-does-at-a-glance/data-unification-and-mdm-at-a-glance/data-unification-and-mdm-in-detail/reltio-information-model/data-model/reltio-object-types/reltio-attribute-types) in the Reltio documentation.
+> **Learn more:** [Reltio attribute types](https://docs.reltio.com/en/reltio/what-does-reltio-do/what-reltio-does-at-a-glance/data-unification-and-mdm-at-a-glance/data-unification-and-mdm-in-detail/reltio-information-model/data-model/reltio-object-types/reltio-attribute-types?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 7. Redeclare LCAs, DVFs, and cleanse functions
 
@@ -197,7 +197,7 @@ If you define a custom entity in L3 that extends a standard Reltio entity like `
 
 > **Important:** Silent failures here are one of the hardest-to-diagnose issues in a Reltio configuration. If your validations aren't firing or your cleansers aren't running on a custom entity, check that you redeclared them in L3.
 
-> **Learn more:** [Tenant configuration inheritance across layers](https://docs.reltio.com/en/reltio/what-does-reltio-do/what-reltio-does-at-a-glance/data-unification-and-mdm-at-a-glance/data-unification-and-mdm-in-detail/reltio-information-model/data-model/tenant-configuration-inheritance-across-layers) in the Reltio documentation.
+> **Learn more:** [Tenant configuration inheritance across layers](https://docs.reltio.com/en/reltio/what-does-reltio-do/what-reltio-does-at-a-glance/data-unification-and-mdm-at-a-glance/data-unification-and-mdm-in-detail/reltio-information-model/data-model/tenant-configuration-inheritance-across-layers?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 8. Troubleshooting
 
@@ -213,13 +213,13 @@ Common issues and where to look first.
 
 ## 9. Further reading
 
-- [Tenant configuration inheritance across layers](https://docs.reltio.com/en/reltio/what-does-reltio-do/what-reltio-does-at-a-glance/data-unification-and-mdm-at-a-glance/data-unification-and-mdm-in-detail/reltio-information-model/data-model/tenant-configuration-inheritance-across-layers)
-- [Reltio L1 Layer — Foundation](https://docs.reltio.com/en/reltio/what-does-reltio-do/what-reltio-does-at-a-glance/data-unification-and-mdm-at-a-glance/data-unification-and-mdm-in-detail/reltio-information-model/data-model/tenant-configuration-inheritance-across-layers/reltio-l1-layer--foundation)
-- [Reltio L2 Layer — Containers](https://docs.reltio.com/en/reltio/what-does-reltio-do/what-reltio-does-at-a-glance/data-unification-and-mdm-at-a-glance/data-unification-and-mdm-in-detail/reltio-information-model/data-model/tenant-configuration-inheritance-across-layers/reltio-l2-layer----containers)
-- [Reltio L3 Layer — Customer tenant](https://docs.reltio.com/en/reltio/what-does-reltio-do/what-reltio-does-at-a-glance/data-unification-and-mdm-at-a-glance/data-unification-and-mdm-in-detail/reltio-information-model/data-model/tenant-configuration-inheritance-across-layers/reltio-l3-layer----customer-tenant)
-- [Reltio object types](https://docs.reltio.com/en/reltio/what-does-reltio-do/what-reltio-does-at-a-glance/data-unification-and-mdm-at-a-glance/data-unification-and-mdm-in-detail/reltio-information-model/data-model/reltio-object-types)
-- [Reltio attribute types](https://docs.reltio.com/en/reltio/what-does-reltio-do/what-reltio-does-at-a-glance/data-unification-and-mdm-at-a-glance/data-unification-and-mdm-in-detail/reltio-information-model/data-model/reltio-object-types/reltio-attribute-types)
-- [Configuration API](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/configuration-api)
+- [Tenant configuration inheritance across layers](https://docs.reltio.com/en/reltio/what-does-reltio-do/what-reltio-does-at-a-glance/data-unification-and-mdm-at-a-glance/data-unification-and-mdm-in-detail/reltio-information-model/data-model/tenant-configuration-inheritance-across-layers?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
+- [Reltio L1 Layer — Foundation](https://docs.reltio.com/en/reltio/what-does-reltio-do/what-reltio-does-at-a-glance/data-unification-and-mdm-at-a-glance/data-unification-and-mdm-in-detail/reltio-information-model/data-model/tenant-configuration-inheritance-across-layers/reltio-l1-layer--foundation?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
+- [Reltio L2 Layer — Containers](https://docs.reltio.com/en/reltio/what-does-reltio-do/what-reltio-does-at-a-glance/data-unification-and-mdm-at-a-glance/data-unification-and-mdm-in-detail/reltio-information-model/data-model/tenant-configuration-inheritance-across-layers/reltio-l2-layer----containers?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
+- [Reltio L3 Layer — Customer tenant](https://docs.reltio.com/en/reltio/what-does-reltio-do/what-reltio-does-at-a-glance/data-unification-and-mdm-at-a-glance/data-unification-and-mdm-in-detail/reltio-information-model/data-model/tenant-configuration-inheritance-across-layers/reltio-l3-layer----customer-tenant?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
+- [Reltio object types](https://docs.reltio.com/en/reltio/what-does-reltio-do/what-reltio-does-at-a-glance/data-unification-and-mdm-at-a-glance/data-unification-and-mdm-in-detail/reltio-information-model/data-model/reltio-object-types?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
+- [Reltio attribute types](https://docs.reltio.com/en/reltio/what-does-reltio-do/what-reltio-does-at-a-glance/data-unification-and-mdm-at-a-glance/data-unification-and-mdm-in-detail/reltio-information-model/data-model/reltio-object-types/reltio-attribute-types?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
+- [Configuration API](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/configuration-api?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
 
 ## 10. Glossary
 

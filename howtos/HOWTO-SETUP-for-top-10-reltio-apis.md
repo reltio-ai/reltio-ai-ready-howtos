@@ -18,7 +18,7 @@ flowchart LR
 
 This guide walks you through configuring an empty Reltio tenant so the Top 10 APIs tutorial works end to end. You'll apply a Layer 3 ([L3](#glossary)) configuration that defines two entity types, two sources, and one [relation type](#glossary), then verify the tenant is ready. Everything runs against the [Configuration API](#glossary) — no Console UI required.
 
-This guide is for this Reltio role: **Developer**. For more information on data unification roles in the Reltio Context Intelligence Platform, see [About roles](https://docs.reltio.com/en/roles/about-roles).
+This guide is for this Reltio role: **Developer**. For more information on data unification roles in the Reltio Context Intelligence Platform, see [About roles](https://docs.reltio.com/en/roles/about-roles?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs).
 
 ## Contents
 
@@ -55,7 +55,7 @@ export TENANT="https://na07-prod.reltio.com/reltio/api/YOUR_TENANT_ID"
 
 > **Important:** The steps below issue a `PUT /configuration`, which **replaces** the tenant's existing L3. Only run this on an empty or sandbox tenant.
 
-> **Learn more:** [Apply an L3 to a tenant](https://docs.reltio.com/en/reltio/what-does-reltio-do/what-reltio-does-at-a-glance/data-unification-and-mdm-at-a-glance/data-unification-and-mdm-in-detail/reltio-information-model/data-model/tenant-configuration-inheritance-across-layers/reltio-l3-layer----customer-tenant/apply-an-l3-to-a-tenant) in the Reltio documentation.
+> **Learn more:** [Apply an L3 to a tenant](https://docs.reltio.com/en/reltio/what-does-reltio-do/what-reltio-does-at-a-glance/data-unification-and-mdm-at-a-glance/data-unification-and-mdm-in-detail/reltio-information-model/data-model/tenant-configuration-inheritance-across-layers/reltio-l3-layer----customer-tenant/apply-an-l3-to-a-tenant?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 2. Key concepts
 
@@ -77,7 +77,7 @@ A few platform concepts to keep straight:
 
 The Top 10 APIs tutorial exercises CRUD, search, crosswalks, relations, match, and merge. The V1 tutorial you can follow today is [HOWTO: Top 10 Reltio APIs](./HOWTO-top-10-reltio-apis.md).
 
-> **Learn more:** [Configuration API overview](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/configuration-api) in the Reltio documentation.
+> **Learn more:** [Configuration API overview](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/configuration-api?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 3. Read the current L3 configuration
 
@@ -129,7 +129,7 @@ curl -s -X GET "${TENANT}/configuration/_noInheritance" \
 - **Keep a copy of the response** — save it locally before you `PUT` so you can roll back.
 - **An empty response is expected on a blank tenant** — the `PUT` will write the first version.
 
-> **Learn more:** [Get Configuration (No Inheritance)](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/configuration-api/get-configuration-no-inheritance) in the Reltio documentation.
+> **Learn more:** [Get Configuration (No Inheritance)](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/configuration-api/get-configuration-no-inheritance?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 4. Define the sources
 
@@ -162,7 +162,7 @@ Here's the fragment of the L3 payload that defines the two sources:
 - **Names are used in the URI** — as a best practice, avoid special characters and spaces when creating a source.
 - **Each source needs a unique name** — the `label` is the display name; the `name` is what appears in the URI.
 
-> **Learn more:** [Managing Sources](https://docs.reltio.com/en/objectives/model-data/data-modeling-at-a-glance/data-modeling-operation/define-relationships/configuring-relationship-types/managing-sources) in the Reltio documentation.
+> **Learn more:** [Managing Sources](https://docs.reltio.com/en/objectives/model-data/data-modeling-at-a-glance/data-modeling-operation/define-relationships/configuring-relationship-types/managing-sources?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 5. Define the Individual entity type
 
@@ -209,7 +209,7 @@ The entity type `URI` follows the format `configuration/entityTypes/{EntityTypeN
 - **Simple attributes declare a `type`** — `String` works for all three attributes in this tutorial. Other supported data types include `Int`, `Long`, `Boolean`, `Date`, `Timestamp`, and `URL`.
 - **Attribute URIs follow the `configuration/entityTypes/{EntityType}/attributes/{AttributeName}` pattern** — this is how cleanse rules, match rules, and survivorship rules reference them.
 
-> **Learn more:** [Add an entity type](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/configuration-api/add-an-entity-type) in the Reltio documentation.
+> **Learn more:** [Add an entity type](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/configuration-api/add-an-entity-type?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 6. Define the Organization entity type
 
@@ -237,7 +237,7 @@ Organizations are the other side of the Employment relation. One simple `String`
 - **Keep the model minimal** — the tutorial only needs one attribute on `Organization`. You can extend the type later through a follow-up `PUT /configuration` or via the Data Modeler.
 - **The same attribute-URI convention applies** — `configuration/entityTypes/Organization/attributes/Name`.
 
-> **Learn more:** [Reltio entity types](https://docs.reltio.com/en/reltio/what-does-reltio-do/what-reltio-does-at-a-glance/data-unification-and-mdm-at-a-glance/data-unification-and-mdm-in-detail/reltio-information-model/data-model/reltio-object-types/reltio-entity-types) in the Reltio documentation.
+> **Learn more:** [Reltio entity types](https://docs.reltio.com/en/reltio/what-does-reltio-do/what-reltio-does-at-a-glance/data-unification-and-mdm-at-a-glance/data-unification-and-mdm-in-detail/reltio-information-model/data-model/reltio-object-types/reltio-entity-types?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 7. Define the Employment relation type
 
@@ -277,7 +277,7 @@ Relation type metadata lets you describe *how* two entity types are linked. `dir
 - **Relation attributes follow the same URI pattern as entity attributes** — `configuration/relationTypes/{TypeName}/attributes/{AttributeName}`.
 - **Relation attributes are simple, atomic types.** Complex (nested) attributes aren't supported on relations.
 
-> **Learn more:** [Relation Types](https://docs.reltio.com/en/developer-resources/relation-management-apis/relation-management-apis-at-a-glance/relations-api/relation-types) in the Reltio documentation.
+> **Learn more:** [Relation Types](https://docs.reltio.com/en/developer-resources/relation-management-apis/relation-management-apis-at-a-glance/relations-api/relation-types?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 8. Apply the L3 with Set Configuration
 
@@ -411,7 +411,7 @@ If `request.updatedTime` is less than the stored `updatedTime`, the API returns 
 | `306` Failed to process business model JSON in create configuration request | Server couldn't parse the body | Check `Content-Type: application/json` and that the outer JSON object is well-formed |
 | `409 Conflict` | `checkParallelUpdate=true` and your `updatedTime` is stale | Re-read `_noInheritance`, merge your edits, retry |
 
-> **Learn more:** [Set Configuration](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/configuration-api/set-configuration) in the Reltio documentation.
+> **Learn more:** [Set Configuration](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/configuration-api/set-configuration?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 9. Verify the tenant
 
@@ -450,7 +450,7 @@ curl -s -X GET "${TENANT}/configuration/_noInheritance" \
 - **If a URI is missing, the `PUT` silently ignored that section** — re-check the payload for that object and re-run step 8.
 - **`GET /configuration` (no flag) returns the consolidated model** — use `_noInheritance` here to confirm only what you wrote.
 
-> **Learn more:** [GET Configuration](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/configuration-api/get-configuration) in the Reltio documentation.
+> **Learn more:** [GET Configuration](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/configuration-api/get-configuration?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 10. Reset and rollback
 
@@ -468,7 +468,7 @@ curl -s -X DELETE "${TENANT}/configuration/sources/ERP?option=purgeAllData" \
 
 > **Important:** If the source appears in any other L3 section (for example, `sourcesUriOrder` or `immutableForSources`), remove it from those sections first or the `DELETE` will fail validation.
 
-> **Learn more:** [Delete a Source System](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/configuration-api/delete-a-source-system) in the Reltio documentation.
+> **Learn more:** [Delete a Source System](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/configuration-api/delete-a-source-system?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 11. Troubleshooting
 
@@ -481,21 +481,21 @@ curl -s -X DELETE "${TENANT}/configuration/sources/ERP?option=purgeAllData" \
 | `PUT` returns 2xx but `_noInheritance` doesn't show your types | You `PUT` to a different tenant, or a proxy stripped the body | Confirm the `TENANT` variable; re-run step 8 with the body loaded from a file (`-d @l3-payload.json`) |
 | Attribute referenced by a match or survivorship rule isn't found | URI typo, or the attribute section is missing from the payload | Fix the attribute URI; verify the attribute exists on the correct entity type |
 
-> **Learn more:** [L3 validation errors](https://docs.reltio.com/en/reltio/what-does-reltio-do/what-reltio-does-at-a-glance/data-unification-and-mdm-at-a-glance/data-unification-and-mdm-in-detail/reltio-information-model/data-model/tenant-configuration-inheritance-across-layers/reltio-l3-layer----customer-tenant/l3-validation-errors) in the Reltio documentation.
+> **Learn more:** [L3 validation errors](https://docs.reltio.com/en/reltio/what-does-reltio-do/what-reltio-does-at-a-glance/data-unification-and-mdm-at-a-glance/data-unification-and-mdm-in-detail/reltio-information-model/data-model/tenant-configuration-inheritance-across-layers/reltio-l3-layer----customer-tenant/l3-validation-errors?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 12. Further reading
 
-- [Apply an L3 to a tenant](https://docs.reltio.com/en/reltio/what-does-reltio-do/what-reltio-does-at-a-glance/data-unification-and-mdm-at-a-glance/data-unification-and-mdm-in-detail/reltio-information-model/data-model/tenant-configuration-inheritance-across-layers/reltio-l3-layer----customer-tenant/apply-an-l3-to-a-tenant)
-- [Configuration API overview](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/configuration-api)
-- [Set Configuration](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/configuration-api/set-configuration)
-- [GET Configuration](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/configuration-api/get-configuration)
-- [Get Configuration (No Inheritance)](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/configuration-api/get-configuration-no-inheritance)
-- [Add an entity type](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/configuration-api/add-an-entity-type)
-- [Attributes configuration](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/configuration-api/attributes-configuration)
-- [Reltio entity types](https://docs.reltio.com/en/reltio/what-does-reltio-do/what-reltio-does-at-a-glance/data-unification-and-mdm-at-a-glance/data-unification-and-mdm-in-detail/reltio-information-model/data-model/reltio-object-types/reltio-entity-types)
-- [Reltio attribute types](https://docs.reltio.com/en/reltio/what-does-reltio-do/what-reltio-does-at-a-glance/data-unification-and-mdm-at-a-glance/data-unification-and-mdm-in-detail/reltio-information-model/data-model/reltio-object-types/reltio-attribute-types)
-- [Relation Types](https://docs.reltio.com/en/developer-resources/relation-management-apis/relation-management-apis-at-a-glance/relations-api/relation-types)
-- [Managing Sources](https://docs.reltio.com/en/objectives/model-data/data-modeling-at-a-glance/data-modeling-operation/define-relationships/configuring-relationship-types/managing-sources)
+- [Apply an L3 to a tenant](https://docs.reltio.com/en/reltio/what-does-reltio-do/what-reltio-does-at-a-glance/data-unification-and-mdm-at-a-glance/data-unification-and-mdm-in-detail/reltio-information-model/data-model/tenant-configuration-inheritance-across-layers/reltio-l3-layer----customer-tenant/apply-an-l3-to-a-tenant?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
+- [Configuration API overview](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/configuration-api?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
+- [Set Configuration](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/configuration-api/set-configuration?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
+- [GET Configuration](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/configuration-api/get-configuration?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
+- [Get Configuration (No Inheritance)](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/configuration-api/get-configuration-no-inheritance?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
+- [Add an entity type](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/configuration-api/add-an-entity-type?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
+- [Attributes configuration](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/configuration-api/attributes-configuration?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
+- [Reltio entity types](https://docs.reltio.com/en/reltio/what-does-reltio-do/what-reltio-does-at-a-glance/data-unification-and-mdm-at-a-glance/data-unification-and-mdm-in-detail/reltio-information-model/data-model/reltio-object-types/reltio-entity-types?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
+- [Reltio attribute types](https://docs.reltio.com/en/reltio/what-does-reltio-do/what-reltio-does-at-a-glance/data-unification-and-mdm-at-a-glance/data-unification-and-mdm-in-detail/reltio-information-model/data-model/reltio-object-types/reltio-attribute-types?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
+- [Relation Types](https://docs.reltio.com/en/developer-resources/relation-management-apis/relation-management-apis-at-a-glance/relations-api/relation-types?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
+- [Managing Sources](https://docs.reltio.com/en/objectives/model-data/data-modeling-at-a-glance/data-modeling-operation/define-relationships/configuring-relationship-types/managing-sources?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
 - [HOWTO: Authenticate and use Reltio APIs](./HOWTO-authenticate-and-use-reltio-apis.md)
 - [HOWTO: Top 10 Reltio APIs](./HOWTO-top-10-reltio-apis.md) — the tutorial this setup enables.
 

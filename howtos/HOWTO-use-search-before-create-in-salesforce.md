@@ -39,7 +39,7 @@ Before you begin setup, confirm you have:
 - A Trailblazer account (for Salesforce AppExchange access)
 - The Reltio role `ROLE_API` (required for SBC)
 
-> **Learn more:** [Search Before Create (SBC)](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/reltio-integration-for-salesforce-with-rih-at-a-glance/reltio-integration-for-salesforce-with-rih-set-up/search-before-create-sbc)
+> **Learn more:** [Search Before Create (SBC)](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/reltio-integration-for-salesforce-with-rih-at-a-glance/reltio-integration-for-salesforce-with-rih-set-up/search-before-create-sbc?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
 
 ## 2. Install the managed package
 
@@ -68,7 +68,7 @@ The SBC feature requires the Reltio Integration for Salesforce [managed package]
 
 > **Note:** Non-admin users need the **RIH SBC Other Users** permission set assignment to use SBC.
 
-> **Learn more:** [Install the Reltio Integration for Salesforce managed package to enable SBC](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/reltio-integration-for-salesforce-with-rih-at-a-glance/reltio-integration-for-salesforce-with-rih-set-up/search-before-create-sbc/install-the-reltio-integration-for-salesforce-managed-package-to-enable-sbc)
+> **Learn more:** [Install the Reltio Integration for Salesforce managed package to enable SBC](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/reltio-integration-for-salesforce-with-rih-at-a-glance/reltio-integration-for-salesforce-with-rih-set-up/search-before-create-sbc/install-the-reltio-integration-for-salesforce-managed-package-to-enable-sbc?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
 
 ## 3. Activate the SBC API collection in RIH
 
@@ -86,7 +86,7 @@ The SBC [recipes](#glossary) use an [API collection](#glossary) called **SFDC-SB
 
 The SFDC-SBC collection includes endpoints for searching and importing both Account and Contact records.
 
-> **Learn more:** [Enable Search Before Create](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/reltio-integration-for-salesforce-with-rih-at-a-glance/reltio-integration-for-salesforce-with-rih-set-up/search-before-create-sbc/enable-search-before-create)
+> **Learn more:** [Enable Search Before Create](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/reltio-integration-for-salesforce-with-rih-at-a-glance/reltio-integration-for-salesforce-with-rih-set-up/search-before-create-sbc/enable-search-before-create?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
 
 ## 4. Create an API client and generate a security code
 
@@ -111,7 +111,7 @@ SBC needs an API client in RIH to authenticate requests between Salesforce and R
 
 10. Copy the **Auth Token** (Security Code). You will enter this value into the SBC configuration in Salesforce.
 
-> **Learn more:** [Enable Search Before Create](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/reltio-integration-for-salesforce-with-rih-at-a-glance/reltio-integration-for-salesforce-with-rih-set-up/search-before-create-sbc/enable-search-before-create)
+> **Learn more:** [Enable Search Before Create](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/reltio-integration-for-salesforce-with-rih-at-a-glance/reltio-integration-for-salesforce-with-rih-set-up/search-before-create-sbc/enable-search-before-create?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
 
 ## 5. Search for existing records before creating
 
@@ -142,7 +142,7 @@ Once the [managed package](#glossary) is installed and SBC is configured, this i
 
 When you import a Reltio record into Salesforce, the connector automatically adds a Salesforce [crosswalk](#glossary) to the Reltio entity, linking the two records for future sync.
 
-> **Learn more:** [Search Before Create (SBC)](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/reltio-integration-for-salesforce-with-rih-at-a-glance/reltio-integration-for-salesforce-with-rih-set-up/search-before-create-sbc)
+> **Learn more:** [Search Before Create (SBC)](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/reltio-integration-for-salesforce-with-rih-at-a-glance/reltio-integration-for-salesforce-with-rih-set-up/search-before-create-sbc?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
 
 ## 6. SBC recipes reference
 
@@ -179,7 +179,7 @@ An API endpoint [recipe](#glossary) that triggers the import of an account or co
 
 Returns: information about the imported record and related records, or an error.
 
-> **Learn more:** [Recipes for Search Before Create](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/reltio-integration-for-salesforce-with-rih-at-a-glance/reltio-integration-for-salesforce-with-rih-set-up/search-before-create-sbc/recipes-for-search-before-create)
+> **Learn more:** [Recipes for Search Before Create](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/reltio-integration-for-salesforce-with-rih-at-a-glance/reltio-integration-for-salesforce-with-rih-set-up/search-before-create-sbc/recipes-for-search-before-create?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
 
 ## 7. Glossary
 

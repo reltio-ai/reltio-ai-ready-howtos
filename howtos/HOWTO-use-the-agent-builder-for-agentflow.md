@@ -23,7 +23,7 @@ flowchart LR
 
 [Agent Builder](#glossary) is the authoring and governance surface inside [AgentFlow](#glossary). [Agent Authors](#glossary) create a custom agent by writing a [system prompt](#glossary), selecting the [tools](#glossary) the agent is allowed to call, and testing it interactively. When the author submits a [publish request](#glossary), an automated [security scan](#glossary) checks the prompt for policy violations. Clean requests enter the [Agent Approver's](#glossary) queue; violations are [auto-blocked](#glossary) before a human sees them. Once approved, the agent is published as an [immutable version](#glossary) and appears in **Discover Agents** for end users. This guide walks through the full lifecycle — authoring, scanning, reviewing, and managing state transitions — covering both the author and approver workflows.
 
-This guide is for these Reltio roles: **Developer**, **Reltio Configurator**, **Data Product Owner**. For more information on data unification roles in the Reltio Context Intelligence Platform, see [About roles](https://docs.reltio.com/en/roles/about-roles).
+This guide is for these Reltio roles: **Developer**, **Reltio Configurator**, **Data Product Owner**. For more information on data unification roles in the Reltio Context Intelligence Platform, see [About roles](https://docs.reltio.com/en/roles/about-roles?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs).
 
 ## Contents
 
@@ -54,7 +54,7 @@ Gather these before you start:
 | **System roles** | `ROLE_USER` and `ROLE_API` on the target tenant |
 | **Tool catalog** | The tools your agent will call must already be in the tenant-approved tool catalog |
 
-> **Learn more:** [AgentFlow capabilities and permissions](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-capabilities-and-permissions) in the Reltio documentation.
+> **Learn more:** [AgentFlow capabilities and permissions](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-capabilities-and-permissions?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 2. Key concepts
 
@@ -67,7 +67,7 @@ Before you author your first agent, familiarize yourself with the four roles and
 
 Every agent moves through a defined state machine: **Draft → Scanning → Pending review → Published** (happy path), with branches into **Auto blocked** (scan violation) and **Rejected** (reviewer rejection). Once an agent is published, its version is immutable; saving further edits creates a new draft version while the published version stays live for end users.
 
-> **Learn more:** [Agent Builder for AgentFlow at a glance](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agent-builder-for-agentflow-at-a-glance) in the Reltio documentation.
+> **Learn more:** [Agent Builder for AgentFlow at a glance](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agent-builder-for-agentflow-at-a-glance?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 3. Create a draft agent
 
@@ -83,7 +83,7 @@ Use this path when you are building a new agent from scratch. If you are updatin
 - Open the **Your Drafts & Requests** tab and confirm the new agent appears with **Draft** status.
 - Open the agent editor and confirm the **Basics**, **Prompt**, **Tools**, and **Test** navigation tabs are visible.
 
-> **Learn more:** [Create, test, and submit an agent for review](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agent-builder-for-agentflow-at-a-glance/create-test-and-submit-an-agent-for-review) in the Reltio documentation.
+> **Learn more:** [Create, test, and submit an agent for review](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agent-builder-for-agentflow-at-a-glance/create-test-and-submit-an-agent-for-review?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 4. Write the system prompt
 
@@ -135,7 +135,7 @@ The following patterns produce unreliable agent behavior and should not appear i
 | Unstructured workflow | "Help user with matches" — no steps, no decision points | Number each step explicitly |
 | No confirmation | Immediate destructive actions with no user approval | Always confirm before modify or delete |
 
-> **Learn more:** [AgentFlow system prompt guidelines](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agent-builder-for-agentflow-at-a-glance/agentflow-system-prompt-guidelines) in the Reltio documentation.
+> **Learn more:** [AgentFlow system prompt guidelines](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agent-builder-for-agentflow-at-a-glance/agentflow-system-prompt-guidelines?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 5. Select tools
 
@@ -153,7 +153,7 @@ The agent can only call tools you explicitly select — this selection is the ag
 - Confirm each tool you selected appears in the right-hand allowlist panel.
 - Confirm the system prompt documents each selected tool in its **Tools** section (section 5 of the recommended structure) with clear selection criteria.
 
-> **Learn more:** [Create, test, and submit an agent for review](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agent-builder-for-agentflow-at-a-glance/create-test-and-submit-an-agent-for-review) in the Reltio documentation.
+> **Learn more:** [Create, test, and submit an agent for review](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agent-builder-for-agentflow-at-a-glance/create-test-and-submit-an-agent-for-review?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 6. Test the draft agent
 
@@ -172,7 +172,7 @@ Testing runs the same automated [security scan](#glossary) that runs on submissi
 - Confirm every tool call the agent makes is from the allowlist you configured in [section 5](#5-select-tools).
 - Confirm destructive actions (if any) ask for user confirmation before executing.
 
-> **Learn more:** [System prompt security scan](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agent-builder-for-agentflow-at-a-glance/system-prompt-security-scan) in the Reltio documentation.
+> **Learn more:** [System prompt security scan](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agent-builder-for-agentflow-at-a-glance/system-prompt-security-scan?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 7. Submit the agent for review
 
@@ -200,7 +200,7 @@ If you need to make changes after submitting, withdraw the pending request at an
 - Confirm the agent shows **Pending review** (or **Auto blocked**) status in the **Your Drafts & Requests** tab.
 - If the scan blocked the request, confirm the scan result shows a `policy_category` value.
 
-> **Learn more:** [Create, test, and submit an agent for review](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agent-builder-for-agentflow-at-a-glance/create-test-and-submit-an-agent-for-review) in the Reltio documentation.
+> **Learn more:** [Create, test, and submit an agent for review](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agent-builder-for-agentflow-at-a-glance/create-test-and-submit-an-agent-for-review?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 8. Review and act on a publish request
 
@@ -239,7 +239,7 @@ The author can revise the agent and resubmit. The previously published version, 
 - After approval: open **Discover Agents** and confirm the agent appears with the correct name and description.
 - After rejection: confirm the author sees the rejection reason and that the agent returned to the author's editable state.
 
-> **Learn more:** [Review and act on a publish request](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agent-builder-for-agentflow-at-a-glance/review-and-act-on-a-publish-request) in the Reltio documentation.
+> **Learn more:** [Review and act on a publish request](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agent-builder-for-agentflow-at-a-glance/review-and-act-on-a-publish-request?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 9. Update a published agent
 
@@ -254,7 +254,7 @@ Use this path when you want to revise an agent that is already published. An [Ag
 
 Version history is maintained across all draft and published versions of the agent, so you can track what changed between published releases.
 
-> **Learn more:** [Create, test, and submit an agent for review](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agent-builder-for-agentflow-at-a-glance/create-test-and-submit-an-agent-for-review) in the Reltio documentation.
+> **Learn more:** [Create, test, and submit an agent for review](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agent-builder-for-agentflow-at-a-glance/create-test-and-submit-an-agent-for-review?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 10. Agent states reference
 
@@ -286,7 +286,7 @@ Agent Builder tracks the state of each agent throughout its lifecycle. The state
 - **Withdraw a pending request** — returns the agent to Draft.
 - **Archive** (admin action) — moves the agent to Archived.
 
-> **Learn more:** [Agent states in Agent Builder](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agent-builder-for-agentflow-at-a-glance/agent-states-in-agent-builder) in the Reltio documentation.
+> **Learn more:** [Agent states in Agent Builder](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agent-builder-for-agentflow-at-a-glance/agent-states-in-agent-builder?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 11. Troubleshooting
 
@@ -302,14 +302,14 @@ Agent Builder tracks the state of each agent throughout its lifecycle. The state
 
 ## 12. Further reading
 
-- [Agent Builder for AgentFlow at a glance](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agent-builder-for-agentflow-at-a-glance) — official overview
-- [Create, test, and submit an agent for review](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agent-builder-for-agentflow-at-a-glance/create-test-and-submit-an-agent-for-review) — author workflow
-- [Review and act on a publish request](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agent-builder-for-agentflow-at-a-glance/review-and-act-on-a-publish-request) — approver workflow
-- [AgentFlow system prompt guidelines](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agent-builder-for-agentflow-at-a-glance/agentflow-system-prompt-guidelines) — deep dive on prompt structure and anti-patterns
-- [Agent states in Agent Builder](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agent-builder-for-agentflow-at-a-glance/agent-states-in-agent-builder) — full state machine
-- [System prompt security scan](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agent-builder-for-agentflow-at-a-glance/system-prompt-security-scan) — what the scan checks and how to read results
-- [Reltio AgentFlow™ at a glance](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance) — parent product overview
-- [AgentFlow capabilities and permissions](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-capabilities-and-permissions) — RBAC model, system roles, and tenant prerequisites
+- [Agent Builder for AgentFlow at a glance](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agent-builder-for-agentflow-at-a-glance?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) — official overview
+- [Create, test, and submit an agent for review](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agent-builder-for-agentflow-at-a-glance/create-test-and-submit-an-agent-for-review?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) — author workflow
+- [Review and act on a publish request](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agent-builder-for-agentflow-at-a-glance/review-and-act-on-a-publish-request?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) — approver workflow
+- [AgentFlow system prompt guidelines](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agent-builder-for-agentflow-at-a-glance/agentflow-system-prompt-guidelines?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) — deep dive on prompt structure and anti-patterns
+- [Agent states in Agent Builder](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agent-builder-for-agentflow-at-a-glance/agent-states-in-agent-builder?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) — full state machine
+- [System prompt security scan](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agent-builder-for-agentflow-at-a-glance/system-prompt-security-scan?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) — what the scan checks and how to read results
+- [Reltio AgentFlow™ at a glance](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) — parent product overview
+- [AgentFlow capabilities and permissions](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agentflow-capabilities-and-permissions?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) — RBAC model, system roles, and tenant prerequisites
 
 ## 13. Glossary
 

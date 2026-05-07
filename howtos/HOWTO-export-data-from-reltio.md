@@ -53,7 +53,7 @@ The Export Service supports four [export job](#glossary) types:
 
 > **Important:** Your export permissions match your Reltio Server access — you can only export data that your account can read via the API.
 
-> **Learn more:** [Export data using Reltio export service](https://docs.reltio.com/en/objectives/load-and-export-data/data-exporting-at-a-glance/data-exporting-operation/export-data-using-reltio-export-service)
+> **Learn more:** [Export data using Reltio export service](https://docs.reltio.com/en/objectives/load-and-export-data/data-exporting-at-a-glance/data-exporting-operation/export-data-using-reltio-export-service?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
 
 ## 2. Export entities via API
 
@@ -151,7 +151,7 @@ curl -s -X POST "${EXPORT_URL}/export/${TENANT_ID}/entities?fileFormat=json" \
 
 > **Important:** If the background task limit for your [tenant](#glossary) is exceeded, the export returns the error `PERIODIC_TASKS_PER_TENANT_LIMIT_EXCEEDED`. Use the Export Tasks Management API to check active tasks before starting new ones.
 
-> **Learn more:** [Export entities](https://docs.reltio.com/en/objectives/load-and-export-data/data-exporting-at-a-glance/data-exporting-operation/export-data-using-reltio-export-service/export-entities)
+> **Learn more:** [Export entities](https://docs.reltio.com/en/objectives/load-and-export-data/data-exporting-at-a-glance/data-exporting-operation/export-data-using-reltio-export-service/export-entities?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
 
 ## 3. Export relations via API
 
@@ -192,7 +192,7 @@ curl -s -X POST "${EXPORT_URL}/export/${TENANT_ID}/relations" \
 
 > **Tip:** Use `resolveMergedEntities` to get winner URIs for start/end objects — useful when entities have been merged since the relation was created.
 
-> **Learn more:** [Export relations](https://docs.reltio.com/en/objectives/load-and-export-data/data-exporting-at-a-glance/data-exporting-operation/export-data-using-reltio-export-service/export-relations)
+> **Learn more:** [Export relations](https://docs.reltio.com/en/objectives/load-and-export-data/data-exporting-at-a-glance/data-exporting-operation/export-data-using-reltio-export-service/export-relations?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
 
 ## 4. Export activity log data via API
 
@@ -240,7 +240,7 @@ curl -s -X POST "${EXPORT_URL}/export/${TENANT_ID}/activities?filter=gt(timestam
 
 > **Note:** As a best practice, always specify a time period filter when exporting activity log data. Retention and searching limits are governed by your tenant's quotas.
 
-> **Learn more:** [Exporting Activity Log Data](https://docs.reltio.com/en/objectives/load-and-export-data/data-exporting-at-a-glance/data-exporting-operation/export-data-using-reltio-export-service/exporting-activity-log-data)
+> **Learn more:** [Exporting Activity Log Data](https://docs.reltio.com/en/objectives/load-and-export-data/data-exporting-at-a-glance/data-exporting-operation/export-data-using-reltio-export-service/exporting-activity-log-data?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
 
 ## 5. Monitor and manage export tasks
 
@@ -277,7 +277,7 @@ curl -s -X PUT "${EXPORT_URL}/tasks/${TASK_ID}/_forceStop" \
 
 > **Note:** Force stop is available to Administrators only.
 
-> **Learn more:** [Export data using Reltio export service](https://docs.reltio.com/en/objectives/load-and-export-data/data-exporting-at-a-glance/data-exporting-operation/export-data-using-reltio-export-service)
+> **Learn more:** [Export data using Reltio export service](https://docs.reltio.com/en/objectives/load-and-export-data/data-exporting-at-a-glance/data-exporting-operation/export-data-using-reltio-export-service?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
 
 ## 6. Split exports into multiple files
 
@@ -323,7 +323,7 @@ Output files follow the naming convention `_part_[N]`, where `[N]` is the file n
 
 > **Note:** `partSize` controls the unarchived size of each output file. The downloaded `.gz` or `.zip` file will be smaller due to compression.
 
-> **Learn more:** [Export data using Reltio export service](https://docs.reltio.com/en/objectives/load-and-export-data/data-exporting-at-a-glance/data-exporting-operation/export-data-using-reltio-export-service)
+> **Learn more:** [Export data using Reltio export service](https://docs.reltio.com/en/objectives/load-and-export-data/data-exporting-at-a-glance/data-exporting-operation/export-data-using-reltio-export-service?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
 
 ## 7. Export using the Console UI
 
@@ -340,7 +340,7 @@ If you prefer a visual interface over the API, use the Export application in the
 
 > **Important:** The **CSV Exploded** format can result in low export performance, large export files, or job failure. The more values that entities have, the higher the risk. Use **CSV Flattened** or **JSON** instead.
 
-> **Learn more:** [Export entities and relationships](https://docs.reltio.com/en/applications/console/tenant-management-applications/data-export-at-a-glance/export-entities-and-relationships)
+> **Learn more:** [Export entities and relationships](https://docs.reltio.com/en/applications/console/tenant-management-applications/data-export-at-a-glance/export-entities-and-relationships?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
 
 ## 8. Glossary
 

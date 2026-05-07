@@ -21,7 +21,7 @@ flowchart LR
 
 When a source system doesn't supply a unique key for an entity — common for addresses, locations, or flat-file extracts — Reltio can calculate a deterministic surrogate key from the cleansed attribute values. Identical inputs produce identical surrogate keys, which makes duplicate detection and auto-merge work without relying on the source.
 
-This guide is for these Reltio roles: **Reltio Configurator**, **Developer**. For more information on data unification roles in the Reltio Context Intelligence Platform, see [About roles](https://docs.reltio.com/en/roles/about-roles).
+This guide is for these Reltio roles: **Reltio Configurator**, **Developer**. For more information on data unification roles in the Reltio Context Intelligence Platform, see [About roles](https://docs.reltio.com/en/roles/about-roles?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs).
 
 ## Contents
 
@@ -57,7 +57,7 @@ These terms appear throughout the guide.
 - **[Enforce flag](#glossary)** — a `surrogateCrosswalks` configuration option that controls whether a surrogate is always generated or only as a fallback.
 - **[generationLogic](#glossary)** — a parameter that controls how surrogate keys handle missing operational values (OV).
 
-> **Learn more:** [Configuring surrogate keys](https://docs.reltio.com/en/objectives/model-data/data-modeling-at-a-glance/data-modeling-operation/define-crosswalks-for-data-sources/configuring-surrogate-keys) in the Reltio documentation.
+> **Learn more:** [Configuring surrogate keys](https://docs.reltio.com/en/objectives/model-data/data-modeling-at-a-glance/data-modeling-operation/define-crosswalks-for-data-sources/configuring-surrogate-keys?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 3. Decide when to use a surrogate key
 
@@ -85,7 +85,7 @@ Reltio's documentation lists four patterns for how source data arrives and the r
 
 Reltio models address as a `Party` object in L1 plus a `Location` object linked by `hasAddress`. `Location` is the address attribute of anything that inherits from `Party` — `Individual`, `Organization`, `HCP`, `[HCO](#glossary)`. If a source repeats the same address across many records, surrogate keys let Reltio merge them into a single `Location` entity automatically. The merged entity ends up with relationships to every entity that shares the address.
 
-> **Learn more:** [Configuring surrogate keys](https://docs.reltio.com/en/objectives/model-data/data-modeling-at-a-glance/data-modeling-operation/define-crosswalks-for-data-sources/configuring-surrogate-keys) in the Reltio documentation.
+> **Learn more:** [Configuring surrogate keys](https://docs.reltio.com/en/objectives/model-data/data-modeling-at-a-glance/data-modeling-operation/define-crosswalks-for-data-sources/configuring-surrogate-keys?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 4. Configure the surrogate crosswalk in L3
 
@@ -178,7 +178,7 @@ When primary entities like `HCP` or `HCO` have addresses associated with them, t
 - **refEntity** — the `Location` object being loaded.
 - **refRelation** — the `hasAddress` relationship used to link one entity to another.
 
-> **Learn more:** [Configuring surrogate keys](https://docs.reltio.com/en/objectives/model-data/data-modeling-at-a-glance/data-modeling-operation/define-crosswalks-for-data-sources/configuring-surrogate-keys) in the Reltio documentation.
+> **Learn more:** [Configuring surrogate keys](https://docs.reltio.com/en/objectives/model-data/data-modeling-at-a-glance/data-modeling-operation/define-crosswalks-for-data-sources/configuring-surrogate-keys?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 6. Control generation with the enforce flag
 
@@ -235,7 +235,7 @@ A configuration has three attributes: `AddressLine1` (non-OV value `TestAddressL
 
 > **Important:** If lookup values are included in the surrogate calculation and a lookup is unresolved, a random value may be used depending on `generationLogic`. That produces different crosswalk values for the same entity with the same values. Resolve all lookup issues before calculating surrogate crosswalks.
 
-> **Learn more:** [Configuring surrogate keys](https://docs.reltio.com/en/objectives/model-data/data-modeling-at-a-glance/data-modeling-operation/define-crosswalks-for-data-sources/configuring-surrogate-keys) in the Reltio documentation.
+> **Learn more:** [Configuring surrogate keys](https://docs.reltio.com/en/objectives/model-data/data-modeling-at-a-glance/data-modeling-operation/define-crosswalks-for-data-sources/configuring-surrogate-keys?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 8. Recalculate surrogate keys for existing data
 
@@ -249,7 +249,7 @@ Run it when:
 - You added a new surrogate key to an entity type that already has data
 - You're onboarding an existing tenant to surrogate keys for the first time
 
-> **Learn more:** [Recalculate surrogate crosswalks task](https://docs.reltio.com/en/developer-resources/entity-management-apis/entity-management-apis-at-a-glance/entities-api/update-entities/recalculate-surrogate-crosswalks) in the Reltio documentation.
+> **Learn more:** [Recalculate surrogate crosswalks task](https://docs.reltio.com/en/developer-resources/entity-management-apis/entity-management-apis-at-a-glance/entities-api/update-entities/recalculate-surrogate-crosswalks?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 9. Troubleshooting
 
@@ -265,9 +265,9 @@ Common symptoms and where to look.
 
 ## 10. Further reading
 
-- [Configuring surrogate keys](https://docs.reltio.com/en/objectives/model-data/data-modeling-at-a-glance/data-modeling-operation/define-crosswalks-for-data-sources/configuring-surrogate-keys)
-- [Recalculate surrogate crosswalks task](https://docs.reltio.com/en/developer-resources/entity-management-apis/entity-management-apis-at-a-glance/entities-api/update-entities/recalculate-surrogate-crosswalks)
-- [Define crosswalks for data sources](https://docs.reltio.com/en/objectives/model-data/data-modeling-at-a-glance/data-modeling-operation/define-crosswalks-for-data-sources)
+- [Configuring surrogate keys](https://docs.reltio.com/en/objectives/model-data/data-modeling-at-a-glance/data-modeling-operation/define-crosswalks-for-data-sources/configuring-surrogate-keys?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
+- [Recalculate surrogate crosswalks task](https://docs.reltio.com/en/developer-resources/entity-management-apis/entity-management-apis-at-a-glance/entities-api/update-entities/recalculate-surrogate-crosswalks?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
+- [Define crosswalks for data sources](https://docs.reltio.com/en/objectives/model-data/data-modeling-at-a-glance/data-modeling-operation/define-crosswalks-for-data-sources?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
 
 ## 11. Glossary
 

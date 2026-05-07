@@ -20,7 +20,7 @@ flowchart LR
 
 This tutorial walks you through the ten Reltio API calls that cover the full lifecycle of a mastered record: authenticate, inspect the tenant's data model, create and search entities, reconcile them by [crosswalk](#glossary), update attributes, link entities with a relation, surface potential duplicates, merge them, and review the change history. Each step reuses the data created by the previous one, so by the end you have a working golden record with a complete audit trail. Everything runs against Reltio's REST APIs using `curl` — no SDK or UI required.
 
-This guide is for this Reltio role: **Developer**. For more information on data unification roles in the Reltio Context Intelligence Platform, see [About roles](https://docs.reltio.com/en/roles/about-roles).
+This guide is for this Reltio role: **Developer**. For more information on data unification roles in the Reltio Context Intelligence Platform, see [About roles](https://docs.reltio.com/en/roles/about-roles?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs).
 
 ## Contents
 
@@ -59,7 +59,7 @@ export TENANT="https://na07-prod.reltio.com/reltio/api/YOUR_TENANT_ID"
 
 You'll set `TOKEN` in [Step 3](#3-authenticate) and a few entity-URI variables (`ENTITY_JOHN`, `ENTITY_JANE`, `ENTITY_ACME`, `ENTITY_JON`) as you go.
 
-> **Learn more:** [Reltio API overview](https://docs.reltio.com/en/developer-resources) in the Reltio documentation.
+> **Learn more:** [Reltio API overview](https://docs.reltio.com/en/developer-resources?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 2. Key concepts
 
@@ -74,7 +74,7 @@ The ten APIs in this guide fall into four groups — one authentication call, on
 
 Every tenant API URL in this guide is relative to `${TENANT}`. The Authentication API is the one exception: it lives at `https://auth.reltio.com` and is not tenant-specific.
 
-> **Learn more:** [Reltio information model](https://docs.reltio.com/en/reltio/what-does-reltio-do/what-reltio-does-at-a-glance/data-unification-and-mdm-at-a-glance/data-unification-and-mdm-in-detail/reltio-information-model) in the Reltio documentation.
+> **Learn more:** [Reltio information model](https://docs.reltio.com/en/reltio/what-does-reltio-do/what-reltio-does-at-a-glance/data-unification-and-mdm-at-a-glance/data-unification-and-mdm-in-detail/reltio-information-model?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 3. Authenticate
 
@@ -121,7 +121,7 @@ export TOKEN="eyJhbGciOiJSUzI1NiIs..."
 | `400 invalid_grant` | Wrong `grant_type` or malformed body | Send `grant_type=client_credentials` as `application/x-www-form-urlencoded` |
 | `403 Forbidden` | Valid token, but the caller's IP is not on the tenant's allow list | Have a tenant admin add the IP to the whitelist |
 
-> **Learn more:** [Authentication API](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/authentication-api) in the Reltio documentation.
+> **Learn more:** [Authentication API](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/authentication-api?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 4. Read your data model
 
@@ -164,7 +164,7 @@ curl -s -X GET "${TENANT}/configuration" \
 | `404 Not Found` | `TENANT` URL points at the wrong environment or tenant ID | Check `https://{env}.reltio.com/reltio/api/{tenantId}` |
 | Empty list | Tenant has no L3 entity types yet | Run the [setup guide](./HOWTO-SETUP-for-top-10-reltio-apis.md) |
 
-> **Learn more:** [Configuration API](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/configuration-api) in the Reltio documentation.
+> **Learn more:** [Configuration API](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/configuration-api?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 5. Create entities
 
@@ -243,7 +243,7 @@ export ENTITY_JANE="entities/DEF456"
 | `401 Unauthorized` | Token expired mid-session | Re-run [Step 3](#3-authenticate) and re-export `TOKEN` |
 | Partial `status: "failed"` in the response array | One entity in the batch was rejected | Inspect the `errorMessage` on the failed `index` and retry that entity only |
 
-> **Learn more:** [Create entities](https://docs.reltio.com/en/developer-resources/entity-management-apis/entity-management-apis-at-a-glance/entities-api/create-entity) in the Reltio documentation.
+> **Learn more:** [Create entities](https://docs.reltio.com/en/developer-resources/entity-management-apis/entity-management-apis-at-a-glance/entities-api/create-entity?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 6. Search for entities
 
@@ -294,7 +294,7 @@ curl -s -X POST "${TENANT}/entities/_search" \
 | Empty result set right after create | Search index hasn't caught up | Wait a few seconds — creation is asynchronous |
 | `414 URI Too Long` | Filter string exceeded server limit | Switch to `POST /entities/_search` |
 
-> **Learn more:** [Filtering entities](https://docs.reltio.com/en/developer-resources/entity-management-apis/entity-management-apis-at-a-glance/entities-api/get-entity/filtering-entities) in the Reltio documentation.
+> **Learn more:** [Filtering entities](https://docs.reltio.com/en/developer-resources/entity-management-apis/entity-management-apis-at-a-glance/entities-api/get-entity/filtering-entities?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 7. Look up an entity by crosswalk
 
@@ -330,7 +330,7 @@ curl -s -X POST \
 | `404 Not Found` | No entity carries that crosswalk value in the given source | Expected outcome for new records; fall back to create |
 | `400` with "unknown source" | `type` references a source that doesn't exist in L3 | Check the output of [Step 4](#4-read-your-data-model) |
 
-> **Learn more:** [Get Entity by Crosswalk](https://docs.reltio.com/en/developer-resources/entity-management-apis/entity-management-apis-at-a-glance/entities-api/get-entity/get-entity-by-crosswalk) in the Reltio documentation.
+> **Learn more:** [Get Entity by Crosswalk](https://docs.reltio.com/en/developer-resources/entity-management-apis/entity-management-apis-at-a-glance/entities-api/get-entity/get-entity-by-crosswalk?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 8. Update an attribute
 
@@ -378,7 +378,7 @@ Update modes differ in what happens to attributes **not** in the payload:
 | Attributes you didn't touch have disappeared | You forgot `partialOverride` | Re-send the attributes; the current values are preserved in history |
 | Reltio created a duplicate instead of updating | Crosswalk value or source `type` doesn't match any existing entity | Use [Step 7](#7-look-up-an-entity-by-crosswalk) to confirm the crosswalk first |
 
-> **Learn more:** [Update Entity](https://docs.reltio.com/en/developer-resources/entity-management-apis/entity-management-apis-at-a-glance/entities-api/update-entity) in the Reltio documentation.
+> **Learn more:** [Update Entity](https://docs.reltio.com/en/developer-resources/entity-management-apis/entity-management-apis-at-a-glance/entities-api/update-entity?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 9. Create a relationship
 
@@ -450,7 +450,7 @@ curl -s -X GET "${TENANT}/${ENTITY_JOHN}/relations" \
 | `400` "unknown relation type" | `type` path doesn't match L3 | Confirm the relation type exists (`${TENANT}/configuration/relationTypes`) |
 | `404` on one side | `objectURI` points at a URI that no longer exists (e.g., merged away) | Resolve the survivor URI via [Step 7](#7-look-up-an-entity-by-crosswalk) |
 
-> **Learn more:** [Create Relations](https://docs.reltio.com/en/developer-resources/relation-management-apis/relation-management-apis-at-a-glance/relations-api/create-relations) in the Reltio documentation.
+> **Learn more:** [Create Relations](https://docs.reltio.com/en/developer-resources/relation-management-apis/relation-management-apis-at-a-glance/relations-api/create-relations?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 10. Find potential matches
 
@@ -527,7 +527,7 @@ Useful query parameters:
 | Empty match list | Rules still evaluating, or the duplicate doesn't meet any rule's predicate | Wait, then re-inspect the rule definition in the tenant config |
 | `404` on the URI | Entity was merged and its URI now redirects | Resolve the survivor via `_byCrosswalk` ([Step 7](#7-look-up-an-entity-by-crosswalk)) |
 
-> **Learn more:** [Potential Matches API](https://docs.reltio.com/en/developer-resources/entity-management-apis/entity-management-apis-at-a-glance/potential-matches-api) in the Reltio documentation.
+> **Learn more:** [Potential Matches API](https://docs.reltio.com/en/developer-resources/entity-management-apis/entity-management-apis-at-a-glance/potential-matches-api?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 11. Merge two entities
 
@@ -589,7 +589,7 @@ curl -s -X POST \
 | `400` "entities must be of the same type" | Cross-type merge attempted | Merge only entities of the same type |
 | `409 Conflict` | One of the entities is already merged or in the middle of a merge | Re-resolve both URIs via [Step 7](#7-look-up-an-entity-by-crosswalk) and retry |
 
-> **Learn more:** [Merge and Unmerge API](https://docs.reltio.com/en/developer-resources/entity-management-apis/entity-management-apis-at-a-glance/merge-and-unmerge-entities-api) in the Reltio documentation.
+> **Learn more:** [Merge and Unmerge API](https://docs.reltio.com/en/developer-resources/entity-management-apis/entity-management-apis-at-a-glance/merge-and-unmerge-entities-api?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 12. View entity history
 
@@ -652,7 +652,7 @@ curl -s -X GET \
 | `404 Not Found` | Entity URI doesn't exist or was merged away | Resolve the survivor URI via `_byCrosswalk` |
 | Events missing near the tail | You exceeded the 1,000-event cap | Narrow the filter or rely on an external audit sink |
 
-> **Learn more:** [Entity History](https://docs.reltio.com/en/developer-resources/entity-management-apis/entity-management-apis-at-a-glance/entities-api/get-entity/entity-history) in the Reltio documentation.
+> **Learn more:** [Entity History](https://docs.reltio.com/en/developer-resources/entity-management-apis/entity-management-apis-at-a-glance/entities-api/get-entity/entity-history?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) in the Reltio documentation.
 
 ## 13. Troubleshooting
 
@@ -678,17 +678,17 @@ Rate-limit defaults worth knowing:
 
 ## 14. Further reading
 
-- [Reltio developer resources home](https://docs.reltio.com/en/developer-resources)
-- [Authentication API](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/authentication-api)
-- [Configuration API](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/configuration-api)
-- [Entities API](https://docs.reltio.com/en/developer-resources/entity-management-apis/entity-management-apis-at-a-glance/entities-api)
-- [Crosswalks API](https://docs.reltio.com/en/developer-resources/entity-management-apis/entity-management-apis-at-a-glance/crosswalks-api)
-- [Relations API](https://docs.reltio.com/en/developer-resources/relation-management-apis/relation-management-apis-at-a-glance/relations-api)
-- [Potential Matches API](https://docs.reltio.com/en/developer-resources/entity-management-apis/entity-management-apis-at-a-glance/potential-matches-api)
-- [Merge and Unmerge API](https://docs.reltio.com/en/developer-resources/entity-management-apis/entity-management-apis-at-a-glance/merge-and-unmerge-entities-api)
-- [Entity History](https://docs.reltio.com/en/developer-resources/entity-management-apis/entity-management-apis-at-a-glance/entities-api/get-entity/entity-history)
-- [Filtering entities](https://docs.reltio.com/en/developer-resources/entity-management-apis/entity-management-apis-at-a-glance/entities-api/get-entity/filtering-entities)
-- [API request limits](https://docs.reltio.com/en/reltio/whats-in-the-box/whats-in-the-box-at-a-glance/implementation-assistance-at-a-glance/implementation-assistance-operation/identify-performance-factors/quota-and-limits/api-request-limits)
+- [Reltio developer resources home](https://docs.reltio.com/en/developer-resources?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
+- [Authentication API](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/authentication-api?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
+- [Configuration API](https://docs.reltio.com/en/developer-resources/system-administration-apis/system-administration-apis-at-a-glance/configuration-api?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
+- [Entities API](https://docs.reltio.com/en/developer-resources/entity-management-apis/entity-management-apis-at-a-glance/entities-api?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
+- [Crosswalks API](https://docs.reltio.com/en/developer-resources/entity-management-apis/entity-management-apis-at-a-glance/crosswalks-api?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
+- [Relations API](https://docs.reltio.com/en/developer-resources/relation-management-apis/relation-management-apis-at-a-glance/relations-api?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
+- [Potential Matches API](https://docs.reltio.com/en/developer-resources/entity-management-apis/entity-management-apis-at-a-glance/potential-matches-api?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
+- [Merge and Unmerge API](https://docs.reltio.com/en/developer-resources/entity-management-apis/entity-management-apis-at-a-glance/merge-and-unmerge-entities-api?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
+- [Entity History](https://docs.reltio.com/en/developer-resources/entity-management-apis/entity-management-apis-at-a-glance/entities-api/get-entity/entity-history?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
+- [Filtering entities](https://docs.reltio.com/en/developer-resources/entity-management-apis/entity-management-apis-at-a-glance/entities-api/get-entity/filtering-entities?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
+- [API request limits](https://docs.reltio.com/en/reltio/whats-in-the-box/whats-in-the-box-at-a-glance/implementation-assistance-at-a-glance/implementation-assistance-operation/identify-performance-factors/quota-and-limits/api-request-limits?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
 
 ## 15. Glossary
 
