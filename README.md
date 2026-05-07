@@ -6,6 +6,8 @@ Generate hands-on, accurate HOWTO guides for the Reltio platform — powered by 
 
 This repo is a **generator kit**. You fork it, open it in Claude Code, and generate HOWTOs tailored to how your company uses Reltio. The guides are written for your team, live in your fork, and are never sent back here.
 
+> **This repo does not accept pull requests.** Fork it and keep your guides in your own fork.
+
 ```
 reltio-docs/docs.md        ← 3,237 topics of official Reltio documentation
 reltio-docs/index.md       ← structured topic index
