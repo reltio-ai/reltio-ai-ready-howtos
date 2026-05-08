@@ -393,6 +393,39 @@ Rules:
 
 ---
 
+### B4. No headings inside numbered lists
+
+Never place a `###` (or any level) heading between numbered list items. **Any heading between two list items resets the counter to 1** in every Markdown renderer — steps 5, 6, 7 silently render as 1, 2, 3.
+
+**Wrong — heading interrupts the list:**
+
+```markdown
+1. Create the external queue configuration.
+2. Enter the tenant URI and client credentials.
+3. Set the batch size to 100.
+
+### Set up the consumer group
+
+4. Open Streaming configuration.   ← renders as "1."
+5. Enter the consumer group name.   ← renders as "2."
+```
+
+**Right — inline bold label keeps the counter intact:**
+
+```markdown
+1. Create the external queue configuration.
+2. Enter the tenant URI and client credentials.
+3. Set the batch size to 100.
+4. **Consumer group setup:** Open Streaming configuration.
+5. Enter the consumer group name.
+```
+
+Or restructure so the heading comes entirely **before** the list starts, not in the middle of it.
+
+If a group of steps needs a label, put a **bold lead-in** at the start of the first step in that group (e.g., `**Configure the source:**`). Never use a heading mid-list. Reserve `###` for standalone sub-sections that sit outside any numbered list.
+
+---
+
 ## Part C: API tutorial steps
 
 API tutorials are the most common HOWTO type. Every procedural step follows this pattern:

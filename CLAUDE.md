@@ -189,6 +189,7 @@ After writing the guide, perform a validation pass **before delivering it**:
    - The first section is `## 1. Getting started`
    - Every numbered list has a leading sentence
    - No "Step X:" prefixes inside numbered lists
+   - No `###` (or any) headings between numbered list items — headings reset the counter to 1 in every Markdown renderer; use **bold lead-ins** instead (see `STRUCTURE-GUIDE.md` B4)
    - List separators use ` — ` (em dash with spaces)
    - Bold is used only for UI element labels, first-use glossary terms, and list lead-in terms
    - Every main section ends with a `> **Learn more:**` link where a source page exists
@@ -251,23 +252,19 @@ After the HOWTO, provide a brief validation summary to the person who requested 
 
 This gives the person generating the HOWTO visibility into what's solid and what to double-check.
 
-### Step 9: Push to the repo
+### Step 9: Commit your files
 
-Both files are generated. Now push via a feature branch and open a PR:
+Both files are generated. Stage and commit them:
 
 ```bash
-git checkout -b howto/[topic-slug]
 git add howtos/HOWTO-[your-topic].md \
         howtos-html/HOWTO-[your-topic].html \
         howtos-html/index.html \
         README.md
 git commit -m "Add HOWTO on [topic]"
-git push origin howto/[topic-slug]
 ```
 
-The push prints a PR URL. Open it and paste the validation summary into the PR description.
-
-**Every new HOWTO must have a PR open before the task is considered complete.**
+Push to your fork however your team prefers. The guide is yours.
 
 ---
 

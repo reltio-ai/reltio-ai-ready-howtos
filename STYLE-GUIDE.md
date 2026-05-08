@@ -434,6 +434,8 @@ This applies everywhere: audience lines, body text, callouts, glossary entries, 
 
 **HTML generation enforcement:** `generate-html.js` runs a lint check that blocks HTML generation for any `.md` file containing "Reltio Data Cloud". A violation causes an immediate, named error and halts the build.
 
+**Do not add "Reltio Context Intelligence Platform" as a glossary entry.** The platform name is not a Reltio-specific technical term that needs defining — it is simply the name of the product the reader is already using. Customers do not need a glossary entry explaining what the product is called. If a guide must reference the platform name in the glossary for some reason, the definition must be a plain customer-facing description only — never an internal note like "This is the current product name."
+
 ---
 
 ## Part H: Links and Cross-References

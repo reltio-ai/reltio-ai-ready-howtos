@@ -1,5 +1,5 @@
 {
-  "name": "reltio-howtos-and-docs-main",
+  "name": "reltio-ai-ready-howtos",
   "version": "1.0.0",
   "description": "Practical, hands-on guides for working with the Reltio platform — generated from [official Reltio documentation](https://docs.reltio.com) using AI assistance.",
   "main": "generate-diagrams.js",
