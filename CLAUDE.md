@@ -112,7 +112,7 @@ Follow every rule in both `STYLE-GUIDE.md` and `STRUCTURE-GUIDE.md`.
 
 ### Step 3: Study an existing HOWTO
 
-Read at least one existing guide (preferably `howtos/HOWTO-set-up-rih-for-salesforce.md`) to internalize the patterns before writing.
+Read at least one existing guide (preferably `howtos/HOWTO-authenticate-and-use-reltio-apis.md`) to internalize the patterns before writing.
 
 > **Note:** Some older guides predate the current `STRUCTURE-GUIDE.md` and do not yet follow the new structural conventions (Contents heading, single ordered list of sections, numbered `## 1. Getting started` as the first section, all top-level sections numbered, no Attribution footer). Use them for voice and style reference only, not as structural templates. Follow `STRUCTURE-GUIDE.md` for structure.
 
@@ -412,40 +412,8 @@ Use `reltio-docs/index.md` to find topics. Some strong candidates:
 | `STYLE-GUIDE.md` | Writing conventions (voice, code, tables, callouts) — follow for every guide | ~12 KB |
 | `STRUCTURE-GUIDE.md` | Document structure (layout, diagram, glossary, section types) — follow for every guide | ~8 KB |
 | `howtos/HOWTO-top-10-reltio-apis.md` | Best style example — read before writing | ~34 KB |
-| `howtos/HOWTO-set-up-rih-for-salesforce.md` | Best structure example — read before writing | ~15 KB |
 | `howtos/HOWTO-authenticate-and-use-reltio-apis.md` | Style example (topic-based guide) | ~28 KB |
 | `howtos/HOWTO-SETUP-for-top-10-reltio-apis.md` | Style example (setup/config guide) | ~9 KB |
 | `setup_tenant.py` | Example companion setup script | ~17 KB |
 | `generate-diagrams.js` | Optional: converts Mermaid code blocks in HOWTOs to SVG images in `howtos/images/` | ~4 KB |
 
----
-
-## Two repos — know which one you're working on
-
-This local clone has two remotes with different purposes. Never conflate them.
-
-| | Bitbucket (`origin`) | GitHub (`github`) |
-|---|---|---|
-| URL | `bitbucket.org/reltio-ondemand/reltio-howtos-docs` | `github.com/reltio-ai/reltio-ai-ready-howtos` |
-| Contains | Everything: HOWTOs + generator kit | Generator kit only — **no HOWTOs** |
-| Who it's for | Reltio team | Community / customers forking the kit |
-| PRs / commits | Required — prefix `RP-XXXXXX ` | Not done manually |
-| How to update it | Normal `git push origin` | Run `./scripts/export-to-github.sh` |
-
-**Writing or editing HOWTOs?** → `git push origin <branch>`, open a Bitbucket PR.  
-**Changed the kit** (CLAUDE.md, style guides, generate-html.js)? → commit to Bitbucket, then `./scripts/export-to-github.sh`.  
-**Never push HOWTOs to GitHub** — the export script intentionally excludes them.
-
----
-
-## Session startup
-
-Say **"resume howtos"** at the start of any session. This fires the `resume-howtos` skill (`~/.claude/skills/resume-howtos/`), which will:
-1. Read `state.md` for current context
-2. Run `git status` + `git log --oneline -6`
-3. Run `bash check-setup.sh` to confirm node, Vercel viewer, and git config are healthy
-4. Present a session brief — branch, last state, recent commits, uncommitted changes, open items
-
-## Session end
-
-Say **"update state.md"** before closing. Claude will rewrite `state.md` to reflect what actually happened: branch, last commit, open PRs, outstanding items, next step.

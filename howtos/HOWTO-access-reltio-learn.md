@@ -105,8 +105,6 @@ The following resources complement this guide:
 
 **Learning path:** a curated sequence of courses in Reltio Learn organized by role, helping you build skills in a structured order.
 
-**Reltio Context Intelligence Platform:** the core Reltio MDM platform. Reltio Learn uses separate credentials and is a distinct service.
-
 **Reltio Learn:** Reltio's training and certification platform at [learn.reltio.com](https://learn.reltio.com/), offering role-based learning paths, live events, and certification programs for Reltio customers and partners.
 
 ---
