@@ -359,14 +359,14 @@ hr {
 <li><code>ROLE_EXECUTE_MCP</code></li>
 <li><code>ROLE_DATALOADER</code></li>
 </ol>
-<h3 id="add-the-agent-in-agentflow">Add the agent in AgentFlow</h3>
+<p><strong>Add the agent in AgentFlow</strong></p>
 <ol>
 <li>Sign in to <a href="https://reltio.ai/login">reltio.ai</a>.</li>
 <li>Open <strong>AgentFlow</strong>.</li>
 <li>Select <strong>Discover agents</strong>.</li>
 <li>Launch <strong>Profiler</strong>.</li>
 </ol>
-<h3 id="verify-it-worked">Verify it worked</h3>
+<p><strong>Verify it worked</strong></p>
 <ul>
 <li>Confirm the Profiler agent appears under <strong>RELTIO AGENTS</strong>.</li>
 <li>Start a test profiling session to confirm the agent responds.</li>
@@ -395,7 +395,7 @@ hr {
 <li>Enable <strong>Require external ID</strong> and enter the UUID v7 value you generated.</li>
 <li>Name the role using the format <code>reltio.client.&lt;suffix&gt;</code>, where <code>&lt;suffix&gt;</code> is a unique identifier of your choice (for example, your company or project name).</li>
 </ol>
-<h3 id="configure-the-trust-policy">Configure the trust policy</h3>
+<p><strong>Configure the trust policy</strong></p>
 <p>In the role&#39;s <strong>Trust relationships</strong> tab, apply this trust policy. Replace <code>&lt;reltio-account-id&gt;</code> with the value from Reltio Support and <code>&lt;external-id&gt;</code> with your generated UUID v7:</p>
 <pre><code class="language-json hljs"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">&quot;Version&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;2012-10-17&quot;</span><span class="hljs-punctuation">,</span>
@@ -423,7 +423,7 @@ hr {
 <blockquote>
 <p><strong>Important:</strong> You must include all four principal resource names. To obtain the <code>&lt;reltio-account-id&gt;</code> associated with the Profiler service, raise a support ticket.</p>
 </blockquote>
-<h3 id="attach-s3-read-permissions">Attach S3 read permissions</h3>
+<p><strong>Attach S3 read permissions</strong></p>
 <p>Attach a policy that grants read access to your bucket:</p>
 <pre><code class="language-json hljs"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">&quot;Version&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;2012-10-17&quot;</span><span class="hljs-punctuation">,</span>
@@ -442,7 +442,7 @@ hr {
     <span class="hljs-punctuation">}</span>
   <span class="hljs-punctuation">]</span>
 <span class="hljs-punctuation">}</span></code></pre>
-<h3 id="verify-it-worked">Verify it worked</h3>
+<p><strong>Verify it worked</strong></p>
 <ol>
 <li>Start a profiling job in AgentFlow.</li>
 <li>Provide the role ARN, External ID, and region when prompted.</li>
@@ -473,7 +473,7 @@ hr {
 <li>Previews the file to detect delimiters, headers, and column types.</li>
 <li>Asks you to confirm the inferred schema before profiling.</li>
 </ol>
-<h3 id="what-can-go-wrong">What can go wrong</h3>
+<p><strong>What can go wrong</strong></p>
 <table>
 <thead>
 <tr>
@@ -564,7 +564,7 @@ hr {
 <li>Creates a Data Loader mapping file based on the confirmed mappings.</li>
 <li>Submits a Data Loader job and monitors its execution.</li>
 </ol>
-<h3 id="load-output">Load output</h3>
+<p><strong>Load output</strong></p>
 <p>The final output includes:</p>
 <ul>
 <li>Record counts and load status</li>
@@ -572,7 +572,7 @@ hr {
 <li>Error logs for any failed records</li>
 <li>A processing summary combining data quality and load results</li>
 </ul>
-<h3 id="key-rules">Key rules</h3>
+<p><strong>Key rules</strong></p>
 <ul>
 <li><strong>User confirmation is required before loading</strong> — the agent won&#39;t submit a Data Loader job without your explicit approval.</li>
 <li><strong>Mapping and schema alignment are limited to flat attribute structures</strong> defined in the Reltio tenant configuration.</li>

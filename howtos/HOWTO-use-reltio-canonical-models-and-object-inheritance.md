@@ -103,11 +103,11 @@ Your L3 `HCP` now carries:
 
 None of these were duplicated in L3. They're inherited by reference.
 
-### Why this matters
+**Why this matters**
 
 In a relational data model, adding a column to an inherited concept means altering every derived table. In Reltio, an L1 addition — say, a new field on `Party` — flows through to every `Individual`, `Organization`, `HCP`, and `HCO` automatically. The entity types gain new capability without you touching the tenant.
 
-### Precedence
+**Precedence**
 
 When the same object is defined in multiple layers, L3 wins over L2 wins over L1. L3 modifications **merge with and extend** the parent definition — they don't replace it outright.
 

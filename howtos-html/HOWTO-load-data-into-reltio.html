@@ -376,7 +376,7 @@ hr {
 <li>Start the data load.</li>
 <li>Review data load completion metrics.</li>
 </ol>
-<h3 id="step-by-step-procedure">Step-by-step procedure</h3>
+<p><strong>Step-by-step procedure</strong></p>
 <ol>
 <li>Open your tenant in the <strong>Data Loader</strong>.</li>
 <li>In the <strong>Job Definition</strong> tab, select <strong>LOAD DATA</strong> and then <strong>Entities</strong> to create a new data load job.</li>
@@ -497,7 +497,7 @@ hr {
 <blockquote>
 <p><strong>Note:</strong> You can add a default value to a simple or nested attribute without mapping it to any column of the input file.</p>
 </blockquote>
-<h3 id="ai-assisted-auto-mapping">AI-assisted auto-mapping</h3>
+<p><strong>AI-assisted auto-mapping</strong></p>
 <p>If your tenant has <code>aiEnabled</code> set to <code>true</code> in the physical configuration (under <code>agentsConfig</code>), you can use the <strong>Auto-map</strong> feature:</p>
 <ol>
 <li>On the <strong>Map</strong> section, select <strong>Auto-map</strong>.</li>
@@ -638,13 +638,13 @@ Body: {&quot;groupingEnabled&quot;: true}</span></code></pre>
 <li>Select <strong>Yes</strong> to confirm.</li>
 </ol>
 <p>The job moves to the <strong>Completed</strong> tab with a status of <code>STOPPED</code>.</p>
-<h3 id="download-error-files">Download error files</h3>
+<p><strong>Download error files</strong></p>
 <p>When a job completes with errors, you can download an error file from the job details. Error files are in CSV format and include:</p>
 <ul>
 <li>All original input attributes for the failed rows</li>
 <li>An error message column explaining what went wrong</li>
 </ul>
-<h3 id="job-priority-and-scheduling">Job priority and scheduling</h3>
+<p><strong>Job priority and scheduling</strong></p>
 <p>You can set job priority to <strong>High</strong>, <strong>Normal</strong> (default), or <strong>Low</strong>. Higher-priority jobs run before lower-priority ones. Jobs with the same priority run in creation order (FIFO). You can also schedule a job to run on a recurring basis from the job definition.</p>
 <blockquote>
 <p><strong>Learn more:</strong> <a href="https://docs.reltio.com/en/applications/console/tenant-management-applications/data-loader-at-a-glance?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs">Data Loader at a glance</a></p>

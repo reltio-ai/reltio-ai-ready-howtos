@@ -77,14 +77,14 @@ Assign these roles to every user who needs Profiler access:
 3. `ROLE_EXECUTE_MCP`
 4. `ROLE_DATALOADER`
 
-### Add the agent in AgentFlow
+**Add the agent in AgentFlow**
 
 1. Sign in to [reltio.ai](https://reltio.ai/login).
 2. Open **AgentFlow**.
 3. Select **Discover agents**.
 4. Launch **Profiler**.
 
-### Verify it worked
+**Verify it worked**
 
 - Confirm the Profiler agent appears under **RELTIO AGENTS**.
 - Start a test profiling session to confirm the agent responds.
@@ -113,7 +113,7 @@ If your source files are in Amazon S3, configure an IAM role so the Profiler can
 5. Enable **Require external ID** and enter the UUID v7 value you generated.
 6. Name the role using the format `reltio.client.<suffix>`, where `<suffix>` is a unique identifier of your choice (for example, your company or project name).
 
-### Configure the trust policy
+**Configure the trust policy**
 
 In the role's **Trust relationships** tab, apply this trust policy. Replace `<reltio-account-id>` with the value from Reltio Support and `<external-id>` with your generated UUID v7:
 
@@ -145,7 +145,7 @@ In the role's **Trust relationships** tab, apply this trust policy. Replace `<re
 
 > **Important:** You must include all four principal resource names. To obtain the `<reltio-account-id>` associated with the Profiler service, raise a support ticket.
 
-### Attach S3 read permissions
+**Attach S3 read permissions**
 
 Attach a policy that grants read access to your bucket:
 
@@ -169,7 +169,7 @@ Attach a policy that grants read access to your bucket:
 }
 ```
 
-### Verify it worked
+**Verify it worked**
 
 1. Start a profiling job in AgentFlow.
 2. Provide the role ARN, External ID, and region when prompted.
@@ -215,7 +215,7 @@ The agent creates a profiling workspace and:
 2. Previews the file to detect delimiters, headers, and column types.
 3. Asks you to confirm the inferred schema before profiling.
 
-### What can go wrong
+**What can go wrong**
 
 | Symptom | Cause | Fix |
 |---------|-------|-----|
@@ -330,7 +330,7 @@ The agent:
 4. Creates a Data Loader mapping file based on the confirmed mappings.
 5. Submits a Data Loader job and monitors its execution.
 
-### Load output
+**Load output**
 
 The final output includes:
 
@@ -339,7 +339,7 @@ The final output includes:
 - Error logs for any failed records
 - A processing summary combining data quality and load results
 
-### Key rules
+**Key rules**
 
 - **User confirmation is required before loading** — the agent won't submit a Data Loader job without your explicit approval.
 - **Mapping and schema alignment are limited to flat attribute structures** defined in the Reltio tenant configuration.

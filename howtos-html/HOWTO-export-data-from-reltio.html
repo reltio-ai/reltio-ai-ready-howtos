@@ -626,7 +626,7 @@ Content-<span class="hljs-keyword">Type</span>: application/<span class="hljs-ty
 <li>The Export Service splits the output into files no larger than your <code>partSize</code> value.</li>
 <li>Download links appear in the task&#39;s <code>currentState.exportUrls</code> field (an array of strings).</li>
 </ol>
-<h3 id="supported-size-formats">Supported size formats</h3>
+<p><strong>Supported size formats</strong></p>
 <table>
 <thead>
 <tr>
@@ -654,7 +654,7 @@ Content-<span class="hljs-keyword">Type</span>: application/<span class="hljs-ty
 <blockquote>
 <p><strong>Important:</strong> The minimum <code>partSize</code> is 100 MB (104857600 bytes).</p>
 </blockquote>
-<h3 id="example-request">Example request</h3>
+<p><strong>Example request</strong></p>
 <pre><code class="language-bash hljs">curl -s -X POST <span class="hljs-string">&quot;<span class="hljs-variable">${EXPORT_URL}</span>/export/<span class="hljs-variable">${TENANT_ID}</span>/entities?partSize=100m&amp;skipPostprocessing=false&quot;</span> \
   -H <span class="hljs-string">&quot;Authorization: Bearer <span class="hljs-variable">${TOKEN}</span>&quot;</span> \
   -H <span class="hljs-string">&quot;Content-Type: application/json&quot;</span> \

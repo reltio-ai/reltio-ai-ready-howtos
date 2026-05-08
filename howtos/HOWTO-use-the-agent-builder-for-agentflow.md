@@ -78,7 +78,7 @@ Use this path when you are building a new agent from scratch. If you are updatin
 3. Enter a name, description, and any relevant tags. These values appear in **Discover Agents** after the agent is published, so make them descriptive and end-user-friendly.
 4. Save the agent. Agent Builder creates it in **Draft** state.
 
-### Verify it worked
+**Verify it worked**
 
 - Open the **Your Drafts & Requests** tab and confirm the new agent appears with **Draft** status.
 - Open the agent editor and confirm the **Basics**, **Prompt**, **Tools**, and **Test** navigation tabs are visible.
@@ -93,7 +93,7 @@ The [system prompt](#glossary) is the complete instruction set the model evaluat
 2. Enter the system prompt. A well-structured prompt covers the agent's **identity**, **objectives**, **tool usage rules**, **workflow**, **guardrails**, **output format**, and **error handling behavior**.
 3. Save your changes.
 
-### Recommended structure
+**Recommended structure**
 
 Reltio recommends the following ten-section structure as the default starting point for production-ready prompts:
 
@@ -112,7 +112,7 @@ Reltio recommends the following ten-section structure as the default starting po
 
 > **Note:** This structure is a recommended convention — the Agent Builder authoring surface does not enforce it automatically. You apply it yourself in the prompt text area.
 
-### The five golden rules
+**The five golden rules**
 
 Apply these rules to every system prompt, regardless of agent type:
 
@@ -122,7 +122,7 @@ Apply these rules to every system prompt, regardless of agent type:
 - **Be transparent** — Always show tools used with inputs.
 - **Be safe** — Require confirmation for destructive actions.
 
-### Anti-patterns to avoid
+**Anti-patterns to avoid**
 
 The following patterns produce unreliable agent behavior and should not appear in production prompts:
 
@@ -148,7 +148,7 @@ The agent can only call tools you explicitly select — this selection is the ag
 
 > **Note:** If you submit the agent without selecting any tools, Agent Builder displays a warning before submission. You can still proceed, but the agent will have no approved actions available at runtime.
 
-### Verify it worked
+**Verify it worked**
 
 - Confirm each tool you selected appears in the right-hand allowlist panel.
 - Confirm the system prompt documents each selected tool in its **Tools** section (section 5 of the recommended structure) with clear selection criteria.
@@ -166,7 +166,7 @@ Testing runs the same automated [security scan](#glossary) that runs on submissi
 
 > **Note:** If the security scan detects a violation in the system prompt during a test run, the test is blocked. Revise the prompt before testing again.
 
-### Verify it worked
+**Verify it worked**
 
 - Confirm the agent's responses follow the output format defined in your system prompt.
 - Confirm every tool call the agent makes is from the allowlist you configured in [section 5](#5-select-tools).
@@ -191,11 +191,11 @@ One of two outcomes follows:
 
 If the agent already has a previously published version, that version **remains live** in **Discover Agents** throughout the review. End users keep using the current published version until a reviewer approves the new one.
 
-### Withdraw a pending request
+**Withdraw a pending request**
 
 If you need to make changes after submitting, withdraw the pending request at any time. Withdrawing returns the agent to **Draft** state and unlocks the editor.
 
-### Verify it worked
+**Verify it worked**
 
 - Confirm the agent shows **Pending review** (or **Auto blocked**) status in the **Your Drafts & Requests** tab.
 - If the scan blocked the request, confirm the scan result shows a `policy_category` value.
@@ -218,14 +218,14 @@ This section applies to users with `ROLE_AGENT_APPROVER`. When an author submits
    - Scan results: status and any `policy_category` value if a violation was detected.
 5. Optionally, select **Test** to run the agent yourself before making a decision. The test panel opens alongside the request detail view.
 
-### Approve the request
+**Approve the request**
 
 1. Select the approve action.
 2. Confirm the approval.
 
 Agent Builder publishes the agent as an **immutable version**, makes it discoverable in **Discover Agents**, and records an audit entry with your identity and the decision. If the agent already had a published version, the newly approved version becomes the active published version.
 
-### Reject the request
+**Reject the request**
 
 1. Select the reject action.
 2. Enter a rejection reason. The reason is visible to the author when they view the request details.
@@ -233,7 +233,7 @@ Agent Builder publishes the agent as an **immutable version**, makes it discover
 
 The author can revise the agent and resubmit. The previously published version, if one exists, remains live.
 
-### Verify it worked
+**Verify it worked**
 
 - After approval: confirm the agent status shows **Published** in the **All Agents** tab.
 - After approval: open **Discover Agents** and confirm the agent appears with the correct name and description.

@@ -290,7 +290,7 @@ For large exports, split the output into multiple files using the `partSize` que
 3. The Export Service splits the output into files no larger than your `partSize` value.
 4. Download links appear in the task's `currentState.exportUrls` field (an array of strings).
 
-### Supported size formats
+**Supported size formats**
 
 | Format | Example |
 |--------|---------|
@@ -301,7 +301,7 @@ For large exports, split the output into multiple files using the `partSize` que
 
 > **Important:** The minimum `partSize` is 100 MB (104857600 bytes).
 
-### Example request
+**Example request**
 
 ```bash
 curl -s -X POST "${EXPORT_URL}/export/${TENANT_ID}/entities?partSize=100m&skipPostprocessing=false" \

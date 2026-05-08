@@ -178,14 +178,14 @@ curl -X PUT "{TenantURL}/configuration" \
   -d @your-updated-l3.json
 ```
 
-### Retrieve the survivorship group to confirm
+**Retrieve the survivorship group to confirm**
 
 ```bash
 curl -X GET "{TenantURL}/configuration/entityTypes/Individual/survivorshipGroups/default" \
   -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
 ```
 
-### Key rules
+**Key rules**
 
 - Every entity type must have exactly one group marked `"default": true`.
 - Attributes not listed in a mapping use the default survivorship strategy (`LUD` unless you've overridden it — see section 5).

@@ -83,7 +83,7 @@ The high-level [Data Loader workflow](#glossary) for loading entities follows th
 6. Start the data load.
 7. Review data load completion metrics.
 
-### Step-by-step procedure
+**Step-by-step procedure**
 
 1. Open your tenant in the **Data Loader**.
 2. In the **Job Definition** tab, select **LOAD DATA** and then **Entities** to create a new data load job.
@@ -161,7 +161,7 @@ After uploading a file, you map the file's columns to the corresponding entity a
 
 > **Note:** You can add a default value to a simple or nested attribute without mapping it to any column of the input file.
 
-### AI-assisted auto-mapping
+**AI-assisted auto-mapping**
 
 If your tenant has `aiEnabled` set to `true` in the physical configuration (under `agentsConfig`), you can use the **Auto-map** feature:
 
@@ -289,14 +289,14 @@ You can set a custom threshold in the [job definition](#glossary):
 
 The job moves to the **Completed** tab with a status of `STOPPED`.
 
-### Download error files
+**Download error files**
 
 When a job completes with errors, you can download an error file from the job details. Error files are in CSV format and include:
 
 - All original input attributes for the failed rows
 - An error message column explaining what went wrong
 
-### Job priority and scheduling
+**Job priority and scheduling**
 
 You can set job priority to **High**, **Normal** (default), or **Low**. Higher-priority jobs run before lower-priority ones. Jobs with the same priority run in creation order (FIFO). You can also schedule a job to run on a recurring basis from the job definition.
 

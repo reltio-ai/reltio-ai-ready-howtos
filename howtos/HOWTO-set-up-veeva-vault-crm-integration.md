@@ -89,7 +89,7 @@ The integration uses event queues and the Veeva Vault CRM connector to move data
 2. The process recipe transforms the record and sends it to Reltio.
 3. If DCR mode is enabled, a data change request is raised in Reltio for approval before updating master records.
 
-### Supported data domains
+**Supported data domains**
 
 The integration handles these data types out of the box:
 
@@ -114,7 +114,7 @@ The recipe package contains all prebuilt recipes for the Veeva Vault CRM integra
 2. In the **Projects** tab, select the **+** icon.
 3. Name the project (for example, `Veeva Vault Integration`) and select **Create**.
 
-### Import the recipe package
+**Import the recipe package**
 
 1. Navigate to the new project.
 2. Go to **Tools** > **Recipe Lifecycle Management (RLCM)**.
@@ -124,7 +124,7 @@ The recipe package contains all prebuilt recipes for the Veeva Vault CRM integra
 6. Select the project folder as the target location.
 7. Confirm all recipes and assets imported successfully.
 
-### Verify the folder structure
+**Verify the folder structure**
 
 After import, the project should contain these folders:
 
@@ -151,13 +151,13 @@ Set up the connections that RIH recipes use to communicate with Reltio, Veeva Va
 3. Enter the Environment URL, Tenant ID, and credentials for the Reltio API user.
 4. Select **Connect** and confirm the status shows **Successful**.
 
-### Veeva Vault CRM connection
+**Veeva Vault CRM connection**
 
 1. Select `Veeva | CON | Veeva Vault CRM Connection`.
 2. Enter the Vault DNS (for example, `yourvault.veevavault.com`), username, and password.
 3. Select **Connect** and confirm the status shows **Successful**.
 
-### Event queue connection (real-time only)
+**Event queue connection (real-time only)**
 
 Configure the connection for your cloud provider. Choose one based on your infrastructure.
 
@@ -191,7 +191,7 @@ Project properties are environment-specific settings that control recipe behavio
 1. In the project, go to **Settings** > **Project Properties**.
 2. Enter the required values.
 
-### Required properties
+**Required properties**
 
 | Property | Description | Example |
 |----------|-------------|---------|
@@ -208,7 +208,7 @@ Project properties are environment-specific settings that control recipe behavio
 | `Raise DCR in Reltio` | Whether to raise data change requests in Reltio for Veeva-originated changes | `No` |
 | `AWS Micro Batch Size` | Records processed per AWS batch (max 150) | `150` |
 
-### Optional properties
+**Optional properties**
 
 | Property | Description | Example |
 |----------|-------------|---------|
@@ -240,7 +240,7 @@ For real-time synchronization, configure your Reltio tenant to publish entity an
    - **Region:** Enter the cloud region (AWS/Azure only)
    - **Format:** Select **JSON**
 
-### Set the object filter
+**Set the object filter**
 
 The object filter controls which entity and relationship types trigger events. Use one of these options.
 
@@ -254,7 +254,7 @@ The object filter controls which entity and relationship types trigger events. U
 
 > **Note:** The delta filter is significantly longer and specific to your data model. It checks for changes in individual attributes like `Name`, `Phone.Number`, `Email.Email`, `Address.AddressLine1`, and so on. See the official documentation for the complete filter expression tailored to your model.
 
-### Set the type filter
+**Set the type filter**
 
 Select these event types:
 
@@ -266,7 +266,7 @@ Select these event types:
 - `RELATIONSHIP_CHANGED`
 - `RELATIONSHIP_REMOVED`
 
-### Set the payload configuration
+**Set the payload configuration**
 
 | Filter type | Payload type | Fields to include |
 |------------|-------------|-------------------|
@@ -279,7 +279,7 @@ Select these event types:
 
 > **Important:** If using the delta filter with relationship events, add the `RelationEventsFilteringFields` array to your tenant's physical configuration under the `streamingConfig` section. This array must include: `updatedTime`, `startRefPinned`, `updatedBy`, `type`, `uri`, `crosswalks`, `endObject`, `startObject`, `createdBy`, `endRefPinned`, `analyticsAttributes`, `createdTime`, `attributes`, `endRefIgnored`, `startRefIgnored`.
 
-### Verify streaming
+**Verify streaming**
 
 1. Confirm the configuration appears in the External Queues tab with status **Active**.
 2. Update a test entity in Reltio and confirm a message appears in the queue.
@@ -325,7 +325,7 @@ For near real-time (Veeva to Reltio):
 2. Activate the corresponding process recipes for HCP and HCO ingest.
 3. If DCR mode is enabled (`Raise DCR in Reltio` = `Yes`), activate the DCR processing recipes.
 
-### Run a test
+**Run a test**
 
 1. Update a sample HCP or HCO record in Reltio.
 2. Monitor the RIH job log for a successful recipe run.
@@ -333,7 +333,7 @@ For near real-time (Veeva to Reltio):
 4. Check the Reltio entity for a crosswalk pointing to the Vault record ID.
 5. Reverse the test: update a record in Veeva Vault CRM and confirm it syncs to Reltio.
 
-### Validation checklist
+**Validation checklist**
 
 Confirm these items before going live:
 
@@ -375,7 +375,7 @@ To add a new mapping:
 5. Confirm the recipes reference the updated table.
 6. Test with a sample record to verify the mapping works.
 
-### Default HCO mappings (sample)
+**Default HCO mappings (sample)**
 
 These are some of the default HCO attribute mappings included in the integration:
 

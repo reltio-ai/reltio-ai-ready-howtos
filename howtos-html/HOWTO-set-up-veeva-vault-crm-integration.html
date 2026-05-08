@@ -366,7 +366,7 @@ hr {
 <li>The process recipe transforms the record and sends it to Reltio.</li>
 <li>If DCR mode is enabled, a data change request is raised in Reltio for approval before updating master records.</li>
 </ol>
-<h3 id="supported-data-domains">Supported data domains</h3>
+<p><strong>Supported data domains</strong></p>
 <p>The integration handles these data types out of the box:</p>
 <table>
 <thead>
@@ -411,7 +411,7 @@ hr {
 <li>In the <strong>Projects</strong> tab, select the <strong>+</strong> icon.</li>
 <li>Name the project (for example, <code>Veeva Vault Integration</code>) and select <strong>Create</strong>.</li>
 </ol>
-<h3 id="import-the-recipe-package">Import the recipe package</h3>
+<p><strong>Import the recipe package</strong></p>
 <ol>
 <li>Navigate to the new project.</li>
 <li>Go to <strong>Tools</strong> &gt; <strong>Recipe Lifecycle Management (RLCM)</strong>.</li>
@@ -421,7 +421,7 @@ hr {
 <li>Select the project folder as the target location.</li>
 <li>Confirm all recipes and assets imported successfully.</li>
 </ol>
-<h3 id="verify-the-folder-structure">Verify the folder structure</h3>
+<p><strong>Verify the folder structure</strong></p>
 <p>After import, the project should contain these folders:</p>
 <table>
 <thead>
@@ -471,13 +471,13 @@ hr {
 <li>Enter the Environment URL, Tenant ID, and credentials for the Reltio API user.</li>
 <li>Select <strong>Connect</strong> and confirm the status shows <strong>Successful</strong>.</li>
 </ol>
-<h3 id="veeva-vault-crm-connection">Veeva Vault CRM connection</h3>
+<p><strong>Veeva Vault CRM connection</strong></p>
 <ol>
 <li>Select <code>Veeva | CON | Veeva Vault CRM Connection</code>.</li>
 <li>Enter the Vault DNS (for example, <code>yourvault.veevavault.com</code>), username, and password.</li>
 <li>Select <strong>Connect</strong> and confirm the status shows <strong>Successful</strong>.</li>
 </ol>
-<h3 id="event-queue-connection-real-time-only">Event queue connection (real-time only)</h3>
+<p><strong>Event queue connection (real-time only)</strong></p>
 <p>Configure the connection for your cloud provider. Choose one based on your infrastructure.</p>
 <p><strong>AWS SQS:</strong></p>
 <ol>
@@ -510,7 +510,7 @@ hr {
 <li>In the project, go to <strong>Settings</strong> &gt; <strong>Project Properties</strong>.</li>
 <li>Enter the required values.</li>
 </ol>
-<h3 id="required-properties">Required properties</h3>
+<p><strong>Required properties</strong></p>
 <table>
 <thead>
 <tr>
@@ -580,7 +580,7 @@ hr {
 <td><code>150</code></td>
 </tr>
 </tbody></table>
-<h3 id="optional-properties">Optional properties</h3>
+<p><strong>Optional properties</strong></p>
 <table>
 <thead>
 <tr>
@@ -640,7 +640,7 @@ hr {
 </ul>
 </li>
 </ol>
-<h3 id="set-the-object-filter">Set the object filter</h3>
+<p><strong>Set the object filter</strong></p>
 <p>The object filter controls which entity and relationship types trigger events. Use one of these options.</p>
 <p><strong>Default filter</strong> (sends all HCP, HCO, and relationship events):</p>
 <pre><code class="hljs">(<span class="hljs-name">equals</span>(<span class="hljs-name">type</span>,<span class="hljs-symbol">&#x27;configuration/entityTypes/HCP</span>&#x27;) or equals(<span class="hljs-name">type</span>,<span class="hljs-symbol">&#x27;configuration/entityTypes/HCO</span>&#x27;) or equals(<span class="hljs-name">type</span>,<span class="hljs-symbol">&#x27;configuration/relationTypes/HCPHasAddress</span>&#x27;) or equals(<span class="hljs-name">type</span>,<span class="hljs-symbol">&#x27;configuration/relationTypes/HCOHasAddress</span>&#x27;) or equals(<span class="hljs-name">type</span>,<span class="hljs-symbol">&#x27;configuration/relationTypes/HCPisAffiliatedWithHCO</span>&#x27;) or equals(<span class="hljs-name">type</span>,<span class="hljs-symbol">&#x27;configuration/relationTypes/OrganizationHierarchy</span>&#x27;))</code></pre>
@@ -648,7 +648,7 @@ hr {
 <blockquote>
 <p><strong>Note:</strong> The delta filter is significantly longer and specific to your data model. It checks for changes in individual attributes like <code>Name</code>, <code>Phone.Number</code>, <code>Email.Email</code>, <code>Address.AddressLine1</code>, and so on. See the official documentation for the complete filter expression tailored to your model.</p>
 </blockquote>
-<h3 id="set-the-type-filter">Set the type filter</h3>
+<p><strong>Set the type filter</strong></p>
 <p>Select these event types:</p>
 <ul>
 <li><code>ENTITY_CREATED</code></li>
@@ -659,7 +659,7 @@ hr {
 <li><code>RELATIONSHIP_CHANGED</code></li>
 <li><code>RELATIONSHIP_REMOVED</code></li>
 </ul>
-<h3 id="set-the-payload-configuration">Set the payload configuration</h3>
+<p><strong>Set the payload configuration</strong></p>
 <table>
 <thead>
 <tr>
@@ -687,7 +687,7 @@ hr {
 <blockquote>
 <p><strong>Important:</strong> If using the delta filter with relationship events, add the <code>RelationEventsFilteringFields</code> array to your tenant&#39;s physical configuration under the <code>streamingConfig</code> section. This array must include: <code>updatedTime</code>, <code>startRefPinned</code>, <code>updatedBy</code>, <code>type</code>, <code>uri</code>, <code>crosswalks</code>, <code>endObject</code>, <code>startObject</code>, <code>createdBy</code>, <code>endRefPinned</code>, <code>analyticsAttributes</code>, <code>createdTime</code>, <code>attributes</code>, <code>endRefIgnored</code>, <code>startRefIgnored</code>.</p>
 </blockquote>
-<h3 id="verify-streaming">Verify streaming</h3>
+<p><strong>Verify streaming</strong></p>
 <ol>
 <li>Confirm the configuration appears in the External Queues tab with status <strong>Active</strong>.</li>
 <li>Update a test entity in Reltio and confirm a message appears in the queue.</li>
@@ -753,7 +753,7 @@ hr {
 <li>Activate the corresponding process recipes for HCP and HCO ingest.</li>
 <li>If DCR mode is enabled (<code>Raise DCR in Reltio</code> = <code>Yes</code>), activate the DCR processing recipes.</li>
 </ol>
-<h3 id="run-a-test">Run a test</h3>
+<p><strong>Run a test</strong></p>
 <ol>
 <li>Update a sample HCP or HCO record in Reltio.</li>
 <li>Monitor the RIH job log for a successful recipe run.</li>
@@ -761,7 +761,7 @@ hr {
 <li>Check the Reltio entity for a crosswalk pointing to the Vault record ID.</li>
 <li>Reverse the test: update a record in Veeva Vault CRM and confirm it syncs to Reltio.</li>
 </ol>
-<h3 id="validation-checklist">Validation checklist</h3>
+<p><strong>Validation checklist</strong></p>
 <p>Confirm these items before going live:</p>
 <ul>
 <li>All connections show <strong>Successful</strong> status</li>
@@ -816,7 +816,7 @@ hr {
 <li>Confirm the recipes reference the updated table.</li>
 <li>Test with a sample record to verify the mapping works.</li>
 </ol>
-<h3 id="default-hco-mappings-sample">Default HCO mappings (sample)</h3>
+<p><strong>Default HCO mappings (sample)</strong></p>
 <p>These are some of the default HCO attribute mappings included in the integration:</p>
 <table>
 <thead>

@@ -360,7 +360,7 @@ hr {
 <li>Enter a name, description, and any relevant tags. These values appear in <strong>Discover Agents</strong> after the agent is published, so make them descriptive and end-user-friendly.</li>
 <li>Save the agent. Agent Builder creates it in <strong>Draft</strong> state.</li>
 </ol>
-<h3 id="verify-it-worked">Verify it worked</h3>
+<p><strong>Verify it worked</strong></p>
 <ul>
 <li>Open the <strong>Your Drafts &amp; Requests</strong> tab and confirm the new agent appears with <strong>Draft</strong> status.</li>
 <li>Open the agent editor and confirm the <strong>Basics</strong>, <strong>Prompt</strong>, <strong>Tools</strong>, and <strong>Test</strong> navigation tabs are visible.</li>
@@ -375,7 +375,7 @@ hr {
 <li>Enter the system prompt. A well-structured prompt covers the agent&#39;s <strong>identity</strong>, <strong>objectives</strong>, <strong>tool usage rules</strong>, <strong>workflow</strong>, <strong>guardrails</strong>, <strong>output format</strong>, and <strong>error handling behavior</strong>.</li>
 <li>Save your changes.</li>
 </ol>
-<h3 id="recommended-structure">Recommended structure</h3>
+<p><strong>Recommended structure</strong></p>
 <p>Reltio recommends the following ten-section structure as the default starting point for production-ready prompts:</p>
 <table>
 <thead>
@@ -439,7 +439,7 @@ hr {
 <blockquote>
 <p><strong>Note:</strong> This structure is a recommended convention — the Agent Builder authoring surface does not enforce it automatically. You apply it yourself in the prompt text area.</p>
 </blockquote>
-<h3 id="the-five-golden-rules">The five golden rules</h3>
+<p><strong>The five golden rules</strong></p>
 <p>Apply these rules to every system prompt, regardless of agent type:</p>
 <ul>
 <li><strong>Be explicit</strong> — Never assume the model will infer requirements.</li>
@@ -448,7 +448,7 @@ hr {
 <li><strong>Be transparent</strong> — Always show tools used with inputs.</li>
 <li><strong>Be safe</strong> — Require confirmation for destructive actions.</li>
 </ul>
-<h3 id="anti-patterns-to-avoid">Anti-patterns to avoid</h3>
+<p><strong>Anti-patterns to avoid</strong></p>
 <p>The following patterns produce unreliable agent behavior and should not appear in production prompts:</p>
 <table>
 <thead>
@@ -503,7 +503,7 @@ hr {
 <blockquote>
 <p><strong>Note:</strong> If you submit the agent without selecting any tools, Agent Builder displays a warning before submission. You can still proceed, but the agent will have no approved actions available at runtime.</p>
 </blockquote>
-<h3 id="verify-it-worked">Verify it worked</h3>
+<p><strong>Verify it worked</strong></p>
 <ul>
 <li>Confirm each tool you selected appears in the right-hand allowlist panel.</li>
 <li>Confirm the system prompt documents each selected tool in its <strong>Tools</strong> section (section 5 of the recommended structure) with clear selection criteria.</li>
@@ -522,7 +522,7 @@ hr {
 <blockquote>
 <p><strong>Note:</strong> If the security scan detects a violation in the system prompt during a test run, the test is blocked. Revise the prompt before testing again.</p>
 </blockquote>
-<h3 id="verify-it-worked">Verify it worked</h3>
+<p><strong>Verify it worked</strong></p>
 <ul>
 <li>Confirm the agent&#39;s responses follow the output format defined in your system prompt.</li>
 <li>Confirm every tool call the agent makes is from the allowlist you configured in <a href="#5-select-tools">section 5</a>.</li>
@@ -556,9 +556,9 @@ hr {
 </tr>
 </tbody></table>
 <p>If the agent already has a previously published version, that version <strong>remains live</strong> in <strong>Discover Agents</strong> throughout the review. End users keep using the current published version until a reviewer approves the new one.</p>
-<h3 id="withdraw-a-pending-request">Withdraw a pending request</h3>
+<p><strong>Withdraw a pending request</strong></p>
 <p>If you need to make changes after submitting, withdraw the pending request at any time. Withdrawing returns the agent to <strong>Draft</strong> state and unlocks the editor.</p>
-<h3 id="verify-it-worked">Verify it worked</h3>
+<p><strong>Verify it worked</strong></p>
 <ul>
 <li>Confirm the agent shows <strong>Pending review</strong> (or <strong>Auto blocked</strong>) status in the <strong>Your Drafts &amp; Requests</strong> tab.</li>
 <li>If the scan blocked the request, confirm the scan result shows a <code>policy_category</code> value.</li>
@@ -582,20 +582,20 @@ hr {
 </li>
 <li>Optionally, select <strong>Test</strong> to run the agent yourself before making a decision. The test panel opens alongside the request detail view.</li>
 </ol>
-<h3 id="approve-the-request">Approve the request</h3>
+<p><strong>Approve the request</strong></p>
 <ol>
 <li>Select the approve action.</li>
 <li>Confirm the approval.</li>
 </ol>
 <p>Agent Builder publishes the agent as an <strong>immutable version</strong>, makes it discoverable in <strong>Discover Agents</strong>, and records an audit entry with your identity and the decision. If the agent already had a published version, the newly approved version becomes the active published version.</p>
-<h3 id="reject-the-request">Reject the request</h3>
+<p><strong>Reject the request</strong></p>
 <ol>
 <li>Select the reject action.</li>
 <li>Enter a rejection reason. The reason is visible to the author when they view the request details.</li>
 <li>Confirm the rejection.</li>
 </ol>
 <p>The author can revise the agent and resubmit. The previously published version, if one exists, remains live.</p>
-<h3 id="verify-it-worked">Verify it worked</h3>
+<p><strong>Verify it worked</strong></p>
 <ul>
 <li>After approval: confirm the agent status shows <strong>Published</strong> in the <strong>All Agents</strong> tab.</li>
 <li>After approval: open <strong>Discover Agents</strong> and confirm the agent appears with the correct name and description.</li>

@@ -370,9 +370,9 @@ hr {
 <li>Your custom territory ID</li>
 </ul>
 <p>None of these were duplicated in L3. They&#39;re inherited by reference.</p>
-<h3 id="why-this-matters">Why this matters</h3>
+<p><strong>Why this matters</strong></p>
 <p>In a relational data model, adding a column to an inherited concept means altering every derived table. In Reltio, an L1 addition — say, a new field on <code>Party</code> — flows through to every <code>Individual</code>, <code>Organization</code>, <code>HCP</code>, and <code>HCO</code> automatically. The entity types gain new capability without you touching the tenant.</p>
-<h3 id="precedence">Precedence</h3>
+<p><strong>Precedence</strong></p>
 <p>When the same object is defined in multiple layers, L3 wins over L2 wins over L1. L3 modifications <strong>merge with and extend</strong> the parent definition — they don&#39;t replace it outright.</p>
 <blockquote>
 <p><strong>Learn more:</strong> <a href="https://docs.reltio.com/en/reltio/what-does-reltio-do/what-reltio-does-at-a-glance/data-unification-and-mdm-at-a-glance/data-unification-and-mdm-in-detail/reltio-information-model/data-model/tenant-configuration-inheritance-across-layers/reltio-l1-layer--foundation?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs">Reltio L1 Layer — Foundation</a> in the Reltio documentation.</p>

@@ -413,10 +413,10 @@ hr {
   -H <span class="hljs-string">&quot;Authorization: Bearer YOUR_ACCESS_TOKEN&quot;</span> \
   -H <span class="hljs-string">&quot;Content-Type: application/json&quot;</span> \
   -d @your-updated-l3.json</code></pre>
-<h3 id="retrieve-the-survivorship-group-to-confirm">Retrieve the survivorship group to confirm</h3>
+<p><strong>Retrieve the survivorship group to confirm</strong></p>
 <pre><code class="language-bash hljs">curl -X GET <span class="hljs-string">&quot;{TenantURL}/configuration/entityTypes/Individual/survivorshipGroups/default&quot;</span> \
   -H <span class="hljs-string">&quot;Authorization: Bearer YOUR_ACCESS_TOKEN&quot;</span></code></pre>
-<h3 id="key-rules">Key rules</h3>
+<p><strong>Key rules</strong></p>
 <ul>
 <li>Every entity type must have exactly one group marked <code>&quot;default&quot;: true</code>.</li>
 <li>Attributes not listed in a mapping use the default survivorship strategy (<code>LUD</code> unless you&#39;ve overridden it — see section 5).</li>
