@@ -29,22 +29,7 @@ const { execSync } = require("child_process");
 const { marked } = require("marked");
 const hljs = require("highlight.js");
 
-// Always resolve to the main worktree root, even when Claude Code runs this
-// script from inside a linked worktree (.claude/worktrees/<branch>/).
-// git rev-parse --git-common-dir returns the shared .git dir for any worktree,
-// so its parent is always the original repo root.
-let REPO_ROOT;
-try {
-  const gitCommonDir = require("child_process")
-    .execSync("git rev-parse --git-common-dir", { cwd: __dirname, encoding: "utf8" })
-    .trim();
-  const absGitCommonDir = path.isAbsolute(gitCommonDir)
-    ? gitCommonDir
-    : path.join(__dirname, gitCommonDir);
-  REPO_ROOT = path.dirname(absGitCommonDir);
-} catch {
-  REPO_ROOT = __dirname; // fallback: not a git repo
-}
+const REPO_ROOT = __dirname;
 const HOWTOS_DIR = path.join(REPO_ROOT, "howtos");
 const OUTPUT_DIR = path.join(REPO_ROOT, "howtos-html");
 const TEMPLATE_DIR = path.join(REPO_ROOT, "html-template");
