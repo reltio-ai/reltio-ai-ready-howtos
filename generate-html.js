@@ -25,11 +25,26 @@
 
 const fs = require("fs");
 const path = require("path");
-const { execSync, spawnSync } = require("child_process");
+const { execSync } = require("child_process");
 const { marked } = require("marked");
 const hljs = require("highlight.js");
 
-const REPO_ROOT = __dirname;
+// Always resolve to the main worktree root, even when Claude Code runs this
+// script from inside a linked worktree (.claude/worktrees/<branch>/).
+// git rev-parse --git-common-dir returns the shared .git dir for any worktree,
+// so its parent is always the original repo root.
+let REPO_ROOT;
+try {
+  const gitCommonDir = require("child_process")
+    .execSync("git rev-parse --git-common-dir", { cwd: __dirname, encoding: "utf8" })
+    .trim();
+  const absGitCommonDir = path.isAbsolute(gitCommonDir)
+    ? gitCommonDir
+    : path.join(__dirname, gitCommonDir);
+  REPO_ROOT = path.dirname(absGitCommonDir);
+} catch {
+  REPO_ROOT = __dirname; // fallback: not a git repo
+}
 const HOWTOS_DIR = path.join(REPO_ROOT, "howtos");
 const OUTPUT_DIR = path.join(REPO_ROOT, "howtos-html");
 const TEMPLATE_DIR = path.join(REPO_ROOT, "html-template");
@@ -335,7 +350,6 @@ function loadCorpusMeta() {
 
 function injectCorpusMeta(html, meta) {
   if (!meta) return html;
-  // Replace any snapshot date + topic count in the disclaimer blockquote
   return html.replace(
     /snapshot \d{4}-\d{2}-\d{2} \d{2}:\d{2} UTC \([\d,]+ topics\)/g,
     `snapshot ${meta.timestamp} (${meta.topics} topics)`
@@ -345,23 +359,27 @@ function injectCorpusMeta(html, meta) {
 // --- Glossary link resolution ---
 
 function resolveGlossaryLinks(html) {
+  // Find the glossary h2 heading
   const headingRe = /<h2[^>]*>[^<]*[Gg]lossary[^<]*<\/h2>/;
   const headingMatch = html.match(headingRe);
   if (!headingMatch) return html;
 
   const afterGlossary = html.slice(html.indexOf(headingMatch[0]) + headingMatch[0].length);
 
+  // Build term → { slug, def } map — capture full paragraph content for the tooltip
   const termMap = new Map();
   const termRe = /<p><strong>([^:]+):<\/strong>([\s\S]*?)<\/p>/g;
   let m;
   while ((m = termRe.exec(afterGlossary)) !== null) {
     const term = m[1].trim();
     const slug = 'glossary-' + term.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/, '');
+    // Strip HTML tags from definition for the tooltip text
     const def = m[2].replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
     termMap.set(term, { slug, def });
   }
   if (termMap.size === 0) return html;
 
+  // Add id to each glossary term paragraph (keeps the section anchor usable)
   for (const [term, { slug }] of termMap) {
     const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     html = html.replace(
@@ -370,6 +388,7 @@ function resolveGlossaryLinks(html) {
     );
   }
 
+  // Replace body href="#glossary" links with hover-tooltip spans (no navigation)
   html = html.replace(/<a href="#glossary">([^<]+)<\/a>/g, (full, linkText) => {
     const key = linkText.trim();
     let found = null;
@@ -530,15 +549,12 @@ function extractOverviewSentence(markdown) {
 function getFileCommitAuthor(mdFilePath) {
   try {
     const rel = path.relative(REPO_ROOT, mdFilePath);
-    // Use spawnSync (no shell) so the path is passed as a literal argument,
-    // not interpolated into a shell string — eliminates the injection surface.
-    const result = spawnSync(
-      "git",
-      ["log", "--follow", "--diff-filter=A", '--format=%an', "--", rel],
-      { cwd: REPO_ROOT, encoding: "utf-8" }
-    );
-    if (result.status !== 0 || !result.stdout) return null;
-    const name = result.stdout.trim().split("\n")[0].trim();
+    const out = execSync(
+      `git log --follow --diff-filter=A --format="%an" -- "${rel}"`,
+      { cwd: REPO_ROOT, encoding: "utf-8", stdio: ["pipe", "pipe", "pipe"] }
+    ).trim();
+    // git log may return multiple lines if the file was renamed; take the first.
+    const name = out.split("\n")[0].trim();
     return name || null;
   } catch {
     return null;
@@ -694,28 +710,10 @@ function lintFlowchartDirection(files) {
   return violations;
 }
 
-// --- Path validation ---
-
-function validateHowtoPath(filePath) {
-  const resolved = path.resolve(filePath);
-  const allowedDir = path.resolve(HOWTOS_DIR) + path.sep;
-  if (!resolved.startsWith(allowedDir)) {
-    throw new Error(
-      `Path traversal rejected: "${filePath}" is outside howtos/`
-    );
-  }
-  if (!/^HOWTO-.+\.md$/.test(path.basename(resolved))) {
-    throw new Error(
-      `Invalid file: "${filePath}" must match the HOWTO-*.md pattern`
-    );
-  }
-  return resolved;
-}
-
 // --- Main ---
 
 function getTargetFiles(args) {
-  if (args.length > 0) return args.map((f) => validateHowtoPath(f));
+  if (args.length > 0) return args.map((f) => path.resolve(f));
   return fs
     .readdirSync(HOWTOS_DIR)
     .filter((f) => f.startsWith("HOWTO-") && f.endsWith(".md"))
