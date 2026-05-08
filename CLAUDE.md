@@ -116,6 +116,27 @@ Read at least one existing guide (preferably `howtos/HOWTO-set-up-rih-for-salesf
 
 > **Note:** Some older guides predate the current `STRUCTURE-GUIDE.md` and do not yet follow the new structural conventions (Contents heading, single ordered list of sections, numbered `## 1. Getting started` as the first section, all top-level sections numbered, no Attribution footer). Use them for voice and style reference only, not as structural templates. Follow `STRUCTURE-GUIDE.md` for structure.
 
+### Step 3b: Resolve the repo root before writing any file
+
+Before writing the HOWTO file, always resolve the true repo root. Claude Code sometimes
+runs sessions inside a linked git worktree (e.g. `.claude/worktrees/<branch>/`). Writing
+files with a relative path like `howtos/HOWTO-name.md` in that context buries them deep
+inside `.claude/` instead of the repo root where users expect them.
+
+Run this once at the start of every generation session:
+
+```bash
+REPO_ROOT=$(git rev-parse --show-toplevel)
+echo "Repo root: $REPO_ROOT"
+```
+
+Then write **all** files using the absolute path:
+- Markdown: `$REPO_ROOT/howtos/HOWTO-name.md`
+- Run the generator: `node $REPO_ROOT/generate-html.js $REPO_ROOT/howtos/HOWTO-name.md`
+
+If `git rev-parse --show-toplevel` is unavailable, fall back to `__dirname` of
+`generate-html.js`.
+
 ### Step 4: Write the guide
 
 Generate the full HOWTO following the structure in `STRUCTURE-GUIDE.md` and the writing conventions in `STYLE-GUIDE.md`.
@@ -399,3 +420,35 @@ Use `reltio-docs/index.md` to find topics. Some strong candidates:
 | `howtos/HOWTO-SETUP-for-top-10-reltio-apis.md` | Style example (setup/config guide) | ~9 KB |
 | `setup_tenant.py` | Example companion setup script | ~17 KB |
 | `generate-diagrams.js` | Optional: converts Mermaid code blocks in HOWTOs to SVG images in `howtos/images/` | ~4 KB |
+
+---
+
+## Two repos — know which one you're working on
+
+This local clone has two remotes with different purposes. Never conflate them.
+
+| | Bitbucket (`origin`) | GitHub (`github`) |
+|---|---|---|
+| URL | `bitbucket.org/reltio-ondemand/reltio-howtos-docs` | `github.com/reltio-ai/reltio-ai-ready-howtos` |
+| Contains | Everything: HOWTOs + generator kit | Generator kit only — **no HOWTOs** |
+| Who it's for | Reltio team | Community / customers forking the kit |
+| PRs / commits | Required — prefix `RP-XXXXXX ` | Not done manually |
+| How to update it | Normal `git push origin` | Run `./scripts/export-to-github.sh` |
+
+**Writing or editing HOWTOs?** → `git push origin <branch>`, open a Bitbucket PR.  
+**Changed the kit** (CLAUDE.md, style guides, generate-html.js)? → commit to Bitbucket, then `./scripts/export-to-github.sh`.  
+**Never push HOWTOs to GitHub** — the export script intentionally excludes them.
+
+---
+
+## Session startup
+
+Say **"resume howtos"** at the start of any session. This fires the `resume-howtos` skill (`~/.claude/skills/resume-howtos/`), which will:
+1. Read `state.md` for current context
+2. Run `git status` + `git log --oneline -6`
+3. Run `bash check-setup.sh` to confirm node, Vercel viewer, and git config are healthy
+4. Present a session brief — branch, last state, recent commits, uncommitted changes, open items
+
+## Session end
+
+Say **"update state.md"** before closing. Claude will rewrite `state.md` to reflect what actually happened: branch, last commit, open PRs, outstanding items, next step.
