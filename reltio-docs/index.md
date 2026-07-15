@@ -1,5 +1,5 @@
 # Reltio Documentation Index
-_Generated: 2026-07-08 02:15 UTC — 3231 topics (3178 unique)_
+_Generated: 2026-07-15 02:15 UTC — 3231 topics (3178 unique)_
 
 This file is a structured navigation index of the Reltio documentation portal.
 It contains the full parent-child hierarchy, topic URLs, keywords, summaries,
@@ -888,6 +888,7 @@ relationships, locate sibling topics, and follow cross-references.
 - **Path:** Reltio Documentation Portal v2 sitemap > Reltio > What does Reltio do? > What Reltio does at a glance > Data unification and MDM at a glance > Data unification and MDM in detail > Reltio match and merge > Match Group Elements - Description and Configuration > Rule Element
 - **Summary:** Learn about comparator classes and how to use them to support matching in the Reltio Context Intelligence Platform.
 - **Keywords:** how to define comparator classes, map comparator to attributes, use fuzzy comparison operator, configure thresholds for levenshtein, phonetic comparators for names, compare organization names tokens, address line comparator usage, calculate relevance score per comparator, select match token class, comparator classes
+- **See also:** [Compare Strings API](https://docs.reltio.com/en/developer-resources/entity-management-apis/entity-management-apis-at-a-glance/potential-matches-api/explanation-of-match-tokens-and-match-documents/working-with-strings/compare-strings?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs), [Get a List of Comparator Classes](https://docs.reltio.com/en/developer-resources/entity-management-apis/entity-management-apis-at-a-glance/potential-matches-api/explanation-of-match-tokens-and-match-documents/working-with-strings/get-a-list-of-comparator-classes?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs), [Compare Strings with Multi Operand](https://docs.reltio.com/en/developer-resources/entity-management-apis/entity-management-apis-at-a-glance/potential-matches-api/explanation-of-match-tokens-and-match-documents/working-with-strings/compare-strings-with-multi-operand?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
 
 #### Match Token Class
 
@@ -910,6 +911,7 @@ relationships, locate sibling topics, and follow cross-references.
 - **Path:** Reltio Documentation Portal v2 sitemap > Reltio > What does Reltio do? > What Reltio does at a glance > Data unification and MDM at a glance > Data unification and MDM in detail > Reltio match and merge > Match Group Elements - Description and Configuration > Rule Element > Match Token Class
 - **Summary:** This article describes each of the available match token classes in the Reltio Context Intelligence Platform.
 - **Keywords:** Match Token Class, match token, token, match token generator, token generator, match token class, token class, exact, exactornull, exactorallnull
+- **See also:** [Generate Tokens for the Specified Strings API](https://docs.reltio.com/en/developer-resources/entity-management-apis/entity-management-apis-at-a-glance/potential-matches-api/explanation-of-match-tokens-and-match-documents/working-with-strings/generate-tokens-for-the-specified-strings?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs), [Get a List of Match Token Classes](https://docs.reltio.com/en/developer-resources/entity-management-apis/entity-management-apis-at-a-glance/potential-matches-api/explanation-of-match-tokens-and-match-documents/working-with-strings/get-a-list-of-match-token-classes?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs), [Generate Tokens for Specified Strings with Multi Operand](https://docs.reltio.com/en/developer-resources/entity-management-apis/entity-management-apis-at-a-glance/potential-matches-api/explanation-of-match-tokens-and-match-documents/working-with-strings/generate-tokens-for-specified-strings-with-multi-operand?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
 
 #### Creating a Custom Comparator and Match Token class
 
@@ -1983,7 +1985,7 @@ relationships, locate sibling topics, and follow cross-references.
 
 - **URL:** https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agent-builder-for-agentflow-at-a-glance/create-test-and-submit-an-agent-for-review?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs
 - **Path:** Reltio Documentation Portal v2 sitemap > Products > AgentFlow > Reltio AgentFlow™ at a glance > Agent Builder for AgentFlow at a glance
-- **Summary:** Learn how to create a new agent or update a published one in Agent Builder, verify its behavior in the test panel, and submit it for governance review.
+- **Summary:** Learn how to create a new agent or update a published agent in Agent Builder, verify its behavior in the test panel, and submit the agent for governance review.
 - **Keywords:** create agent reltio agentflow builder, edit published agent agentflow builder, test draft agent agentflow builder, submit agent for review agentflow, write system prompt agentflow agent, select tools agentflow agent builder, agentflow agent draft and publish workflow, agent builder author workflow, publish, agentflow
 - **See also:** [Agent Builder for AgentFlow at a glance](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agent-builder-for-agentflow-at-a-glance?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs), [AgentFlow system prompt guidelines](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agent-builder-for-agentflow-at-a-glance/agentflow-system-prompt-guidelines?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs), [Upload an agent from another tenant](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agent-builder-for-agentflow-at-a-glance/upload-an-agent-from-another-tenant?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs), [Assign Agent Builder roles to users](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agent-builder-for-agentflow-at-a-glance/assign-agent-builder-roles-to-users?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs), [Agent states in Agent Builder](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agent-builder-for-agentflow-at-a-glance/agent-states-in-agent-builder?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs), [Review and act on a publish request](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agent-builder-for-agentflow-at-a-glance/review-and-act-on-a-publish-request?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
 
@@ -14113,9 +14115,9 @@ _Topics in this section: Data integrations at a glance, Application Integration 
 - **Summary:** Learn how to deploy and configure the prebuilt recipes that enable bi-directional data synchronization between Reltio and Veeva Vault CRM.
 - **Keywords:** deploy veeva vault crm integration recipes, configure reltio veeva integration hub, import veeva recipes in reltio integration hub, set up reltio integration with veeva vault, veeva vault crm recipe configuration steps, reltio integration hub connection setup, test reltio veeva vault crm integration, workato project for veeva crm integration, create integration hub project for veeva, enable real time recipe sync reltio veeva
 
-#### Configure event queues: SQS, Pub/Sub, or Azure
+#### Configure event queues: SQS, Pub/Sub, Azure, or DataTable
 
-- **URL:** https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/introduction-to-the-reltio-integration-for-veeva-vault-crm/configure-event-queues-sqs-pubsub-or-azure?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs
+- **URL:** https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/introduction-to-the-reltio-integration-for-veeva-vault-crm/configure-event-queues-sqs-pubsub-azure-or-datatable?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs
 - **Path:** Reltio Documentation Portal v2 sitemap > Applications > Data Integrations > Application Integration at a glance > Introduction to the Reltio Integration for Veeva Vault CRM
 - **Summary:** Configure your cloud event queues to support real-time data synchronization between Reltio and Veeva Vault CRM.
 - **Keywords:** configure event queues reltio veeva integration, set up aws sqs for reltio, azure service bus topic reltio connection, gcp pubsub configuration for reltio veeva, reltio veeva real time queue setup, reltio integration hub queue configuration, connect reltio to aws sqs, configure azure topic for veeva vault, google pubsub reltio event delivery, veeva reltio queue integration
@@ -14135,7 +14137,7 @@ _Topics in this section: Data integrations at a glance, Application Integration 
 - **Path:** Reltio Documentation Portal v2 sitemap > Applications > Data Integrations > Application Integration at a glance > Introduction to the Reltio Integration for Veeva Vault CRM
 - **Summary:** Configure your integration to detect field-level changes in Reltio and ensure that only meaningful updates are sent to Vault CRM.
 - **Keywords:** enable delta detection in reltio recipes, configure sequencing controls in reltio integration, field level change detection reltio veeva, avoid out of order event sync reltio veeva, reltio integration delta sync settings, event ordering logic in reltio recipes, relationeventsfilteringfields reltio configuration, detect meaningful field changes in reltio, reltio queue configuration for attribute filtering, handle race conditions in real time sync
-- **See also:** [Configure event queues: SQS, Pub/Sub, or Azure](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/introduction-to-the-reltio-integration-for-veeva-vault-crm/configure-event-queues-sqs-pubsub-or-azure?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
+- **See also:** [Configure event queues: SQS, Pub/Sub, Azure, or DataTable](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/introduction-to-the-reltio-integration-for-veeva-vault-crm/configure-event-queues-sqs-pubsub-azure-or-datatable?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
 
 #### Search Before Create (SBC) for Veeva Vault CRM
 

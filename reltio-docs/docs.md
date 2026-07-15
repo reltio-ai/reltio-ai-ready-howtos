@@ -1,8 +1,8 @@
 # Reltio Documentation
 
-_Generated: 2026-07-08 02:15 UTC_
+_Generated: 2026-07-15 02:14 UTC_
 
-_Topics: 3355_
+_Topics: 3356_
 
 ---
 
@@ -8775,9 +8775,6 @@ We build on each GA release with a steady stream of bi-weekly updates that deliv
 
 | Release Name | Stage | Tenant Type | Release Date |
 | --- | --- | --- | --- |
-| 2026.1.6.0 | 1 | Development (DEV) | July 10, 2026 |
-| 2026.1.6.0 | 2 | Test (TEST) | July 10, 2026 |
-| 2026.1.6.0 | 3 | Production (PRD) | July 17, 2026 |
 | 2026.1.7.0 | 1 | Development (DEV) | July 24, 2026 |
 | 2026.1.7.0 | 2 | Test (TEST) | July 24, 2026 |
 | 2026.1.7.0 | 3 | Production (PRD) | July 31, 2026 |
@@ -15197,6 +15194,44 @@ For more information, see [Best practices for Reltio Data Sharing with Databrick
 
 ---
 
+# 2026.1.6.0 RN | 17-July-2026
+
+Learn about the new features and enhancements introduced in this 2026.1.6.0 release.
+
+**Deployment dates**
+
+| Stage | Tenant type | When |
+| --- | --- | --- |
+| 1 | Development (DEV) | July 10, 2026 |
+| 2 | Test (TEST) | July 10, 2026 |
+| 3 | Production (PRD) | July 17, 2026 |
+
+## LCA and DVF errors are now easier to understand and resolve
+
+Life Cycle Action (LCA) and Data Validation Framework (DVF) error messages in **Hub** now display as plain-language messages instead of the raw internal templates, error codes, and combined error blocks shown previously. Depending on the type of failure, **Hub** simplifies the message as follows:
+
+- When a single LCA operation fails, **Hub** shows only the underlying error message instead of the full internal template.
+- When a DVF validation fails, **Hub** separates the results into two numbered lists, one for errors and one for warnings.
+- When multiple errors occur during the same operation, **Hub** lists each one as a bulleted item in plain language.
+
+The simplified format lets you quickly identify what caused a save or validation failure and resolve it without interpreting technical error codes.
+
+The updated error format is available wherever LCA and DVF error messages appear in **Hub**, including the **Profile** page, **Graph** perspective, and **Review DCR** page. API responses still use the previous error format.
+
+For more information, see [Life Cycle Actions](https://docs.reltio.com/en/developer-resources/about-developer-resources/developer-resources-at-a-glance/customize-data-tasks-with-lcas?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs) and [Data Validation Functions](https://docs.reltio.com/en/objectives/cleanse-and-verify-data/data-cleansing-at-a-glance/data-cleansing-operation/define-data-validation-functions?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs).
+
+## Admins can now update published agents in Agent Builder
+
+Agentflow admins can now update all published agents in a tenant, even if an agent was originally created by another user. This enhancement supports ongoing maintenance of agents by allowing admins to make timely updates, respond to changing business needs, and keep published agents accurate without depending on the availability of the original author.
+
+Users with the `ROLE_ADMIN_AGENTS` and `ROLE_ADMIN_TENANT` roles can update all published agents in Agent Builder.
+
+For more information, see [Create, test, and submit an agent for review](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agent-builder-for-agentflow-at-a-glance/create-test-and-submit-an-agent-for-review?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs).
+
+
+
+---
+
 # 2026.1 bi-weekly Release Notes (RN)
 
 > **Section:** Reltio > What’s new and notable? > What's new at a glance > Release Notes at a glance > 2026.1 Release Notes
@@ -18206,6 +18241,10 @@ You can define a comparator class for each attribute using *exact*, *fuzzy*, *ex
 
 > **Note:** Comparators always check for exact matches only. If you want to apply the fuzzy match logic, the *Fuzzy* operator option must be selected manually.
 
+
+
+To test a comparator class configuration without building a full match rule, use the[Compare Strings API](https://docs.reltio.com/en/developer-resources/entity-management-apis/entity-management-apis-at-a-glance/potential-matches-api/explanation-of-match-tokens-and-match-documents/working-with-strings/compare-strings?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs).
+
 The table below lists available comparator classes:
 
 **Description and Recommended Use of Comparator Classes**
@@ -18472,6 +18511,8 @@ The following table shows how to perform a relevance calculation. S1 and S2 repr
 - [Metaphone](http://en.wikipedia.org/wiki/Metaphone)
 - [Regular Expression Patterns](https://docs.oracle.com/javase/7/docs/api/java/util/regex/Pattern.html)
 - [Soundex](http://en.wikipedia.org/wiki/Soundex)
+- [Get a List of Comparator Classes](https://docs.reltio.com/en/developer-resources/entity-management-apis/entity-management-apis-at-a-glance/potential-matches-api/explanation-of-match-tokens-and-match-documents/working-with-strings/get-a-list-of-comparator-classes?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
+- [Compare Strings with Multi Operand](https://docs.reltio.com/en/developer-resources/entity-management-apis/entity-management-apis-at-a-glance/potential-matches-api/explanation-of-match-tokens-and-match-documents/working-with-strings/compare-strings-with-multi-operand?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
 
 
 
@@ -21054,6 +21095,8 @@ This article describes each of the available match token classes in the Reltio C
 
 Reltio Context Intelligence Platform uses match token classes to identify correct pairs of records for quick and efficient match rule comparison and adjudication. Each match token class generates a match token that helps to identify candidates to be matched.
 
+To generate tokens for a match token class configuration without building a full match rule, use the [Generate Tokens for the Specified Strings API](https://docs.reltio.com/en/developer-resources/entity-management-apis/entity-management-apis-at-a-glance/potential-matches-api/explanation-of-match-tokens-and-match-documents/working-with-strings/generate-tokens-for-the-specified-strings?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs).
+
 This table describes each match token class and the potential number of tokens that may be generated.
 
 **Available Match Token Classes**
@@ -21079,6 +21122,8 @@ This table describes each match token class and the potential number of tokens t
 
 - [Regular Expression Patterns](https://docs.oracle.com/javase/7/docs/api/java/util/regex/Pattern.html)
 - [Soundex](http://en.wikipedia.org/wiki/Soundex)
+- [Get a List of Match Token Classes](https://docs.reltio.com/en/developer-resources/entity-management-apis/entity-management-apis-at-a-glance/potential-matches-api/explanation-of-match-tokens-and-match-documents/working-with-strings/get-a-list-of-match-token-classes?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
+- [Generate Tokens for Specified Strings with Multi Operand](https://docs.reltio.com/en/developer-resources/entity-management-apis/entity-management-apis-at-a-glance/potential-matches-api/explanation-of-match-tokens-and-match-documents/working-with-strings/generate-tokens-for-specified-strings-with-multi-operand?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs)
 
 
 
@@ -25964,7 +26009,7 @@ You can assign different roles to the same user across different tenants. For ex
 **Keywords:** create agent reltio agentflow builder, edit published agent agentflow builder, test draft agent agentflow builder, submit agent for review agentflow, write system prompt agentflow agent, select tools agentflow agent builder, agentflow agent draft and publish workflow, agent builder author workflow, publish, agentflow, governance
 
 
-Learn how to create a new agent or update a published one in Agent Builder, verify its behavior in the test panel, and submit it for governance review.
+Learn how to create a new agent or update a published agent in Agent Builder, verify its behavior in the test panel, and submit the agent for governance review.
 
 Agent Builder provides you with the following structured authoring workflow:
 
@@ -25986,7 +26031,7 @@ For more information about writing an effective system prompt, see [AgentFlow sy
 
 Before you begin, confirm that:
 
-- You must have the `ROLE_AGENT_AUTHOR` on the target tenant. For more information about how to get this role, see [Assign Agent Builder roles to users](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agent-builder-for-agentflow-at-a-glance/assign-agent-builder-roles-to-users?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs).
+- You have the `ROLE_AGENT_AUTHOR` on the target tenant. For more information about how to get this role, see [Assign Agent Builder roles to users](https://docs.reltio.com/en/products/agentflow/reltio-agentflow-at-a-glance/agent-builder-for-agentflow-at-a-glance/assign-agent-builder-roles-to-users?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs).
 - At least one user on the tenant must have the `ROLE_AGENT_AUTHOR` role (PUBLISH permission). Publishing requires an approver with PUBLISH permission.
 - The tools you plan to use must be in the tenant-approved tool catalog.
 
@@ -26122,13 +26167,37 @@ The history panel displays events in chronological order for the selected agent 
 
 ## Update a published agent
 
-Use this path when you want to revise an agent that is already published. An Agent Author (for their own agents) or an Agent Admin can initiate this. The published version remains live and available to users throughout the editing and review process.
+To update a published agent, create a new draft from the published version. This allows you to make changes while the latest published version is available to users. Your ability to update an agent depends on your assigned roles:
+
+- `ROLE_AGENT_AUTHOR`: Create a new draft for agents you published.
+- `ROLE_ADMIN_AGENTS` and `ROLE_ADMIN_TENANT`: Create or edit drafts for all published agents in a tenant.
+
+To update an agent, perform the following steps:
 
 1. Log in to **AgentFlow** and go to **Agent Builder**.
-2. Locate the published agent and select the option to create a new version. Agent Builder creates a new draft version. The latest published version remains active in Discover Agents.
-3. Proceed to write the system prompt and select tools. See [#concept-9378/select_tools](#concept-9378/select_tools).
+2. Select the required agent.
 
-Version history is maintained across all draft and published versions of the agent.
+   The agent details page appears.
+3. Select **Create New Draft** / **Edit Draft**.
+
+   On updating the agent, Agent Builder creates a new draft version. The latest published version is still available in the **Discover Agents** page while you update the agent.
+4. Update the system prompt and select the required tools. See [#concept-9378/select_tools](#concept-9378/select_tools).
+5. Select **Save & Continue**.
+
+**Result**
+
+Your agent is updated, and Agent Builder maintains [version history](#concept-9378/section-234) across all draft and published versions.
+
+**Handling save conflicts**
+
+If another user saves changes to the agent after you make your own changes, Agent Builder blocks your next save and displays a conflict error.
+
+Refreshing the page loads the latest version and allows you to continue editing, but it also discards your unsaved changes. To avoid losing your progress, perform the following steps:
+
+1. Select **Go back without refreshing**.
+2. Copy your changes to a separate location.
+3. Refresh the page to load the latest version.
+4. Reapply your changes and click **Save**.
 
 ## Result
 
@@ -103205,7 +103274,7 @@ The following table describes the supported query parameters.
 | --- | --- | --- | --- | --- |
 | `dataTypes` | String | No | Comma-separated list of data types to reindex and stream. If omitted, all data types are processed. | `entities`, `relations`, `interactions`, `matches`, `merges`, `activities`, `deleted_entities`, `deleted_relations`, `deleted_interactions`.   Default: all |
 | `updatedSince` | Integer (int64) | No | Reindexes objects updated after the specified timestamp in epoch milliseconds.   Default: `0`. | Default: `0` |
-| `adapters` | String | No | Specifies the target adapter to stream data to. If omitted, all enabled adapters are used. | — |
+| `adapters` | String | No | Comma-separated list of adapter names that process the sync and stream data to their target platforms. Among your tenant's enabled adapters, only the adapters named in this parameter process the sync.   Adapter names are case-sensitive and must exactly match the adapter name shown in the **Console**.  If the value is omitted, empty, or contains only commas, all enabled adapters process the sync.  If the value contains only adapter names that are not enabled or not recognized, the API returns `200 OK`, but no data is streamed to any adapter, and only a sync activity record is created. | Comma-separated adapter names.  Default: All enabled adapters in your tenant |
 | `reindexDeleted` | Boolean | No | If set to `true`, adds sub-tasks to reindex deleted entities and relations. This parameter is ignored when specific `dataTypes` values are provided. | `true` or `false`.   Default: `false` |
 | `entityType` | String | No | Restricts the reindex scope to a specific entity type. Only applies when `dataTypes` includes `entities`. | Example: `Individual` |
 | `relationType` | String | No | Restricts the reindex scope to a specific relation type. Only applies when `dataTypes` includes `relations`. | Example: `HasAddress` |
@@ -103231,6 +103300,7 @@ The following table shows common ways to use the Sync to Data Pipeline API. Use 
 | --- | --- | --- |
 | Send all data (default) | Reindex and stream all tenant data to the Data Pipeline Hub. | `POST https://{env}.reltio.com/reltio/api/{tenantId}/syncToDataPipeline` |
 | Include deleted and loser records | Reindex all data, including deleted entities and relations and loser records from merges. | `POST https://{env}.reltio.com/reltio/api/{tenantId}/syncToDataPipeline?reindexDeleted=true` |
+| Sync to specific adapters | Sync to specific enabled adapters. Enter each adapter name exactly as it appears in the **Console**, including the same capitalization. To sync to more than one adapter, separate the names with commas. | `POST https://{env}.reltio.com/reltio/api/{tenantId}/syncToDataPipeline?adapters=snowflakeIntrl1` |
 | Sync only entities | Reindex and stream entity data only, excluding all other data types. | `POST https://{env}.reltio.com/reltio/api/{tenantId}/syncToDataPipeline?dataTypes=entities` |
 | Sync only relations | Reindex and stream relation data only, excluding all other data types. | `POST https://{env}.reltio.com/reltio/api/{tenantId}/syncToDataPipeline?dataTypes=relations` |
 | Sync a specific entity type | Restrict the reindex scope to a single entity type. Replace `HCP` with your entity type. | `POST https://{env}.reltio.com/reltio/api/{tenantId}/syncToDataPipeline?dataTypes=entities&entityType=HCP` |
@@ -144370,7 +144440,7 @@ The Workflow Modeler has no prerequisites; however, it’s helpful if you’re f
 
 ## Open an existing BPMN file
 
-In the Workflow Modeler, you can either open an existing BPMN diagram *.bpmn20.xml file or you can import the existing Out-of-the-box (OOTB) workflows from Bitbucket and enhance the workflow according to your business needs. Out-of-the-box process definitions are available at [Workflow - Default Process Definitions Bitbucket Repo](https://bitbucket.org/reltio-ondemand/workflow/src/production/default%20process%20definitions/). You can also open a BPMN file that is already published and displayed in the **Business processes** tab.
+In the Workflow Modeler, you can either open an existing BPMN diagram *.bpmn20.xml file or you can import the existing Out-of-the-box (OOTB) workflows from Bitbucket and enhance the workflow according to your business needs. Out-of-the-box process definitions are available at [Workflow - Default Process Definitions Github Repo](https://github.com/reltio-ai/workflow/tree/main/default%20process%20definitions). You can also open a BPMN file that is already published and displayed in the **Business processes** tab.
 
 To open an existing BPMN file:
 
@@ -160101,12 +160171,12 @@ The following table outlines how crosswalks are used to maintain identity, track
 
 ---
 
-# Configure event queues: SQS, Pub/Sub, or Azure
+# Configure event queues: SQS, Pub/Sub, Azure, or DataTable
 
 > **Section:** Applications > Data Integrations > Application Integration at a glance > Introduction to the Reltio Integration for Veeva Vault CRM
 
 
-**Source:** https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/introduction-to-the-reltio-integration-for-veeva-vault-crm/configure-event-queues-sqs-pubsub-or-azure?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs
+**Source:** https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/introduction-to-the-reltio-integration-for-veeva-vault-crm/configure-event-queues-sqs-pubsub-azure-or-datatable?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs
 
 **Keywords:** configure event queues reltio veeva integration, set up aws sqs for reltio, azure service bus topic reltio connection, gcp pubsub configuration for reltio veeva, reltio veeva real time queue setup, reltio integration hub queue configuration, connect reltio to aws sqs, configure azure topic for veeva vault, google pubsub reltio event delivery, veeva reltio queue integration, cloud event queue reltio recipes, real time sync queue setup reltio veeva
 
@@ -160136,7 +160206,7 @@ Before you begin, make sure you have the following:
    - Queue ARN
    - Region
    - For authentication, use RIH to access AWS with IAM roles; follow the steps mentioned in the topic [Prerequisites - AWS security configuration](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/reltio-integration-for-salesforce-with-rih-at-a-glance/reltio-integration-for-salesforce-with-rih-overview/get-started-with-reltio-integration-for-salesforce-with-rih/prerequisites-for-installing-reltio-integration-for-salesforce-with-rih/prerequisites---aws-security-configuration?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs).
-5. Use the AWS CLI or SDK to validate that the queue is accessible.In your RIH project, open the connection `VeevaReltioIntegrationQueue_Comm`.
+5. Use the AWS CLI or SDK to validate that the queue is accessible.In your RIH project, open the connection `Veeva | CON | AWS SQS Connection`.
 6. Save and test the connection.
 
 To use IAM Role Auth, follow the steps below.
@@ -160189,6 +160259,31 @@ Ensure the following are ready:
 7. Save and test the connection in the RIH Console.
 
 Once configured, your queue will begin receiving entity change events from Reltio. RIH recipes will automatically trigger in response to these events based on the connection.
+
+## Set up a DataTable connection
+
+Use these steps to set up a DataTable connection in Reltio Integration Hub (RIH).
+
+Before you begin, make sure you have the following:
+
+- Access to RIH
+- Permissions to create client roles and API clients
+- Access to the DataTable connector configuration
+
+To set up a DataTable connection, perform the following steps:
+
+1. In RIH, navigate to **API clients**.
+2. Create a **Client role** to provide DataTable access.
+3. In the client role page, select **Tools**.
+4. Enable the required permissions for **Data tables** and **Data table records**.
+5. Save the client role changes.
+6. Create an API client, and assign the client role you created.
+7. Generate the API key for the client.
+8. Copy the API key to use it when you configure the DataTable connector.
+9. In RIH, open the connection `Veeva | CON | Workato Data Table connection`, enter the API key in **Your API Key**.
+10. Save and test the connection in the RIH console.
+
+Once configured, your DataTable connection is available in Reltio Integration Hub. RIH recipes can use this connection to access DataTable records based on the connection.
 
 ## Validation steps
 
@@ -160313,7 +160408,7 @@ This topic explains how to enable and configure delta detection using Reltio que
 
 Delta detection ensures that integration recipes run only when specified attributes change in Reltio. It allows recipes to ignore updates that don't affect mapped fields.
 
-For real-time event setup, see [Configure event queues: SQS, Pub/Sub, or Azure](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/introduction-to-the-reltio-integration-for-veeva-vault-crm/configure-event-queues-sqs-pubsub-or-azure?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs).
+For real-time event setup, see [Configure event queues: SQS, Pub/Sub, Azure, or DataTable](https://docs.reltio.com/en/applications/data-integrations/application-integration-at-a-glance/introduction-to-the-reltio-integration-for-veeva-vault-crm/configure-event-queues-sqs-pubsub-azure-or-datatable?utm_source=ai-corpus&utm_medium=markdown&utm_campaign=reltio-ai-ready-docs).
 
 ## Configure external queue streaming in Reltio Tenant Management
 
@@ -160633,7 +160728,7 @@ Include the following request headers in every request.
 | --- | --- | --- |
 | accept | Yes | Response media type. Use `application/json`. |
 | Content-Type | Yes | Request media type. Use `multipart/form-data`. |
-| API-TOKEN | Yes | API token from the Workato API collection client configuration for the SBC API. |
+| API-TOKEN | Yes | API token from the RIH API collection client configuration for the SBC API. |
 
 ## Request body
 
@@ -160641,7 +160736,7 @@ The following table describes the request fields.
 
 | **Field** | **Required** | **Description** | **Accepted values / Default** |
 | --- | --- | --- | --- |
-| file | No | ZIP file that contains the UI configuration for Search Before Create. | Example: `sbc.zip`. If omitted, the API uses the most recent ZIP file stored under `SBC_setup_UI_zip_file`. |
+| file | No | ZIP file that contains the UI configuration for Search Before Create. | Example: `sbc.zip`. If omitted, the API uses the most recent ZIP file stored under `SBC_setup_UI_zip_file` in RIH Data tables. |
 | name__v | Yes | Name of the `html_report__v` record. | Example: `Test Page - SBC` |
 | platform__v | Yes | Platform value for the `html_report__v` record. | Example: `online__v` |
 | name__v_sbc_config__c | Yes | Name of the `sbc_config__c` record. | Example: `rec_token_test` |
@@ -160654,7 +160749,7 @@ The following table describes the request fields.
 The following example shows a complete request with headers and request fields.
 
 ```
-curl --location --request POST 'https://{workato_api_base_url}/{environment}/veeva-sbc-vv1/veeva/sbc/setup' \
+curl --location --request POST 'https://{RIH_api_base_url}/{environment}/veeva-sbc-vv1/veeva/sbc/setup' \
 --header 'accept: application/json' \
 --header 'Content-Type: multipart/form-data' \
 --header 'API-TOKEN: <api_token>' \
@@ -160698,7 +160793,7 @@ The API returns the following HTTP status codes based on the processing result.
 | **Status code** | **Description** |
 | --- | --- |
 | 200 | The setup request completed successfully. |
-| 400 | No input file was available from the API request or file storage. |
+| 400 | No input file was available from the API request or in RIH Data tables. |
 | 500 | The setup request failed during processing. The response includes an error message and the job URL. |
 
 
@@ -160728,7 +160823,7 @@ Before you begin, confirm that the following prerequisites are met:
 
   To get the page name ID, in Veeva Vault CRM, navigate to **Admin > Configuration > Pages**, open the X-Page, and copy the value in **Name**.
 - The `X-page for SBC` project property is set to the page name ID of the activated top-level X-Page.
-- The ZIP file that contains the frontend configuration is stored in file storage under `SBC_setup_UI_zip_file` in RIH. If you provide a file in the API request, that file takes precedence. Otherwise, the most recent file in file storage is used for the SBC interface.
+- The ZIP file that contains the frontend configuration is stored in file storage under `SBC_setup_UI_zip_file` in RIH Data tables. If you provide a file in the API request, that file takes precedence. Otherwise, the most recent file in file storage is used for the SBC interface.
 
 ## SBC Setup API endpoint
 
@@ -160791,7 +160886,7 @@ Use the following steps to submit the SBC Setup API request.
    --form 'timeout_seconds__c_sbc_config__c=30' \
    --form 'file=@sbc.zip'
    ```
-4. Optional: Attach the ZIP file in the `file` field if you want to use a file from the request. If you do not attach a file, the API uses the most recent file stored under `SBC_setup_UI_zip_file`.
+4. Optional: Attach the ZIP file in the `file` field if you want to use a file from the request. If you do not attach a file, the API uses the most recent file stored under `SBC_setup_UI_zip_file` in RIH Data tables.
 5. Submit the request.
 
 ## Result
@@ -237774,8 +237869,10 @@ When editing an existing role: Choose the Trust Relationships tab and select Edi
             "Effect": "Allow",
             "Principal": {
                 "AWS": [
-                    "arn:aws:iam::123456789876:user/reltio.platform.dataload",
-                    "arn:aws:iam::123456789876:user/reltio.platform.api"
+					"arn:aws:iam::123456789012:user/reltio.platform.dataload",
+				 	"arn:aws:iam::123456789012:user/reltio.platform.api",
+				 	"arn:aws:iam::123456789012:role/role-reltio.platform.dataload",
+					"arn:aws:iam::123456789012:role/role-reltio.platform.api"
                 ]
             },
             "Action": "sts:AssumeRole",
@@ -237789,6 +237886,13 @@ When editing an existing role: Choose the Trust Relationships tab and select Edi
 }
 
 ```
+
+
+
+
+
+> **Important:** Reltio authenticates using both IAM users and IAM roles. List both principal types in the trust policy.
+> If your policy lists only the IAM role principals, requests from a service that still uses the IAM user fail with a `sts:AssumeRole` authorization error. We recommend keeping both principal types until Reltio completes the migration.
 
 
 
@@ -237813,7 +237917,7 @@ When editing an existing role: Choose the Trust Relationships tab and select Edi
 5. Save the policy.
    The following example shows a complete trust policy for a HIPAA environment, including the standard Reltio principals and the HIPAA principal:
    ```
-{ "Version": "2012-10-17", "Statement": [ { "Effect": "Allow", "Principal": { "AWS": [ "arn:aws:iam::123456789876:user/reltio.platform.dataload", "arn:aws:iam::123456789876:user/reltio.platform.api" ] }, "Action": "sts:AssumeRole", "Condition": { "StringEquals": { "sts:ExternalId": "{your-external-id}" } } }, { "Effect": "Allow", "Principal": { "AWS": "arn:aws:iam::682505635934:user/reltio.platform.dev-h360" }, "Action": "sts:AssumeRole" } ] }
+{ "Version": "2012-10-17", "Statement": [ { "Effect": "Allow", "Principal": { "AWS": [ "arn:aws:iam::123456789012:user/reltio.platform.dataload", "arn:aws:iam::123456789012:user/reltio.platform.api", "arn:aws:iam::123456789012:role/role-reltio.platform.dataload", "arn:aws:iam::123456789012:role/role-reltio.platform.api" ] }, "Action": "sts:AssumeRole", "Condition": { "StringEquals": { "sts:ExternalId": "{your-external-id}" } } }, { "Effect": "Allow", "Principal": { "AWS": "arn:aws:iam::682505635934:user/reltio.platform.dev-h360" }, "Action": "sts:AssumeRole" } ] }
    ```
 
 
